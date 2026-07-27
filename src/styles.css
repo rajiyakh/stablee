@@ -1,0 +1,165 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+/*
+ * RobinPulse AI design system — premium light financial intelligence.
+ *
+ * Warm off-white canvas, white cards, ivory surfaces, light gray-green
+ * borders, deep forest-green text, restrained lime accent. No dark theme.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-surface: var(--surface);
+  --color-positive: var(--positive);
+  --color-positive-foreground: var(--positive-foreground);
+  --color-negative: var(--negative);
+  --color-negative-foreground: var(--negative-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-sans: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+  --shadow-card: 0 1px 2px oklch(0.25 0.03 150 / 6%), 0 8px 24px oklch(0.25 0.03 150 / 5%);
+  --shadow-lift: 0 2px 4px oklch(0.25 0.03 150 / 7%), 0 16px 40px oklch(0.25 0.03 150 / 8%);
+}
+
+:root {
+  --radius: 0.75rem;
+
+  /* #F5F6F0 */
+  --background: oklch(0.9702 0.0117 108.66);
+  /* #14251C */
+  --foreground: oklch(0.2417 0.0245 158.03);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.2417 0.0245 158.03);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.2417 0.0245 158.03);
+  /* #1F7A4D */
+  --primary: oklch(0.4956 0.1044 158.15);
+  --primary-foreground: oklch(0.9838 0.006 108);
+  /* #EEF1E8 */
+  --secondary: oklch(0.9494 0.0143 118.3);
+  --secondary-foreground: oklch(0.2417 0.0245 158.03);
+  --surface: oklch(0.9494 0.0143 118.3);
+  --muted: oklch(0.9494 0.0143 118.3);
+  /* #627067 */
+  --muted-foreground: oklch(0.5303 0.0201 152.4);
+  --accent: oklch(0.9494 0.0143 118.3);
+  --accent-foreground: oklch(0.4956 0.1044 158.15);
+  /* #C8F135 */
+  --brand: oklch(0.9059 0.2018 121.5);
+  --brand-foreground: oklch(0.2417 0.0245 158.03);
+  /* #D35C52 */
+  --destructive: oklch(0.6135 0.1584 25.6);
+  --destructive-foreground: oklch(0.9838 0.006 108);
+  --negative: oklch(0.6135 0.1584 25.6);
+  --negative-foreground: oklch(0.9838 0.006 108);
+  /* #138A55 */
+  --positive: oklch(0.5417 0.1206 160.1);
+  --positive-foreground: oklch(0.9838 0.006 108);
+  /* #D69B32 */
+  --warning: oklch(0.7359 0.1281 78.5);
+  --warning-foreground: oklch(0.2417 0.0245 158.03);
+  /* #DDE3D8 */
+  --border: oklch(0.9111 0.0138 128.3);
+  --input: oklch(0.9111 0.0138 128.3);
+  --ring: oklch(0.4956 0.1044 158.15);
+
+  --chart-1: oklch(0.4956 0.1044 158.15);
+  --chart-2: oklch(0.7059 0.1418 121.5);
+  --chart-3: oklch(0.6135 0.1584 25.6);
+  --chart-4: oklch(0.7359 0.1281 78.5);
+  --chart-5: oklch(0.5303 0.0201 152.4);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv02", "cv03", "ss01";
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.015em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: oklch(0.9059 0.2018 121.5 / 45%);
+  }
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
+}
+
+@utility card-surface {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
