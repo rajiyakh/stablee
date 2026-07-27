@@ -71,6 +71,11 @@
     "wagmi": "^3.7.4",
     "zod": "^3.24.2"
   },
+  "overrides": {
+    "axios": "^1.18.1",
+    "ws": "^8.21.1",
+    "uuid": "^11.1.1"
+  },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
     "@lovable.dev/vite-tanstack-config": "^2.7.7",
