@@ -1,6 +1,6 @@
 import { createPublicClient, http } from "viem";
 import { chainlinkFeeds, feedForToken, type ChainlinkFeedConfig } from "@/config/chainlinkFeeds";
-import { robinhoodChain } from "@/config/robinhoodChain";
+import { robinhoodChainFacts } from "@/config/robinhoodChain";
 
 const AGGREGATOR_V3_ABI = [
   {
@@ -23,11 +23,11 @@ const MAX_FEED_AGE_SECONDS = 3600;
 let client: ReturnType<typeof createPublicClient> | null = null;
 
 function getClient() {
-  if (!robinhoodChain) return null;
+  if (!robinhoodChainFacts) return null;
   if (!client) {
     client = createPublicClient({
-      chain: robinhoodChain,
-      transport: http(process.env.ROBINHOOD_RPC_URL || robinhoodChain.rpcUrls.default.http[0]),
+      chain: robinhoodChainFacts,
+      transport: http(process.env.ROBINHOOD_RPC_URL || robinhoodChainFacts.rpcUrls.default.http[0]),
     });
   }
   return client;

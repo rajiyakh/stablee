@@ -117,6 +117,15 @@ async function execGmgnCli(args: string[], timeoutMs: number): Promise<string> {
           maxBuffer: 10 * 1024 * 1024,
           windowsHide: true,
           signal: controller.signal,
+          // On Windows, `npx` resolves to `npx.cmd`, a batch shim that
+          // execFile cannot spawn directly without a shell (fails with
+          // ENOENT without shell, or EINVAL if "npx.cmd" is passed as the
+          // command with shell:false — both are documented Node/Windows
+          // child_process quirks). shell:true is safe here specifically
+          // because every arg is an internally-generated literal/enum
+          // (chain is always "robinhood", interval is one of five fixed
+          // strings, limit is a validated number) — never raw user input.
+          shell: process.platform === "win32",
         },
         (error, stdout, stderr) => {
           if (error) {

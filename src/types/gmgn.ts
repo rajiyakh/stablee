@@ -1,12 +1,18 @@
 /**
  * GMGN OpenAPI types (client-safe — no server-only imports).
  *
- * Field names on `GmgnRankItem` mirror GMGN's own real API response shape
- * (confirmed via `gmgn-cli`'s own `--help` output and its published skill
- * docs — never guessed). A single `market trending` / `market hot-searches`
- * call is scoped to ONE interval at a time (`--interval`), so the raw item
- * carries generic `volume`/`swaps`/`price_change_percent` fields for whatever
- * interval was requested — `normalize.ts` slots that value into the matching
+ * Field names on `GmgnRankItem` mirror a real, live `gmgn-cli market
+ * trending --chain robinhood` response (confirmed once a real GMGN_API_KEY
+ * became available — several fields differ from what the published docs
+ * alone implied: `is_honeypot`/`is_renounced`/`is_open_source` are numbers
+ * (0/1) not booleans, the real timestamp field is `creation_timestamp`, the
+ * real ATH field is `history_highest_market_cap`, and the real Twitter
+ * field is `twitter_username`). See `src/providers/gmgn/schemas.ts` for the
+ * authoritative, runtime-validated shape — this interface just documents it.
+ * A single `market trending` / `market hot-searches` call is scoped to ONE
+ * interval at a time (`--interval`), so the raw item carries generic
+ * `volume`/`swaps`/`price_change_percent` fields for whatever interval was
+ * requested — `normalize.ts` slots that value into the matching
  * interval-specific field on `RobinhoodTrendingToken` and leaves every other
  * interval's field `undefined`, never a fabricated/guessed value.
  */
@@ -21,16 +27,17 @@ export interface GmgnRankItem {
   address: string;
   pair_address?: string | null;
   dex?: string | null;
+  launchpad_platform?: string | null;
 
   name?: string | null;
   symbol?: string | null;
   logo?: string | null;
 
-  created_timestamp?: number | null;
+  creation_timestamp?: number | null;
 
   price?: number | null;
   market_cap?: number | null;
-  history_highest_marketcap?: number | null;
+  history_highest_market_cap?: number | null;
   liquidity?: number | null;
 
   volume?: number | null;
@@ -48,8 +55,10 @@ export interface GmgnRankItem {
   gas_fee?: number | null;
 
   rug_ratio?: number | null;
-  is_honeypot?: boolean | null;
+  is_honeypot?: boolean | number | null;
   is_wash_trading?: boolean | null;
+  is_renounced?: boolean | number | null;
+  is_open_source?: boolean | number | null;
   top_10_holder_rate?: number | null;
   top70_sniper_hold_rate?: number | null;
   dev_team_hold_rate?: number | null;
@@ -65,14 +74,14 @@ export interface GmgnRankItem {
   rank?: number | null;
 
   website?: string | null;
-  twitter?: string | null;
+  twitter_username?: string | null;
   telegram?: string | null;
 }
 
 export interface GmgnHotSearchBlock {
   chain: string;
   interval: string;
-  rank: GmgnRankItem[];
+  tokens: GmgnRankItem[];
 }
 
 export type SecurityFlags = {

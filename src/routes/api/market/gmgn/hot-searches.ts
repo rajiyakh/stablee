@@ -48,7 +48,7 @@ export const Route = createFileRoute("/api/market/gmgn/hot-searches")({
           const blocks = gmgnHotSearchesResponseSchema.parse(res.data);
           const robinhoodBlock = blocks.find((block) => block.chain === "robinhood") ?? blocks[0];
           const data = robinhoodBlock
-            ? normalizeHotSearches(robinhoodBlock.rank, interval.data)
+            ? normalizeHotSearches(robinhoodBlock.tokens, interval.data)
             : [];
           return jsonOk(envelope("gmgn", { ...res, data }), 45);
         } catch (error) {

@@ -19,10 +19,17 @@ function isRobinhoodEvmItem(item: GmgnRankItemParsed): boolean {
 
 function buildSecurity(item: GmgnRankItemParsed): SecurityFlags | undefined {
   const flags: SecurityFlags = {};
-  if (item.is_honeypot !== null && item.is_honeypot !== undefined)
-    flags.honeypot = item.is_honeypot;
+  // is_honeypot is a number (0/1) in the real API, not a boolean.
+  if (item.is_honeypot !== null && item.is_honeypot !== undefined) {
+    flags.honeypot = Boolean(item.is_honeypot);
+  }
+  // renounced_mint/renounced_freeze_account are observed always null for
+  // Robinhood — is_renounced/is_open_source are the fields GMGN actually
+  // populates there, so they're preferred when the mint/freeze pair is null.
   if (item.renounced_mint !== null && item.renounced_mint !== undefined) {
     flags.renounced = Boolean(item.renounced_mint && item.renounced_freeze_account);
+  } else if (item.is_renounced !== null && item.is_renounced !== undefined) {
+    flags.renounced = Boolean(item.is_renounced);
   }
   if (item.top_10_holder_rate !== null && item.top_10_holder_rate !== undefined) {
     flags.topHolderPercent = item.top_10_holder_rate * 100;
@@ -43,7 +50,7 @@ function buildExternalLinks(item: GmgnRankItemParsed): RobinhoodTrendingToken["e
   if (item.pair_address)
     links.dexScreener = `https://dexscreener.com/robinhood/${item.pair_address}`;
   if (item.website) links.website = item.website;
-  if (item.twitter) links.x = item.twitter;
+  if (item.twitter_username) links.x = item.twitter_username;
   if (item.telegram) links.telegram = item.telegram;
   return links;
 }
@@ -114,16 +121,18 @@ function toBaseToken(
     symbol: item.symbol ?? "—",
     logoUrl: item.logo ?? undefined,
     pairAddress: item.pair_address ?? undefined,
-    dexName: item.dex ?? undefined,
-    createdAt: item.created_timestamp
-      ? new Date(item.created_timestamp * 1000).toISOString()
+    // `dex` is rarely populated for Robinhood — launchpad_platform (e.g.
+    // "circus", "pons", "bankr") is the real venue field GMGN returns.
+    dexName: item.dex ?? item.launchpad_platform ?? undefined,
+    createdAt: item.creation_timestamp
+      ? new Date(item.creation_timestamp * 1000).toISOString()
       : undefined,
-    ageSeconds: item.created_timestamp
-      ? Math.max(0, Date.now() / 1000 - item.created_timestamp)
+    ageSeconds: item.creation_timestamp
+      ? Math.max(0, Date.now() / 1000 - item.creation_timestamp)
       : undefined,
     priceUsd: item.price ?? undefined,
     marketCapUsd: item.market_cap ?? undefined,
-    athMarketCapUsd: item.history_highest_marketcap ?? undefined,
+    athMarketCapUsd: item.history_highest_market_cap ?? undefined,
     liquidityUsd: item.liquidity ?? undefined,
     holders: item.holder_count ?? undefined,
     totalFeesNative: item.gas_fee ?? undefined,

@@ -16,7 +16,7 @@ vi.mock("@/providers/gmgn/client.server", () => ({
 }));
 
 vi.mock("@/config/robinhoodChain", () => ({
-  robinhoodChain: {
+  robinhoodChainFacts: {
     id: 4663,
     name: "Robinhood Chain",
     nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },

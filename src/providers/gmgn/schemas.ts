@@ -3,25 +3,36 @@ import { z } from "zod";
 /**
  * Every field is optional/nullable — GMGN's raw response fields are trusted
  * only when present; nothing here is required beyond what's needed to
- * identify the token. This mirrors the app-wide rule: never fabricate a
- * missing value, never assume a field GMGN might omit for a given chain
- * (e.g. `is_honeypot` is documented as BSC/Base-only).
+ * identify the token. Field names below were corrected against a real,
+ * live `gmgn-cli market trending --chain robinhood` response (a real
+ * GMGN_API_KEY became available after this was first built defensively
+ * from docs alone) — several field names and types differed from the
+ * documented guesses:
+ *  - `is_honeypot` is a number (0/1), not a boolean.
+ *  - the real timestamp field is `creation_timestamp`, not `created_timestamp`.
+ *  - the real ATH field is `history_highest_market_cap` (extra underscore),
+ *    not `history_highest_marketcap`.
+ *  - the real Twitter field is `twitter_username`, not `twitter`.
+ *  - `is_renounced`/`is_open_source` (numbers, 0/1) are real fields not
+ *    previously known, and are more reliably populated for Robinhood than
+ *    `renounced_mint`/`renounced_freeze_account` (observed always null).
  */
 export const gmgnRankItemSchema = z.object({
   chain: z.string().nullish(),
   address: z.string(),
   pair_address: z.string().nullish(),
   dex: z.string().nullish(),
+  launchpad_platform: z.string().nullish(),
 
   name: z.string().nullish(),
   symbol: z.string().nullish(),
   logo: z.string().nullish(),
 
-  created_timestamp: z.number().nullish(),
+  creation_timestamp: z.number().nullish(),
 
   price: z.number().nullish(),
   market_cap: z.number().nullish(),
-  history_highest_marketcap: z.number().nullish(),
+  history_highest_market_cap: z.number().nullish(),
   liquidity: z.number().nullish(),
 
   volume: z.number().nullish(),
@@ -39,8 +50,10 @@ export const gmgnRankItemSchema = z.object({
   gas_fee: z.number().nullish(),
 
   rug_ratio: z.number().nullish(),
-  is_honeypot: z.boolean().nullish(),
+  is_honeypot: z.union([z.boolean(), z.number()]).nullish(),
   is_wash_trading: z.boolean().nullish(),
+  is_renounced: z.union([z.boolean(), z.number()]).nullish(),
+  is_open_source: z.union([z.boolean(), z.number()]).nullish(),
   top_10_holder_rate: z.number().nullish(),
   top70_sniper_hold_rate: z.number().nullish(),
   dev_team_hold_rate: z.number().nullish(),
@@ -55,7 +68,7 @@ export const gmgnRankItemSchema = z.object({
   rank: z.number().nullish(),
 
   website: z.string().nullish(),
-  twitter: z.string().nullish(),
+  twitter_username: z.string().nullish(),
   telegram: z.string().nullish(),
 });
 
@@ -84,10 +97,18 @@ export const gmgnTrendingResponseSchema = z
     return value.data.rank;
   });
 
+/**
+ * The real field holding the token array is `tokens`, confirmed against a
+ * live `gmgn-cli market hot-searches --chain robinhood` response — not
+ * `rank` as originally guessed from docs alone (trending uses `rank`,
+ * hot-searches uses `tokens`; the two endpoints do not share a field name
+ * here). The real top-level shape is a bare array of blocks, e.g.
+ * `[{ interval, chain, version, tokens: [...] }]`.
+ */
 const hotSearchBlockSchema = z.object({
   chain: z.string(),
   interval: z.string(),
-  rank: rankArraySchema,
+  tokens: rankArraySchema,
 });
 
 /**

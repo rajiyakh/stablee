@@ -1,5 +1,5 @@
 import { createPublicClient, http, type Address } from "viem";
-import { robinhoodChain } from "@/config/robinhoodChain";
+import { robinhoodChainFacts } from "@/config/robinhoodChain";
 import { findSwapToken, swapTokens, type SwapTokenConfig } from "@/config/swapTokens";
 import { erc20Abi } from "./erc20";
 import { fetchGmgnTrending, gmgnConfigured } from "@/providers/gmgn/client.server";
@@ -16,11 +16,11 @@ export interface DiscoveredSwapToken extends SwapTokenConfig {
 let publicClient: ReturnType<typeof createPublicClient> | null = null;
 
 function getPublicClient() {
-  if (!robinhoodChain) return null;
+  if (!robinhoodChainFacts) return null;
   if (!publicClient) {
     publicClient = createPublicClient({
-      chain: robinhoodChain,
-      transport: http(process.env.ROBINHOOD_RPC_URL || robinhoodChain.rpcUrls.default.http[0]),
+      chain: robinhoodChainFacts,
+      transport: http(process.env.ROBINHOOD_RPC_URL || robinhoodChainFacts.rpcUrls.default.http[0]),
     });
   }
   return publicClient;
