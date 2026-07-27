@@ -19,14 +19,37 @@ export interface SwapTokenConfig {
 
 /**
  * 0x's (and the broader EVM tooling ecosystem's) standard sentinel for the
- * chain's native asset in sellToken/buyToken. Not observed in an actual 0x
- * response this session — see docs/0X_SWAP_SETUP.md. Native-ETH selling
- * stays disabled (NATIVE_SELL_ENABLED) until that's empirically confirmed.
+ * chain's native asset in sellToken/buyToken. Confirmed via a real
+ * GET /swap/allowance-holder/price call against Robinhood Chain (chainId
+ * 4663): liquidityAvailable: true, route filled through WETH, sellToken
+ * echoed back as this exact address — see docs/0X_SWAP_SETUP.md.
  */
 export const NATIVE_SENTINEL = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
-export const NATIVE_SELL_ENABLED = false;
+export const NATIVE_SELL_ENABLED = true;
+
+/**
+ * Reserved when computing the "Max" amount for a native-ETH sell — gas for
+ * the swap transaction itself is paid in ETH, so selling the literal full
+ * balance would leave nothing to pay for the transaction and it would
+ * revert. Observed real Robinhood Chain gas cost for a swap tx is roughly
+ * 0.00002 ETH (485258 gas * ~0.0000416 gwei); this reserve is ~50x that for
+ * margin against gas price spikes. Only affects native sells — ERC-20 sells
+ * already pay gas separately from the token being sold, no reserve needed.
+ */
+export const NATIVE_GAS_RESERVE_WEI = 1_000_000_000_000_000n; // 0.001 ETH
 
 export const swapTokens: SwapTokenConfig[] = [
+  ...(NATIVE_SELL_ENABLED
+    ? [
+        {
+          address: NATIVE_SENTINEL,
+          symbol: "ETH",
+          name: "Ether",
+          decimals: 18,
+          verified: true,
+        },
+      ]
+    : []),
   {
     address: "0x0bd7d308f8e1639fab988df18a8011f41eacad73",
     symbol: "WETH",

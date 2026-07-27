@@ -297,7 +297,11 @@ export function SwapPage() {
             value={sellAmountInput}
             onChange={setSellAmountInput}
             balanceFormatted={balance.formatted}
-            onMax={balance.formatted ? () => setSellAmountInput(balance.formatted!) : undefined}
+            onMax={
+              balance.maxSellFormatted
+                ? () => setSellAmountInput(balance.maxSellFormatted!)
+                : undefined
+            }
           />
           <div className="flex justify-center">
             <Button

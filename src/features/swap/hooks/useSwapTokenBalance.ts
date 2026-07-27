@@ -1,34 +1,63 @@
 import { formatUnits } from "viem";
-import { useAccount, useReadContract } from "wagmi";
+import { useAccount, useBalance, useReadContract } from "wagmi";
 import { robinhoodChain } from "@/config/robinhoodChain";
 import { erc20Abi } from "@/lib/swap/erc20";
-import type { SwapTokenConfig } from "@/config/swapTokens";
+import { NATIVE_GAS_RESERVE_WEI, NATIVE_SENTINEL, type SwapTokenConfig } from "@/config/swapTokens";
+
+export function isNativeSwapToken(token: SwapTokenConfig | null): boolean {
+  return token?.address.toLowerCase() === NATIVE_SENTINEL.toLowerCase();
+}
 
 /**
- * Real ERC-20 balanceOf() read for the connected wallet's sell-token
- * balance. Native-asset balance reading isn't wired (native selling is
- * disabled — see swapTokens.ts's NATIVE_SELL_ENABLED), so this is always
- * the ERC-20 path. Never a placeholder value.
+ * The "Max" amount for a sell. Native-ETH sells must reserve gas (see
+ * NATIVE_GAS_RESERVE_WEI) — the ERC-20 path pays gas separately from the
+ * token being sold, so its max is the true full balance.
+ */
+export function computeMaxSellFormatted(
+  value: bigint | undefined,
+  decimals: number,
+  native: boolean,
+): string | null {
+  if (value === undefined) return null;
+  if (!native) return formatUnits(value, decimals);
+  const spendable = value > NATIVE_GAS_RESERVE_WEI ? value - NATIVE_GAS_RESERVE_WEI : 0n;
+  return formatUnits(spendable, decimals);
+}
+
+/**
+ * Real balance read for the connected wallet's sell-token: ERC-20
+ * balanceOf() for token contracts, wagmi's native useBalance() for the ETH
+ * sentinel (balanceOf() would revert against a non-contract address).
+ * Never a placeholder value.
  */
 export function useSwapTokenBalance(token: SwapTokenConfig | null) {
   const { address, isConnected } = useAccount();
+  const native = isNativeSwapToken(token);
 
-  const query = useReadContract({
-    address: token ? (token.address as `0x${string}`) : undefined,
+  const erc20Query = useReadContract({
+    address: token && !native ? (token.address as `0x${string}`) : undefined,
     abi: erc20Abi,
     functionName: "balanceOf",
     args: address ? [address] : undefined,
     chainId: robinhoodChain?.id,
-    query: { enabled: Boolean(isConnected && address && token && robinhoodChain) },
+    query: { enabled: Boolean(isConnected && address && token && !native && robinhoodChain) },
   });
 
-  const formatted =
-    query.data !== undefined && token ? formatUnits(query.data, token.decimals) : null;
+  const nativeQuery = useBalance({
+    address,
+    chainId: robinhoodChain?.id,
+    query: { enabled: Boolean(isConnected && address && token && native && robinhoodChain) },
+  });
+
+  const value = native ? nativeQuery.data?.value : erc20Query.data;
+  const formatted = value !== undefined && token ? formatUnits(value, token.decimals) : null;
+  const maxSellFormatted = token ? computeMaxSellFormatted(value, token.decimals, native) : null;
 
   return {
-    balance: query.data ?? null,
+    balance: value ?? null,
     formatted,
-    isLoading: query.isLoading,
-    refetch: query.refetch,
+    maxSellFormatted,
+    isLoading: native ? nativeQuery.isLoading : erc20Query.isLoading,
+    refetch: native ? nativeQuery.refetch : erc20Query.refetch,
   };
 }

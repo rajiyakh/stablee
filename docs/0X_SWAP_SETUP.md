@@ -89,11 +89,14 @@ are marked `verified: false` and show the Unverified badge + risk warnings in th
 manually-curated entries to `swapTokens.ts` the same way AAPL/AMZN were added: confirm the
 address via Blockscout's token API, never from a single unverified source.
 
-Native ETH selling ships **disabled** (`NATIVE_SELL_ENABLED = false` in `swapTokens.ts`) — the
-`0xEeee...EEeE` native-asset sentinel is the standard convention across DeFi tooling but was not
-observed in an actual 0x response this session. Before enabling it, make one real
-`GET /swap/allowance-holder/price?sellToken=0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE&...`
-call and confirm 0x accepts it for chain 4663.
+Native ETH selling is **enabled** (`NATIVE_SELL_ENABLED = true` in `swapTokens.ts`). Confirmed via
+a real `GET /swap/allowance-holder/price` call against chain 4663 with
+`sellToken=0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE`: `liquidityAvailable: true`, the route
+filled through WETH, and `sellToken` echoed back as the sentinel address unchanged. Balance
+reading uses wagmi's native `useBalance()` instead of ERC-20 `balanceOf()` (which would revert
+against a non-contract address) — see `useSwapTokenBalance.ts`. The "Max" button reserves
+`NATIVE_GAS_RESERVE_WEI` (0.001 ETH) when selling native ETH so the swap transaction itself always
+has gas to execute; ERC-20 sells pay gas separately and use the true full balance.
 
 ## Testing without live credentials
 
