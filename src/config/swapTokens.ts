@@ -65,28 +65,16 @@ export const swapTokens: SwapTokenConfig[] = [
     isStablecoin: true,
     verified: true,
   },
-  {
-    // Confirmed via Blockscout: name "Apple • Robinhood Token", symbol "AAPL", decimals 18.
-    // Has a cross-verified Chainlink price feed — see src/config/chainlinkFeeds.ts.
-    address: "0xaF3D76f1834A1d425780943C99Ea8A608f8a93f9",
-    symbol: "AAPL",
-    name: "Apple (Robinhood Tokenized Equity)",
-    decimals: 18,
-    logoUrl:
-      "https://cdn.robinhood.com/ncw_assets/logos/0xaf3d76f1834a1d425780943c99ea8a608f8a93f9.png",
-    verified: true,
-  },
-  {
-    // Confirmed via Blockscout: name "Amazon • Robinhood Token", symbol "AMZN", decimals 18.
-    // Has a cross-verified Chainlink price feed — see src/config/chainlinkFeeds.ts.
-    address: "0x12f190a9F9d7D37a250758b26824B97CE941bF54",
-    symbol: "AMZN",
-    name: "Amazon (Robinhood Tokenized Equity)",
-    decimals: 18,
-    logoUrl:
-      "https://cdn.robinhood.com/ncw_assets/logos/0x12f190a9f9d7d37a250758b26824b97ce941bf54.png",
-    verified: true,
-  },
+  // Tokenized-equity tokens (AAPL, AMZN, AMD, ASML, BABA, CLSK, COIN, CRCL)
+  // are intentionally NOT listed here. Confirmed live against 0x's real API
+  // for all 8: both SELL_TOKEN_NOT_AUTHORIZED_FOR_TRADE and
+  // BUY_TOKEN_NOT_AUTHORIZED_FOR_TRADE — a permanent regulatory restriction
+  // on 0x's side, not a transient liquidity issue, and symmetric (neither
+  // direction works). Listing a token a user can select but can never
+  // actually get a quote for is worse than not listing it. Their Chainlink
+  // price feeds remain wired in chainlinkFeeds.ts (real, independently
+  // useful data) in case a future swap venue supports them, or the
+  // restriction changes. See docs/0X_SWAP_SETUP.md.
 ];
 
 export const USDG_ADDRESS = swapTokens.find((t) => t.symbol === "USDG")!.address;

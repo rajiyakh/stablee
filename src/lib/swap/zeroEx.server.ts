@@ -1,4 +1,4 @@
-import { fetchJson, type FetchResult } from "@/lib/market/http.server";
+import { fetchJson, ProviderError, type FetchResult } from "@/lib/market/http.server";
 import { selectFeeToken } from "./fees";
 import { serverFeeBps, serverFeeRecipient } from "./feeConfig.server";
 
@@ -51,6 +51,23 @@ function buildQuery(params: ZeroExRequestParams): URLSearchParams {
   return query;
 }
 
+/**
+ * 0x returns a structured { name, message } body for request-level rejections
+ * (confirmed live: SELL_TOKEN_NOT_AUTHORIZED_FOR_TRADE for every one of this
+ * app's tokenized-equity tokens — a permanent regulatory restriction on 0x's
+ * side, not a transient failure). Recognized so the UI can show 0x's own
+ * accurate reason instead of a generic "temporarily unavailable" message that
+ * wrongly implies retrying might help.
+ */
+function is0xNamedError(body: unknown): body is { name: string; message: string } {
+  return (
+    typeof body === "object" &&
+    body !== null &&
+    typeof (body as Record<string, unknown>).name === "string" &&
+    typeof (body as Record<string, unknown>).message === "string"
+  );
+}
+
 async function callZeroEx(
   path: string,
   params: ZeroExRequestParams,
@@ -60,17 +77,27 @@ async function callZeroEx(
   const query = buildQuery(params);
   const url = `${BASE_URL}${path}?${query.toString()}`;
 
-  return fetchJson<unknown>(url, {
-    provider: "zeroex",
-    cacheKey,
-    ttlSeconds,
-    timeoutMs: 10_000,
-    retries: 1,
-    headers: {
-      "0x-api-key": process.env.ZEROX_API_KEY ?? "",
-      "0x-version": "v2",
-    },
-  });
+  try {
+    return await fetchJson<unknown>(url, {
+      provider: "zeroex",
+      cacheKey,
+      ttlSeconds,
+      timeoutMs: 10_000,
+      retries: 1,
+      headers: {
+        "0x-api-key": process.env.ZEROX_API_KEY ?? "",
+        "0x-version": "v2",
+      },
+    });
+  } catch (error) {
+    if (error instanceof ProviderError && is0xNamedError(error.body)) {
+      // error.body.message is 0x's own documented, user-safe explanatory
+      // text (not an internal detail) — surfaced verbatim rather than
+      // collapsed into a generic "temporarily unavailable" message.
+      throw new ProviderError("rejected", error.body.message, 422, error.body);
+    }
+    throw error;
+  }
 }
 
 /** Indicative price — no wallet signature required, used for pre-flight $20/$0.02 checks. */

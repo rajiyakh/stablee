@@ -48,6 +48,10 @@ export class ProviderError extends Error {
     public code: string,
     message: string,
     public status = 502,
+    /** Best-effort parsed JSON body of a non-ok response, when available — lets a
+     * specific caller (e.g. zeroEx.server.ts) recognize a provider's own named
+     * error shape instead of only ever seeing a generic HTTP-status message. */
+    public body?: unknown,
   ) {
     super(message);
   }
@@ -121,10 +125,15 @@ export async function fetchJson<T>(url: string, options: FetchOptions): Promise<
         recordSuccess(options.provider);
         throw new ProviderError("not_found", "Resource not found", 404);
       } else if (!response.ok) {
+        const body = await response
+          .clone()
+          .json()
+          .catch(() => undefined);
         lastError = new ProviderError(
           "provider_error",
           `Provider responded with ${response.status}`,
           502,
+          body,
         );
         recordFailure(options.provider, lastError.message);
       } else {

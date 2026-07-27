@@ -51,7 +51,9 @@ export function jsonError(provider: ProviderId, error: unknown): Response {
           ? "The provider did not respond in time."
           : error.code === "not_found"
             ? "No provider record found for this request."
-            : "Data temporarily unavailable from the provider.";
+            : error.code === "rejected"
+              ? error.message
+              : "Data temporarily unavailable from the provider.";
   } else if (error instanceof z.ZodError) {
     code = "invalid_provider_response";
     message = "The provider returned an unexpected response shape.";

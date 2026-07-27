@@ -64,19 +64,43 @@ every required wallet field, including `VITE_WALLETCONNECT_PROJECT_ID`, is set.
 
 ## Curated token list
 
-`src/config/swapTokens.ts` ships with four canonical Robinhood Chain addresses, each confirmed
-directly against `robinhoodchain.blockscout.com`'s own token API (not a symbol match, not a
-secondary source):
+`src/config/swapTokens.ts` ships with three canonical Robinhood Chain addresses (plus native ETH,
+see below), each confirmed directly against `robinhoodchain.blockscout.com`'s own token API (not
+a symbol match, not a secondary source):
 
 | Symbol | Address | Decimals |
 |---|---|---|
+| ETH (native) | `0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE` | 18 |
 | WETH | `0x0bd7d308f8e1639fab988df18a8011f41eacad73` | 18 |
 | USDG (Global Dollar) | `0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168` | 6 |
-| AAPL (Robinhood Tokenized Equity) | `0xaF3D76f1834A1d425780943C99Ea8A608f8a93f9` | 18 |
-| AMZN (Robinhood Tokenized Equity) | `0x12f190a9F9d7D37a250758b26824B97CE941bF54` | 18 |
 
-AAPL and AMZN also have a cross-verified Chainlink price feed wired in — see
-`src/config/chainlinkFeeds.ts`.
+### Tokenized-equity tokens are NOT in the swap picker (0x restriction, confirmed live)
+
+`swapTokens.ts` deliberately does **not** list AAPL, AMZN, AMD, ASML, BABA, CLSK, COIN, or CRCL —
+all 8 real Robinhood tokenized-equity tokens with a Chainlink feed (see below). Confirmed against
+0x's real API for every one of them, in both directions:
+
+```
+GET /swap/allowance-holder/price?...&sellToken=<tokenized-equity address>
+→ {"name":"SELL_TOKEN_NOT_AUTHORIZED_FOR_TRADE","message":"The sell token is not authorized for trade due to legal restrictions"}
+
+GET /swap/allowance-holder/price?...&buyToken=<tokenized-equity address>
+→ {"name":"BUY_TOKEN_NOT_AUTHORIZED_FOR_TRADE","message":"The buy token is not authorized for trade due to legal restrictions"}
+```
+
+This is a permanent regulatory restriction on 0x's side (presumably: these are real tokenized
+securities, not community tokens), not a transient liquidity gap — retrying or waiting doesn't
+help. Listing a token a user can select but can never get a working quote for is worse than not
+listing it, so they were removed from the swappable list. `zeroEx.server.ts` now also recognizes
+0x's structured `{name, message}` error body and surfaces 0x's own message (via a new `"rejected"`
+`ProviderError` code) instead of a generic "temporarily unavailable" — so if the owner or a future
+change re-adds one of these (or any other 0x-restricted token) to `swapTokens.ts`, the resulting
+error will say why, not just that it failed.
+
+All 8 tokens still have a real, cross-verified Chainlink price feed wired in at
+`src/config/chainlinkFeeds.ts` — that data is independently useful (e.g. as a `resolveUsdValue()`
+pricing tier for a token that *can* trade, or for a future swap venue without this restriction)
+regardless of 0x's trading restriction, so those entries were kept.
 
 **Beyond the curated list**: `/api/swap/price` and `/api/swap/quote` also accept any token
 `resolveSwapToken()` (`src/lib/swap/discoverTokens.server.ts`) can resolve — the curated list
@@ -86,8 +110,11 @@ ever treated as swappable. This closes the gap the spec's broader "Token Selecti
 asked for (GMGN dataset as a source) while keeping the same safety property as the curated list:
 decimals are never trusted from an off-chain source for the $20/$0.02 checks. Discovered tokens
 are marked `verified: false` and show the Unverified badge + risk warnings in the UI. Add more
-manually-curated entries to `swapTokens.ts` the same way AAPL/AMZN were added: confirm the
-address via Blockscout's token API, never from a single unverified source.
+manually-curated entries to `swapTokens.ts` the same way WETH/USDG were added: confirm the
+address via Blockscout's token API (never from a single unverified source), **and** make one real
+`GET /swap/allowance-holder/price` call for it before adding it to the curated list — Blockscout
+confirms the token is real, it does not confirm 0x will actually let anyone trade it (see the
+tokenized-equity section above, discovered the hard way).
 
 Native ETH selling is **enabled** (`NATIVE_SELL_ENABLED = true` in `swapTokens.ts`). Confirmed via
 a real `GET /swap/allowance-holder/price` call against chain 4663 with

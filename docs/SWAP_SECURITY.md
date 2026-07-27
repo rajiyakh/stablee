@@ -141,9 +141,18 @@ limiter (same mechanism as every other API route in the app) before doing any wo
   `ZEROX_API_KEY` is required to test this — an unauthenticated probe was attempted and
   confirmed the API rejects the request before even parsing the token addresses) — native
   selling ships disabled until that's verified (see `docs/0X_SWAP_SETUP.md`).
+  **Update:** since confirmed with a real `ZEROX_API_KEY` (`liquidityAvailable: true`,
+  routed through WETH) — native ETH selling is now enabled.
 - The curated token registry now includes 4 tokens (WETH, USDG, AAPL, AMZN) plus GMGN-discovered,
   on-chain-decimals-verified tokens when `GMGN_API_KEY` is configured (`discoverTokens.server.ts`)
   — the "chain+address identity, never symbol matching" discipline is applied throughout.
+  **Update:** now 3 curated entries (native ETH sentinel, WETH, USDG). AAPL and AMZN were
+  *removed* from the curated list — confirmed live that 0x rejects all 8 real Robinhood
+  tokenized-equity tokens (AAPL, AMZN, AMD, ASML, BABA, CLSK, COIN, CRCL) with
+  `SELL_TOKEN_NOT_AUTHORIZED_FOR_TRADE`/`BUY_TOKEN_NOT_AUTHORIZED_FOR_TRADE` — a permanent
+  regulatory restriction, not a liquidity gap. Their Chainlink feeds remain wired in
+  `chainlinkFeeds.ts` (independently useful, unaffected by the 0x restriction). See
+  `docs/0X_SWAP_SETUP.md`.
 - This review (both passes) is based on code inspection and unit tests against fixtures — commission
   a real independent/external security audit, and complete real testnet/small-mainnet swaps,
   before handling meaningful user funds. See the Production Launch Checklist in

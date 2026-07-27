@@ -18,7 +18,15 @@ const AGGREGATOR_V3_ABI = [
   },
 ] as const;
 
-const MAX_FEED_AGE_SECONDS = 3600;
+/**
+ * Multiplier applied to a feed's own heartbeatSeconds to decide staleness.
+ * A fixed short window (e.g. 1 hour) is wrong here — observed live, a
+ * healthy 86400s-heartbeat feed can legitimately sit 90+ minutes without
+ * updating during quiet trading (see chainlinkFeeds.ts). 2x heartbeat is
+ * generous margin for normal reporting delay without masking a genuinely
+ * dead feed.
+ */
+const STALENESS_HEARTBEAT_MULTIPLIER = 2;
 
 let client: ReturnType<typeof createPublicClient> | null = null;
 
@@ -33,11 +41,16 @@ function getClient() {
   return client;
 }
 
+/** Pure so it's directly unit-testable without mocking a viem client. */
+export function isFeedStale(ageSeconds: number, heartbeatSeconds: number): boolean {
+  return ageSeconds > heartbeatSeconds * STALENESS_HEARTBEAT_MULTIPLIER;
+}
+
 /**
- * Reads a real Chainlink AggregatorV3Interface feed. Wired and functional,
- * but chainlinkFeeds.ts ships empty (no Robinhood Chain feed addresses were
- * confirmed this session) — this simply never gets a config to act on until
- * the owner adds one, exactly like tradingDestinations.ts's disabled entries.
+ * Reads a real Chainlink AggregatorV3Interface feed. Wired, functional, and
+ * has real entries for the 8 confirmed Robinhood tokenized-equity feeds —
+ * see chainlinkFeeds.ts. Every other token still falls through to the next
+ * USD-pricing tier, exactly like tradingDestinations.ts's disabled entries.
  */
 export async function readChainlinkPrice(feed: ChainlinkFeedConfig): Promise<number | null> {
   const publicClient = getClient();
@@ -52,7 +65,7 @@ export async function readChainlinkPrice(feed: ChainlinkFeedConfig): Promise<num
     const [, answer, , updatedAt] = result;
 
     const ageSeconds = Date.now() / 1000 - Number(updatedAt);
-    if (ageSeconds > MAX_FEED_AGE_SECONDS) return null;
+    if (isFeedStale(ageSeconds, feed.heartbeatSeconds)) return null;
     if (answer <= 0n) return null;
 
     return Number(answer) / 10 ** feed.feedDecimals;

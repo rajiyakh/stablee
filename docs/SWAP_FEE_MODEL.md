@@ -56,8 +56,8 @@ The function's return value is always either `sellToken` or `buyToken` — 0x re
 
 1. `resolveUsdValue()` (`src/lib/swap/usdValue.server.ts`) prices the sell amount — see its
    4-tier priority in `docs/0X_SWAP_SETUP.md`'s linked source, or just read the file: USDG face
-   value → 0x indicative price against USDG → Chainlink (real code, currently unconfigured) →
-   DEX Screener (reusing the site's existing Robinhood Mainnet provider).
+   value → 0x indicative price against USDG → Chainlink (configured for 8 tokenized-equity feeds,
+   see `chainlinkFeeds.ts`) → DEX Screener (reusing the site's existing Robinhood Mainnet provider).
 2. If the USD value can't be determined by any tier, the swap is blocked with:
    *"Unable to verify the USD value of this trade. RobinPulse cannot confirm the minimum
    platform fee, so this swap cannot be submitted."*
