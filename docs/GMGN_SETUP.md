@@ -35,11 +35,22 @@ equivalent to publishing it. This project's build was checked (`grep -r GMGN_API
 All GMGN traffic is initiated from `src/providers/gmgn/client.server.ts`, a `.server.ts`
 file — this repo's ESLint config (`no-restricted-imports` against the `server-only`
 package) fails the build if a `.server.ts` module is ever imported from client code. That
-file spawns the official `gmgn-cli` npm package via `child_process.execFile`, with
-`GMGN_API_KEY` injected only into the child process's environment. The browser never sees
-the key, never talks to GMGN directly, and never receives a raw GMGN response — only the
-normalized, validated `RobinhoodTrendingToken[]` / `RobinhoodHotSearchToken[]` shape defined
-in `src/types/gmgn.ts`.
+file calls GMGN's OpenAPI (`openapi.gmgn.ai`) directly over `fetch`, with `GMGN_API_KEY`
+sent only as a server-side request header. The browser never sees the key, never talks to
+GMGN directly, and never receives a raw GMGN response — only the normalized, validated
+`RobinhoodTrendingToken[]` / `RobinhoodHotSearchToken[]` shape defined in `src/types/gmgn.ts`.
+
+**Not a child_process wrapper around the `gmgn-cli` npm package anymore.** That was the
+original design — `execFile`-spawning the official CLI — and it worked in local dev, but
+broke GMGN market data in production. `npx gmgn-cli` needs `npx` on PATH plus live
+npm-registry access at request time; neither is reliably present in a Vercel serverless
+function's execution sandbox (a minimal Node.js runtime, not a full dev machine). Switching
+to invoking the installed package's file directly (`node <resolved path>`) didn't fix it
+either — Nitro's bundler only traces and copies files that are statically imported, and a
+path only ever computed at runtime (`require.resolve` + `execFile`) never makes it into the
+deployed function bundle. The auth scheme and endpoint paths now used were extracted
+directly from `gmgn-cli`'s own source and confirmed live against the real API — see the
+comment at the top of `client.server.ts` for the exact request/response shapes.
 
 Route handlers (`src/routes/api/market/gmgn/trending.ts`, `.../hot-searches.ts`) sit between
 the client and `client.server.ts`, and are the only way the browser reaches GMGN data:
@@ -48,7 +59,7 @@ the client and `client.server.ts`, and are the only way the browser reaches GMGN
 Browser → /api/market/gmgn/trending?interval=1h&limit=100
         → guard() rate limit
         → notConfigured() if GMGN_API_KEY unset
-        → client.server.ts (spawns gmgn-cli, GMGN_API_KEY only in child env)
+        → client.server.ts (fetch to openapi.gmgn.ai, GMGN_API_KEY only in a server-side header)
         → gmgnTrendingResponseSchema.parse() (Zod — rejects malformed shapes)
         → normalizeTrending() (interval-scoped field mapping, chain/address filter)
         → jsonOk(envelope("gmgn", ...))
