@@ -16,9 +16,16 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 // out of scope here). This still blocks loading any *external* script host
 // other than the one explicit TradingView allowlist entry, which is the more
 // load-bearing protection for this app (no third-party script injection).
+//
+// connect-src/frame-src/script-src also allowlist Privy + WalletConnect
+// origins (per docs.privy.io/security/implementation-guide/content-security-policy)
+// so wallet connect doesn't silently break the moment VITE_WALLET_ENABLED
+// flips true — added ahead of go-live since a CSP violation fails closed
+// with no visible error to the developer testing it. Inert today: no Privy
+// script loads at all while wallet connect is off (see docs/WALLET_SETUP.md).
 const securityHeaders = {
   "Content-Security-Policy":
-    "default-src 'self'; script-src 'self' 'unsafe-inline' https://s3.tradingview.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; frame-src https://dexscreener.com https://www.tradingview-widget.com https://s.tradingview.com; frame-ancestors 'none'; object-src 'none'; base-uri 'self'",
+    "default-src 'self'; script-src 'self' 'unsafe-inline' https://s3.tradingview.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://auth.privy.io https://*.rpc.privy.systems https://explorer-api.walletconnect.com wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org; frame-src https://dexscreener.com https://www.tradingview-widget.com https://s.tradingview.com https://auth.privy.io https://verify.walletconnect.com https://verify.walletconnect.org https://challenges.cloudflare.com; frame-ancestors 'none'; object-src 'none'; base-uri 'self'",
   "X-Content-Type-Options": "nosniff",
   "Referrer-Policy": "strict-origin-when-cross-origin",
   "Permissions-Policy": "camera=(), microphone=(), geolocation=()",

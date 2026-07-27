@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { parseUnits } from "viem";
-import { useAccount, useConnect, useDisconnect, useSwitchChain } from "wagmi";
+import { useAccount, useSwitchChain } from "wagmi";
+import { usePrivy } from "@privy-io/react-auth";
 import { ArrowDownUp, ExternalLink, Wallet } from "lucide-react";
 import { toast } from "sonner";
 
@@ -36,8 +37,7 @@ type FlowState = "idle" | "needs-approval" | "approving" | "ready" | "success";
 
 export function SwapPage() {
   const { address, isConnected, chainId } = useAccount();
-  const { connect, connectors, isPending: isConnecting } = useConnect();
-  const { disconnect } = useDisconnect();
+  const { ready: privyReady, connectWallet, logout } = usePrivy();
   const { switchChain, isPending: isSwitching } = useSwitchChain();
 
   const [sellToken, setSellToken] = useState<SwapTokenConfig | null>(
@@ -258,15 +258,15 @@ export function SwapPage() {
         <div className="flex items-center justify-between">
           <h1 className="font-display text-xl font-semibold text-foreground">Swap</h1>
           {isConnected ? (
-            <Button variant="outline" size="sm" onClick={() => disconnect()} className="gap-1.5">
+            <Button variant="outline" size="sm" onClick={() => logout()} className="gap-1.5">
               <Wallet className="size-3.5" />
               {shortenAddress(address, 4)}
             </Button>
           ) : (
             <Button
               size="sm"
-              disabled={isConnecting}
-              onClick={() => connect({ connector: connectors[0] })}
+              disabled={!privyReady}
+              onClick={() => connectWallet()}
               className="gap-1.5"
             >
               <Wallet className="size-3.5" />

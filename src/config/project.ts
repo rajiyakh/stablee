@@ -48,7 +48,11 @@ export const projectConfig = {
     explorerUrl: read("VITE_ROBINHOOD_EXPLORER_URL"),
     nativeCurrencyName: read("VITE_ROBINHOOD_NATIVE_CURRENCY_NAME"),
     nativeCurrencySymbol: read("VITE_ROBINHOOD_NATIVE_CURRENCY_SYMBOL"),
+    // Privy is the connection provider; it supplies its own WalletConnect
+    // relay by default, so this project ID is optional (advanced/self-hosted
+    // WalletConnect Cloud config only) and never required by isWalletConfigured().
     walletConnectProjectId: read("VITE_WALLETCONNECT_PROJECT_ID"),
+    privyAppId: read("VITE_PRIVY_APP_ID"),
   },
 
   dataSources: {
@@ -74,7 +78,7 @@ export function isWalletConfigured(): boolean {
     w.explorerUrl &&
     w.nativeCurrencyName &&
     w.nativeCurrencySymbol &&
-    w.walletConnectProjectId,
+    w.privyAppId,
   );
 }
 

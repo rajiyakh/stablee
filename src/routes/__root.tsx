@@ -7,15 +7,20 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
-import { WagmiProvider } from "wagmi";
+import { lazy, Suspense, useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AppShell } from "@/components/layout/AppShell";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
-import { getWagmiConfig } from "@/config/wagmi";
+import { isWalletConfigured } from "@/config/project";
+
+/**
+ * Lazy so the Privy/wagmi/WalletConnect bundle (~200kb gzipped) is only
+ * fetched when wallet connect is actually enabled — see WalletProviders.tsx.
+ */
+const WalletProviders = lazy(() => import("@/components/wallet/WalletProviders"));
 
 function NotFoundComponent() {
   return (
@@ -131,7 +136,7 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const wagmiConfig = getWagmiConfig();
+  const walletReady = isWalletConfigured();
 
   const app = (
     <TooltipProvider delayDuration={150}>
@@ -143,9 +148,18 @@ function RootComponent() {
     </TooltipProvider>
   );
 
+  // The Suspense fallback is `app` itself (unwrapped) — WalletProviders adds
+  // context only, never extra DOM, so there's no flash/hydration mismatch
+  // between the fallback and the resolved tree.
   return (
     <QueryClientProvider client={queryClient}>
-      {wagmiConfig ? <WagmiProvider config={wagmiConfig}>{app}</WagmiProvider> : app}
+      {walletReady ? (
+        <Suspense fallback={app}>
+          <WalletProviders>{app}</WalletProviders>
+        </Suspense>
+      ) : (
+        app
+      )}
     </QueryClientProvider>
   );
 }
