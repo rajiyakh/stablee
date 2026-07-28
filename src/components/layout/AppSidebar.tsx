@@ -3,9 +3,9 @@ import { Coins, Star, TrendingUp, Users } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuBadge,
@@ -35,15 +35,11 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon" className="top-16 h-[calc(100svh-4rem)]">
-      <SidebarHeader className="flex-row items-center gap-2 group-data-[collapsible=icon]:flex-col">
+      <SidebarHeader>
         <SidebarToggle />
-        <div className="group-data-[collapsible=icon]:hidden">
-          <GlobalSearch />
-        </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>More</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {secondaryItems.map((item) => {
@@ -66,6 +62,9 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter className="group-data-[collapsible=icon]:hidden">
+        <GlobalSearch />
+      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );
