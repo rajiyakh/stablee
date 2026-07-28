@@ -17,6 +17,7 @@ import { Route as DisclaimerRouteImport } from './routes/disclaimer'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as MarketsRouteImport } from './routes/markets'
 import { Route as MethodologyRouteImport } from './routes/methodology'
+import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as SwapRouteImport } from './routes/swap'
 import { Route as TokenRouteImport } from './routes/token'
 import { Route as TrendingRouteImport } from './routes/trending'
@@ -33,6 +34,7 @@ import { Route as TokenIndexRouteImport } from './routes/token.index'
 import { Route as ApiAnalyticsSwapEventRouteImport } from './routes/api/analytics/swap-event'
 import { Route as ApiFeedSnapshotRouteImport } from './routes/api/feed/snapshot'
 import { Route as ApiMarketStatusRouteImport } from './routes/api/market/status'
+import { Route as ApiPortfolioHoldingsRouteImport } from './routes/api/portfolio/holdings'
 import { Route as ApiSwapPriceRouteImport } from './routes/api/swap/price'
 import { Route as ApiSwapQuoteRouteImport } from './routes/api/swap/quote'
 import { Route as ApiSwapResolveTokenRouteImport } from './routes/api/swap/resolve-token'
@@ -94,6 +96,11 @@ const MarketsRoute = MarketsRouteImport.update({
 const MethodologyRoute = MethodologyRouteImport.update({
   id: '/methodology',
   path: '/methodology',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortfolioRoute = PortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SwapRoute = SwapRouteImport.update({
@@ -174,6 +181,11 @@ const ApiFeedSnapshotRoute = ApiFeedSnapshotRouteImport.update({
 const ApiMarketStatusRoute = ApiMarketStatusRouteImport.update({
   id: '/api/market/status',
   path: '/api/market/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPortfolioHoldingsRoute = ApiPortfolioHoldingsRouteImport.update({
+  id: '/api/portfolio/holdings',
+  path: '/api/portfolio/holdings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiSwapPriceRoute = ApiSwapPriceRouteImport.update({
@@ -311,6 +323,7 @@ export interface FileRoutesByFullPath {
   '/leaderboard': typeof LeaderboardRoute
   '/markets': typeof MarketsRouteWithChildren
   '/methodology': typeof MethodologyRoute
+  '/portfolio': typeof PortfolioRoute
   '/swap': typeof SwapRouteWithChildren
   '/token': typeof TokenRouteWithChildren
   '/trending': typeof TrendingRoute
@@ -327,6 +340,7 @@ export interface FileRoutesByFullPath {
   '/api/analytics/swap-event': typeof ApiAnalyticsSwapEventRoute
   '/api/feed/snapshot': typeof ApiFeedSnapshotRoute
   '/api/market/status': typeof ApiMarketStatusRoute
+  '/api/portfolio/holdings': typeof ApiPortfolioHoldingsRoute
   '/api/swap/price': typeof ApiSwapPriceRoute
   '/api/swap/quote': typeof ApiSwapQuoteRoute
   '/api/swap/resolve-token': typeof ApiSwapResolveTokenRoute
@@ -358,6 +372,7 @@ export interface FileRoutesByTo {
   '/disclaimer': typeof DisclaimerRoute
   '/leaderboard': typeof LeaderboardRoute
   '/methodology': typeof MethodologyRoute
+  '/portfolio': typeof PortfolioRoute
   '/trending': typeof TrendingRoute
   '/watchlist': typeof WatchlistRoute
   '/xstocks': typeof XstocksRoute
@@ -372,6 +387,7 @@ export interface FileRoutesByTo {
   '/api/analytics/swap-event': typeof ApiAnalyticsSwapEventRoute
   '/api/feed/snapshot': typeof ApiFeedSnapshotRoute
   '/api/market/status': typeof ApiMarketStatusRoute
+  '/api/portfolio/holdings': typeof ApiPortfolioHoldingsRoute
   '/api/swap/price': typeof ApiSwapPriceRoute
   '/api/swap/quote': typeof ApiSwapQuoteRoute
   '/api/swap/resolve-token': typeof ApiSwapResolveTokenRoute
@@ -405,6 +421,7 @@ export interface FileRoutesById {
   '/leaderboard': typeof LeaderboardRoute
   '/markets': typeof MarketsRouteWithChildren
   '/methodology': typeof MethodologyRoute
+  '/portfolio': typeof PortfolioRoute
   '/swap': typeof SwapRouteWithChildren
   '/token': typeof TokenRouteWithChildren
   '/trending': typeof TrendingRoute
@@ -421,6 +438,7 @@ export interface FileRoutesById {
   '/api/analytics/swap-event': typeof ApiAnalyticsSwapEventRoute
   '/api/feed/snapshot': typeof ApiFeedSnapshotRoute
   '/api/market/status': typeof ApiMarketStatusRoute
+  '/api/portfolio/holdings': typeof ApiPortfolioHoldingsRoute
   '/api/swap/price': typeof ApiSwapPriceRoute
   '/api/swap/quote': typeof ApiSwapQuoteRoute
   '/api/swap/resolve-token': typeof ApiSwapResolveTokenRoute
@@ -455,6 +473,7 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/markets'
     | '/methodology'
+    | '/portfolio'
     | '/swap'
     | '/token'
     | '/trending'
@@ -471,6 +490,7 @@ export interface FileRouteTypes {
     | '/api/analytics/swap-event'
     | '/api/feed/snapshot'
     | '/api/market/status'
+    | '/api/portfolio/holdings'
     | '/api/swap/price'
     | '/api/swap/quote'
     | '/api/swap/resolve-token'
@@ -502,6 +522,7 @@ export interface FileRouteTypes {
     | '/disclaimer'
     | '/leaderboard'
     | '/methodology'
+    | '/portfolio'
     | '/trending'
     | '/watchlist'
     | '/xstocks'
@@ -516,6 +537,7 @@ export interface FileRouteTypes {
     | '/api/analytics/swap-event'
     | '/api/feed/snapshot'
     | '/api/market/status'
+    | '/api/portfolio/holdings'
     | '/api/swap/price'
     | '/api/swap/quote'
     | '/api/swap/resolve-token'
@@ -548,6 +570,7 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/markets'
     | '/methodology'
+    | '/portfolio'
     | '/swap'
     | '/token'
     | '/trending'
@@ -564,6 +587,7 @@ export interface FileRouteTypes {
     | '/api/analytics/swap-event'
     | '/api/feed/snapshot'
     | '/api/market/status'
+    | '/api/portfolio/holdings'
     | '/api/swap/price'
     | '/api/swap/quote'
     | '/api/swap/resolve-token'
@@ -597,6 +621,7 @@ export interface RootRouteChildren {
   LeaderboardRoute: typeof LeaderboardRoute
   MarketsRoute: typeof MarketsRouteWithChildren
   MethodologyRoute: typeof MethodologyRoute
+  PortfolioRoute: typeof PortfolioRoute
   SwapRoute: typeof SwapRouteWithChildren
   TokenRoute: typeof TokenRouteWithChildren
   TrendingRoute: typeof TrendingRoute
@@ -606,6 +631,7 @@ export interface RootRouteChildren {
   ApiAnalyticsSwapEventRoute: typeof ApiAnalyticsSwapEventRoute
   ApiFeedSnapshotRoute: typeof ApiFeedSnapshotRoute
   ApiMarketStatusRoute: typeof ApiMarketStatusRoute
+  ApiPortfolioHoldingsRoute: typeof ApiPortfolioHoldingsRoute
   ApiSwapPriceRoute: typeof ApiSwapPriceRoute
   ApiSwapQuoteRoute: typeof ApiSwapQuoteRoute
   ApiSwapResolveTokenRoute: typeof ApiSwapResolveTokenRoute
@@ -684,6 +710,13 @@ declare module '@tanstack/react-router' {
       path: '/methodology'
       fullPath: '/methodology'
       preLoaderRoute: typeof MethodologyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portfolio': {
+      id: '/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof PortfolioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/swap': {
@@ -796,6 +829,13 @@ declare module '@tanstack/react-router' {
       path: '/api/market/status'
       fullPath: '/api/market/status'
       preLoaderRoute: typeof ApiMarketStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/portfolio/holdings': {
+      id: '/api/portfolio/holdings'
+      path: '/api/portfolio/holdings'
+      fullPath: '/api/portfolio/holdings'
+      preLoaderRoute: typeof ApiPortfolioHoldingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/swap/price': {
@@ -1016,6 +1056,7 @@ const rootRouteChildren: RootRouteChildren = {
   LeaderboardRoute: LeaderboardRoute,
   MarketsRoute: MarketsRouteWithChildren,
   MethodologyRoute: MethodologyRoute,
+  PortfolioRoute: PortfolioRoute,
   SwapRoute: SwapRouteWithChildren,
   TokenRoute: TokenRouteWithChildren,
   TrendingRoute: TrendingRoute,
@@ -1025,6 +1066,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAnalyticsSwapEventRoute: ApiAnalyticsSwapEventRoute,
   ApiFeedSnapshotRoute: ApiFeedSnapshotRoute,
   ApiMarketStatusRoute: ApiMarketStatusRoute,
+  ApiPortfolioHoldingsRoute: ApiPortfolioHoldingsRoute,
   ApiSwapPriceRoute: ApiSwapPriceRoute,
   ApiSwapQuoteRoute: ApiSwapQuoteRoute,
   ApiSwapResolveTokenRoute: ApiSwapResolveTokenRoute,

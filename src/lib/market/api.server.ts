@@ -9,6 +9,7 @@ export const ATTRIBUTION: Record<ProviderId, string> = {
   gmgn: "Robinhood Mainnet market data by GMGN",
   zeroex: "Swap quotes by 0x",
   verified: "Owner-verified registry",
+  blockscout: "On-chain holdings by Blockscout",
 };
 
 export function envelope<T>(

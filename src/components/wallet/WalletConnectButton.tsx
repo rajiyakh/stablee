@@ -1,10 +1,19 @@
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { usePrivy } from "@privy-io/react-auth";
-import { Wallet } from "lucide-react";
+import { ChevronDown, Copy, ExternalLink, LogOut, Wallet } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { shortenAddress } from "@/lib/market/format";
 import { isWalletConfigured } from "@/config/project";
+import { robinhoodChain } from "@/config/robinhoodChain";
 
 /**
  * Shared connect/disconnect control — the single Connect Wallet button for
@@ -31,17 +40,53 @@ function WalletConnectButtonInner({ className }: { className?: string }) {
   const { address, isConnected } = useAccount();
   const { ready: privyReady, connectWallet, logout } = usePrivy();
 
-  if (isConnected) {
+  if (isConnected && address) {
     return (
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => logout()}
-        className={className ? `gap-1.5 ${className}` : "gap-1.5"}
-      >
-        <Wallet className="size-3.5" />
-        {shortenAddress(address, 4)}
-      </Button>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            className={className ? `gap-1.5 ${className}` : "gap-1.5"}
+          >
+            <Wallet className="size-3.5" />
+            {shortenAddress(address, 4)}
+            <ChevronDown className="size-3 opacity-60" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-48">
+          <DropdownMenuItem
+            onClick={async () => {
+              try {
+                await navigator.clipboard.writeText(address);
+                toast.success("Address copied");
+              } catch {
+                toast.error("Could not copy address");
+              }
+            }}
+          >
+            <Copy className="size-3.5" />
+            Copy address
+          </DropdownMenuItem>
+          {robinhoodChain?.blockExplorers?.default.url ? (
+            <DropdownMenuItem asChild>
+              <a
+                href={`${robinhoodChain.blockExplorers.default.url}/address/${address}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <ExternalLink className="size-3.5" />
+                View on Blockscout
+              </a>
+            </DropdownMenuItem>
+          ) : null}
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => logout()} className="text-negative focus:text-negative">
+            <LogOut className="size-3.5" />
+            Disconnect
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     );
   }
 

@@ -22,6 +22,7 @@ const navItems = [
     badge: isWalletConfigured() ? undefined : "Soon",
     hot: isWalletConfigured(),
   },
+  { to: "/portfolio", label: "Portfolio", badge: isWalletConfigured() ? undefined : "Soon" },
   { to: "/xstocks", label: "xStocks" },
 ] as const;
 
