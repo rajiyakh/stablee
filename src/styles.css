@@ -3,10 +3,13 @@
 @import "tw-animate-css";
 
 /*
- * RobinPulse AI design system — premium light financial intelligence.
+ * RobinPulse AI design system — "Obsidian Lime": a dark, minimal web3
+ * dashboard built on the same brand identity as the original light theme.
  *
- * Warm off-white canvas, white cards, ivory surfaces, light gray-green
- * borders, deep forest-green text, restrained lime accent. No dark theme.
+ * Near-black green-tinted canvas, slightly-lifted card surfaces, a single
+ * bright lime accent (unchanged from the light theme's brand color) carried
+ * through primary actions, focus rings, and selection. Fixed dark theme —
+ * no light/OS-preference variant, chosen deliberately, not defaulted into.
  */
 
 @theme inline {
@@ -54,57 +57,61 @@
   --font-display: "Fraunces", ui-serif, Georgia, serif;
   --font-sans: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
-  --shadow-card: 0 1px 2px oklch(0.25 0.03 150 / 6%), 0 8px 24px oklch(0.25 0.03 150 / 5%);
-  --shadow-lift: 0 2px 4px oklch(0.25 0.03 150 / 7%), 0 16px 40px oklch(0.25 0.03 150 / 8%);
+  /* Pure-black shadows at higher opacity — the light theme's soft green
+     shadow would be invisible against a near-black background. */
+  --shadow-card: 0 1px 2px oklch(0 0 0 / 30%), 0 8px 24px oklch(0 0 0 / 25%);
+  --shadow-lift: 0 2px 4px oklch(0 0 0 / 35%), 0 16px 40px oklch(0 0 0 / 30%);
 }
 
 :root {
   --radius: 0.75rem;
 
-  /* #F5F6F0 */
-  --background: oklch(0.9702 0.0117 108.66);
-  /* #14251C */
-  --foreground: oklch(0.2417 0.0245 158.03);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.2417 0.0245 158.03);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.2417 0.0245 158.03);
-  /* #1F7A4D */
-  --primary: oklch(0.4956 0.1044 158.15);
-  --primary-foreground: oklch(0.9838 0.006 108);
-  /* #EEF1E8 */
-  --secondary: oklch(0.9494 0.0143 118.3);
-  --secondary-foreground: oklch(0.2417 0.0245 158.03);
-  --surface: oklch(0.9494 0.0143 118.3);
-  --muted: oklch(0.9494 0.0143 118.3);
-  /* #627067 */
-  --muted-foreground: oklch(0.5303 0.0201 152.4);
-  --accent: oklch(0.9494 0.0143 118.3);
-  --accent-foreground: oklch(0.4956 0.1044 158.15);
+  /* #0E1512 */
+  --background: oklch(0.19 0.018 158);
+  /* #EAF2EC */
+  --foreground: oklch(0.95 0.012 158);
+  /* #16201C */
+  --card: oklch(0.235 0.019 158);
+  --card-foreground: oklch(0.95 0.012 158);
+  --popover: oklch(0.235 0.019 158);
+  --popover-foreground: oklch(0.95 0.012 158);
+  /* #C8F135 — same brand lime as the light theme, now the dominant primary */
+  --primary: oklch(0.9059 0.2018 121.5);
+  /* #10190F */
+  --primary-foreground: oklch(0.16 0.02 158);
+  /* #1C2721 */
+  --secondary: oklch(0.275 0.021 152);
+  --secondary-foreground: oklch(0.95 0.012 158);
+  --surface: oklch(0.275 0.021 152);
+  --muted: oklch(0.275 0.021 152);
+  /* #8CA095 */
+  --muted-foreground: oklch(0.68 0.03 152);
+  --accent: oklch(0.275 0.021 152);
+  --accent-foreground: oklch(0.9059 0.2018 121.5);
   /* #C8F135 */
   --brand: oklch(0.9059 0.2018 121.5);
-  --brand-foreground: oklch(0.2417 0.0245 158.03);
-  /* #D35C52 */
+  --brand-foreground: oklch(0.16 0.02 158);
+  /* #D35C52 — kept close to the light theme's value, already legible on dark */
   --destructive: oklch(0.6135 0.1584 25.6);
-  --destructive-foreground: oklch(0.9838 0.006 108);
+  --destructive-foreground: oklch(0.16 0.02 158);
   --negative: oklch(0.6135 0.1584 25.6);
-  --negative-foreground: oklch(0.9838 0.006 108);
-  /* #138A55 */
-  --positive: oklch(0.5417 0.1206 160.1);
-  --positive-foreground: oklch(0.9838 0.006 108);
+  --negative-foreground: oklch(0.16 0.02 158);
+  /* #138A55, nudged lighter for contrast against the dark card surface */
+  --positive: oklch(0.62 0.13 160.1);
+  --positive-foreground: oklch(0.16 0.02 158);
   /* #D69B32 */
   --warning: oklch(0.7359 0.1281 78.5);
-  --warning-foreground: oklch(0.2417 0.0245 158.03);
-  /* #DDE3D8 */
-  --border: oklch(0.9111 0.0138 128.3);
-  --input: oklch(0.9111 0.0138 128.3);
-  --ring: oklch(0.4956 0.1044 158.15);
+  --warning-foreground: oklch(0.16 0.02 158);
+  /* #263229 */
+  --border: oklch(0.3 0.023 152);
+  --input: oklch(0.3 0.023 152);
+  --ring: oklch(0.9059 0.2018 121.5);
 
-  --chart-1: oklch(0.4956 0.1044 158.15);
-  --chart-2: oklch(0.7059 0.1418 121.5);
+  --chart-1: oklch(0.9059 0.2018 121.5);
+  --chart-2: oklch(0.62 0.13 160.1);
   --chart-3: oklch(0.6135 0.1584 25.6);
   --chart-4: oklch(0.7359 0.1281 78.5);
-  --chart-5: oklch(0.5303 0.0201 152.4);
+  --chart-5: oklch(0.68 0.03 152);
 }
 
 @layer base {
