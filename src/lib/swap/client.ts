@@ -1,5 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { getEnvelope } from "@/lib/market/client";
+import { QUOTE_TTL_MS } from "@/config/swapPolicy";
 import type { SwapTokenConfig } from "@/config/swapTokens";
 import type { ZeroExPriceResponse, ZeroExQuoteResponse } from "./schemas";
 import type { ValidateQuoteResult } from "./validateQuote";
@@ -16,8 +17,6 @@ export type SwapPriceData = ZeroExPriceResponse & {
   buyUsd: number | null;
   priceImpactBps: number | null;
   feeUsd: number | null;
-  minSwapUsd: number;
-  meetsMinimumSwap: boolean;
   validation: ValidateQuoteResult<ZeroExPriceResponse>;
 };
 
@@ -26,7 +25,6 @@ export type SwapQuoteData = ZeroExQuoteResponse & {
   buyUsd: number | null;
   priceImpactBps: number | null;
   feeUsd: number | null;
-  minSwapUsd: number;
   validation: ValidateQuoteResult<ZeroExQuoteResponse>;
 };
 
@@ -86,6 +84,10 @@ export const swapPriceQuery = (params: SwapRequestParams, enabled: boolean) =>
       enabled &&
       Boolean(params.sellToken && params.buyToken && (params.sellAmount || params.buyAmount)),
     staleTime: 3_000,
+    // Keeps the live quote from ever sitting expired — a fresh price lands
+    // automatically right as QUOTE_TTL_MS is reached, instead of requiring
+    // the user to notice "Expired" and take an action.
+    refetchInterval: QUOTE_TTL_MS,
     retry: false,
   });
 

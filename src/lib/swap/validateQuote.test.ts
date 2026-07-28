@@ -12,7 +12,6 @@ function baseCtx(overrides: Partial<QuoteValidationContext> = {}): QuoteValidati
     expectedBuyToken: BUY,
     fetchedAt: Date.now(),
     quoteTtlMs: 30_000,
-    feeUsd: 0.05,
     requireTransaction: true,
     priceImpactBps: null,
     ...overrides,
@@ -77,18 +76,6 @@ describe("validateQuote", () => {
     const result = validateQuote(baseQuote({ fees: {} }), baseCtx());
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.issues.some((i) => i.code === "fee_missing")).toBe(true);
-  });
-
-  it("rejects when the integrator fee's USD value is below $0.02", () => {
-    const result = validateQuote(baseQuote(), baseCtx({ feeUsd: 0.01 }));
-    expect(result.ok).toBe(false);
-    if (!result.ok) expect(result.issues.some((i) => i.code === "fee_below_minimum")).toBe(true);
-  });
-
-  it("rejects when feeUsd could not be determined at all", () => {
-    const result = validateQuote(baseQuote(), baseCtx({ feeUsd: null }));
-    expect(result.ok).toBe(false);
-    if (!result.ok) expect(result.issues.some((i) => i.code === "fee_below_minimum")).toBe(true);
   });
 
   it("rejects a balance issue", () => {

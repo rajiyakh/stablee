@@ -13,9 +13,8 @@ import { QUOTE_TTL_MS } from "@/config/swapPolicy";
 import { swapPriceRequestSchema } from "@/lib/swap/requestSchemas";
 import { zeroExPriceResponseSchema } from "@/lib/swap/schemas";
 import { fetchZeroExPrice } from "@/lib/swap/zeroEx.server";
-import { serverFeeRecipient, serverMinSwapUsd } from "@/lib/swap/feeConfig.server";
+import { serverFeeRecipient } from "@/lib/swap/feeConfig.server";
 import { resolveUsdValue } from "@/lib/swap/usdValue.server";
-import { meetsMinimumSwap } from "@/lib/swap/fees";
 import { computePriceImpactBps } from "@/lib/swap/priceImpact";
 import { validateQuote } from "@/lib/swap/validateQuote";
 
@@ -69,7 +68,6 @@ export const Route = createFileRoute("/api/swap/price")({
                   ...data,
                   sellUsd: null,
                   feeUsd: null,
-                  minSwapUsd: serverMinSwapUsd(),
                   validation: { ok: false, issues: [{ code: "no_liquidity" }] },
                 },
               }),
@@ -81,7 +79,6 @@ export const Route = createFileRoute("/api/swap/price")({
             resolveUsdValue(sellToken.address, data.sellAmount, sellToken.decimals),
             resolveUsdValue(buyToken.address, data.buyAmount, buyToken.decimals),
           ]);
-          const minSwapUsd = serverMinSwapUsd();
           const priceImpactBps = computePriceImpactBps(sellUsdResult.usd, buyUsdResult.usd);
 
           let feeUsd: number | null = null;
@@ -104,7 +101,6 @@ export const Route = createFileRoute("/api/swap/price")({
             expectedBuyToken: buyToken.address,
             fetchedAt,
             quoteTtlMs: QUOTE_TTL_MS,
-            feeUsd,
             requireTransaction: false,
             priceImpactBps,
           });
@@ -120,8 +116,6 @@ export const Route = createFileRoute("/api/swap/price")({
                 buyUsd: buyUsdResult.usd,
                 priceImpactBps,
                 feeUsd,
-                minSwapUsd,
-                meetsMinimumSwap: meetsMinimumSwap(sellUsdResult.usd, minSwapUsd),
                 validation,
               },
             }),

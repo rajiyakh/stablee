@@ -30,8 +30,9 @@ function getPublicClient() {
 
 /**
  * Decimals are read directly on-chain rather than trusted from GMGN or any
- * other off-chain source — this value feeds the $20/$0.02 minimum checks, so
- * it must come from ground truth, not a provider's claim about the token.
+ * other off-chain source — this value feeds USD-value/price-impact math and
+ * the swap amount itself, so it must come from ground truth, not a
+ * provider's claim about the token.
  */
 async function readDecimalsOnChain(address: string): Promise<number | null> {
   const client = getPublicClient();

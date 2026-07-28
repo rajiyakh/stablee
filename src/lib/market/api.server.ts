@@ -90,7 +90,7 @@ export function invalidParams(provider: ProviderId): Response {
   });
 }
 
-/** For exact-required-copy business-rule failures (e.g. "below minimum swap amount") that jsonError's generic ProviderError-code mapping would otherwise overwrite. */
+/** For exact-required-copy business-rule failures (e.g. "price impact too severe") that jsonError's generic ProviderError-code mapping would otherwise overwrite. */
 export function customError(
   provider: ProviderId,
   code: string,

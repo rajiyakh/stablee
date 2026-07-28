@@ -10,25 +10,12 @@ import { swapTokens, USDG_ADDRESS } from "@/config/swapTokens";
 export const FEE_BPS_DEFAULT = 10;
 /** Hardcoded safety ceiling — never raised by an env var, only lowered/set below it. */
 export const FEE_BPS_MAX = 30;
-export const MIN_SWAP_USD_DEFAULT = 20;
-export const MIN_FEE_USD = 0.02;
 
 /** Clamps to [0, FEE_BPS_MAX] — a caller can never push the fee above the hardcoded cap. */
 export function computeSwapFeeBps(overrideBps?: number): number {
   const raw = overrideBps ?? FEE_BPS_DEFAULT;
   if (!Number.isFinite(raw)) return FEE_BPS_DEFAULT;
   return Math.max(0, Math.min(FEE_BPS_MAX, raw));
-}
-
-export function meetsMinimumSwap(
-  sellUsd: number | null,
-  minSwapUsd = MIN_SWAP_USD_DEFAULT,
-): boolean {
-  return sellUsd !== null && Number.isFinite(sellUsd) && sellUsd >= minSwapUsd;
-}
-
-export function meetsMinimumFee(feeUsd: number | null): boolean {
-  return feeUsd !== null && Number.isFinite(feeUsd) && feeUsd >= MIN_FEE_USD;
 }
 
 function isStablecoin(address: string): boolean {

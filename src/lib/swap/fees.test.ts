@@ -1,11 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  computeSwapFeeBps,
-  FEE_BPS_MAX,
-  meetsMinimumFee,
-  meetsMinimumSwap,
-  selectFeeToken,
-} from "./fees";
+import { computeSwapFeeBps, FEE_BPS_MAX, selectFeeToken } from "./fees";
 import { USDG_ADDRESS, WETH_ADDRESS } from "@/config/swapTokens";
 
 describe("computeSwapFeeBps", () => {
@@ -24,45 +18,6 @@ describe("computeSwapFeeBps", () => {
 
   it("falls back to the default for non-finite input", () => {
     expect(computeSwapFeeBps(Number.NaN)).toBe(10);
-  });
-});
-
-describe("meetsMinimumSwap ($20 boundary)", () => {
-  it("rejects $19.99", () => {
-    expect(meetsMinimumSwap(19.99)).toBe(false);
-  });
-
-  it("accepts exactly $20", () => {
-    expect(meetsMinimumSwap(20)).toBe(true);
-  });
-
-  it("accepts values above $20", () => {
-    expect(meetsMinimumSwap(20.01)).toBe(true);
-    expect(meetsMinimumSwap(1000)).toBe(true);
-  });
-
-  it("rejects when USD value is unknown (null) — never assumes safe", () => {
-    expect(meetsMinimumSwap(null)).toBe(false);
-  });
-
-  it("respects a custom minimum", () => {
-    expect(meetsMinimumSwap(30, 50)).toBe(false);
-    expect(meetsMinimumSwap(50, 50)).toBe(true);
-  });
-});
-
-describe("meetsMinimumFee ($0.02 floor)", () => {
-  it("rejects fees below $0.02", () => {
-    expect(meetsMinimumFee(0.019)).toBe(false);
-    expect(meetsMinimumFee(0.01)).toBe(false);
-  });
-
-  it("accepts exactly $0.02", () => {
-    expect(meetsMinimumFee(0.02)).toBe(true);
-  });
-
-  it("rejects a null (unverifiable) fee", () => {
-    expect(meetsMinimumFee(null)).toBe(false);
   });
 });
 

@@ -16,7 +16,12 @@ const navItems = [
   { to: "/", label: "Overview" },
   { to: "/ai-feed", label: "AI Feed" },
   { to: "/markets", label: "Markets" },
-  { to: "/swap", label: "Swap", badge: isWalletConfigured() ? undefined : "Soon" },
+  {
+    to: "/swap",
+    label: "Swap",
+    badge: isWalletConfigured() ? undefined : "Soon",
+    hot: isWalletConfigured(),
+  },
   { to: "/xstocks", label: "xStocks" },
 ] as const;
 
@@ -43,7 +48,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/90 backdrop-blur">
+    <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-lg [background-image:linear-gradient(to_right,transparent,var(--color-border)_15%,var(--color-border)_85%,transparent)] [background-position:bottom] [background-repeat:no-repeat] [background-size:100%_1px]">
       <div className="mx-auto flex h-14 w-full max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
         <Link
           to="/"
@@ -58,16 +63,24 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-0.5 xl:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-1 xl:flex" aria-label="Primary">
           {navItems.map((item) => (
             <Link
               key={item.to}
               to={item.to}
               activeOptions={{ exact: item.to === "/" }}
-              activeProps={{ className: "text-foreground" }}
+              activeProps={{ className: "text-foreground [&_.nav-underline]:scale-x-100" }}
               inactiveProps={{ className: "text-muted-foreground hover:text-foreground" }}
-              className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-colors"
+              className="group relative inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-semibold uppercase tracking-widest transition-colors"
             >
+              {"hot" in item && item.hot ? (
+                <span className="relative -top-2 inline-flex self-start">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-negative opacity-75" />
+                  <span className="relative inline-flex items-center rounded-full bg-negative px-1 py-px text-[8px] font-bold uppercase tracking-wide text-white">
+                    Hot
+                  </span>
+                </span>
+              ) : null}
               {item.label}
               {"badge" in item && item.badge ? (
                 <Badge
@@ -77,6 +90,7 @@ export function SiteHeader() {
                   {item.badge}
                 </Badge>
               ) : null}
+              <span className="nav-underline pointer-events-none absolute inset-x-2.5 -bottom-px h-[1.5px] origin-left scale-x-0 rounded-full bg-foreground transition-transform duration-300 ease-out group-hover:scale-x-100" />
             </Link>
           ))}
         </nav>

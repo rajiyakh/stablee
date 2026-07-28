@@ -171,6 +171,24 @@ export function SwapPage({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [approval.isConfirmed]);
 
+  // Keeps the confirm dialog's firm quote from ever sitting expired while
+  // open — schedules exactly one re-fetch for when the current firmQuote
+  // will hit QUOTE_TTL_MS. requestFirmQuote() sets a new firmQuote with a
+  // fresh fetchedAt, which re-triggers this effect for the next cycle —
+  // same self-sustaining pattern as the approval.isConfirmed effect above,
+  // just timer-driven instead of event-driven.
+  useEffect(() => {
+    if (!firmQuote || !confirmOpen || execution.isSwapping || execution.isConfirming) return;
+    const msUntilExpiry = QUOTE_TTL_MS - (Date.now() - firmQuote.fetchedAt);
+    if (msUntilExpiry <= 0) {
+      void requestFirmQuote();
+      return;
+    }
+    const id = window.setTimeout(() => void requestFirmQuote(), msUntilExpiry);
+    return () => window.clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [firmQuote, confirmOpen, execution.isSwapping, execution.isConfirming]);
+
   async function requestFirmQuote() {
     if (!address || !sellToken || !buyToken) return;
     trackSwapEvent("quote_requested", { sellToken: sellToken.address, buyToken: buyToken.address });
@@ -212,10 +230,10 @@ export function SwapPage({
         buyToken: buyToken.address,
         errorCode: data.validation.issues[0]?.code ?? "invalid",
       });
-      // fee_below_minimum and price_impact_severe are pre-empted server-side
-      // (see /api/swap/quote's customError branches) and surface via the
-      // result.error path above, not here — this only covers the remaining
-      // issue codes (token_mismatch, missing_transaction, balance_issue,
+      // price_impact_severe is pre-empted server-side (see /api/swap/quote's
+      // customError branch) and surfaces via the result.error path above,
+      // not here — this only covers the remaining issue codes (fee_missing,
+      // token_mismatch, missing_transaction, balance_issue,
       // simulation_incomplete, quote_expired), none of which should be
       // shown silently.
       toast.error("This quote could not be validated. Please try again.");
@@ -420,32 +438,6 @@ export function SwapPage({
               />
             </div>
 
-            {priceQuery.isError ? (
-              <p className="rounded-lg border border-negative/30 bg-negative/10 p-3 text-sm text-negative">
-                {priceQuery.error instanceof ApiError
-                  ? priceQuery.error.message
-                  : "Robinhood Mainnet market data is temporarily unavailable."}
-              </p>
-            ) : null}
-
-            {priceQuery.data?.data && sellToken && buyToken ? (
-              <SwapQuoteDetails
-                sellToken={sellToken}
-                buyToken={buyToken}
-                quote={priceQuery.data.data}
-                fetchedAt={Date.parse(priceQuery.data.fetchedAt ?? new Date().toISOString())}
-                slippageBps={slippageBps}
-              />
-            ) : null}
-
-            {priceQuery.data?.data && !priceQuery.data.data.meetsMinimumSwap ? (
-              <p className="rounded-lg border border-warning/40 bg-warning/10 p-3 text-sm text-warning">
-                {priceQuery.data.data.sellUsd === null
-                  ? "Unable to verify the USD value of this trade. RobinPulse cannot confirm the minimum platform fee, so this swap cannot be submitted."
-                  : `Minimum swap amount is $${priceQuery.data.data.minSwapUsd} to cover the RobinPulse platform fee.`}
-              </p>
-            ) : null}
-
             {flow === "needs-approval" ? (
               <Button
                 className="w-full"
@@ -463,7 +455,6 @@ export function SwapPage({
                   !isConnected ||
                   Boolean(wrongNetwork) ||
                   !sellAmountBaseUnits ||
-                  !priceQuery.data?.data?.meetsMinimumSwap ||
                   (priceQuery.data?.data?.priceImpactBps !== null &&
                     priceQuery.data?.data?.priceImpactBps !== undefined &&
                     priceQuery.data.data.priceImpactBps >= PRICE_IMPACT_MAX_BPS) ||
@@ -474,6 +465,24 @@ export function SwapPage({
                 {quoteQuery.isFetching ? "Fetching quote…" : "Review Swap"}
               </Button>
             )}
+
+            {priceQuery.isError ? (
+              <p className="rounded-lg border border-negative/30 bg-negative/10 p-3 text-sm text-negative">
+                {priceQuery.error instanceof ApiError
+                  ? priceQuery.error.message
+                  : "Robinhood Mainnet market data is temporarily unavailable."}
+              </p>
+            ) : null}
+
+            {priceQuery.data?.data && sellToken && buyToken ? (
+              <SwapQuoteDetails
+                sellToken={sellToken}
+                buyToken={buyToken}
+                quote={priceQuery.data.data}
+                fetchedAt={Date.parse(priceQuery.data.fetchedAt ?? new Date().toISOString())}
+                slippageBps={slippageBps}
+              />
+            ) : null}
 
             {flow === "success" && execution.hash ? (
               <div className="rounded-lg border border-positive/30 bg-positive/10 p-3 text-sm text-positive">

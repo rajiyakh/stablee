@@ -115,9 +115,9 @@ export function SwapConfirmDialog({
         </dl>
 
         <p className="rounded-lg bg-muted/40 p-2.5 text-xs text-muted-foreground">
-          RobinPulse charges a {feePercent}% platform fee on completed swaps. The minimum supported
-          swap amount is $20, which is designed to produce a minimum platform fee of approximately
-          $0.02. The actual fee token and amount are shown in the live quote before confirmation.
+          RobinPulse charges a {feePercent}% platform fee on every completed swap, sent to the
+          RobinPulse treasury wallet. There is no minimum swap amount. The actual fee token and
+          amount are shown in the live quote above.
         </p>
 
         {!sellToken.verified || !buyToken.verified ? (

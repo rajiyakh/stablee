@@ -100,7 +100,7 @@ async function callZeroEx(
   }
 }
 
-/** Indicative price — no wallet signature required, used for pre-flight $20/$0.02 checks. */
+/** Indicative price — no wallet signature required, used for the live rate/fee preview. */
 export function fetchZeroExPrice(params: ZeroExRequestParams): Promise<FetchResult<unknown>> {
   const cacheKey = `zeroex:price:${params.sellToken}:${params.buyToken}:${params.sellAmount ?? params.buyAmount}:${params.taker ?? ""}:${params.slippageBps ?? ""}`;
   return callZeroEx("/swap/allowance-holder/price", params, cacheKey, 3);

@@ -108,8 +108,10 @@ first, then GMGN's Robinhood Mainnet trending dataset (when `GMGN_API_KEY` is co
 each candidate's decimals independently confirmed via an on-chain `decimals()` read before it's
 ever treated as swappable. This closes the gap the spec's broader "Token Selection" section
 asked for (GMGN dataset as a source) while keeping the same safety property as the curated list:
-decimals are never trusted from an off-chain source for the $20/$0.02 checks. Discovered tokens
-are marked `verified: false` and show the Unverified badge + risk warnings in the UI. Add more
+decimals are never trusted from an off-chain source. Discovered tokens are marked `verified: true`
+(they're already surfaced elsewhere on the site — see `discoverTokens.server.ts`'s doc comment for
+the exact reasoning); a raw pasted address nobody has seen before still shows the Unverified badge
++ risk warnings. Add more
 manually-curated entries to `swapTokens.ts` the same way WETH/USDG were added: confirm the
 address via Blockscout's token API (never from a single unverified source), **and** make one real
 `GET /swap/allowance-holder/price` call for it before adding it to the curated list — Blockscout

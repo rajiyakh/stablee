@@ -1,5 +1,4 @@
 import { PRICE_IMPACT_MAX_BPS } from "@/config/swapPolicy";
-import { meetsMinimumFee } from "./fees";
 import type { ZeroExPriceResponse, ZeroExQuoteResponse } from "./schemas";
 
 export interface QuoteValidationContext {
@@ -8,8 +7,6 @@ export interface QuoteValidationContext {
   /** Epoch ms when the response was fetched — the API has no expiry field, so this is app-side. */
   fetchedAt: number;
   quoteTtlMs: number;
-  /** USD value of fees.integratorFee, resolved by the caller via resolveUsdValue — never guessed here. */
-  feeUsd: number | null;
   /** true for /api/swap/quote (transaction required); false for /api/swap/price (indicative only). */
   requireTransaction: boolean;
   /** Computed via computePriceImpactBps() from two independently-resolved USD values — null when unverifiable. */
@@ -24,7 +21,6 @@ export type QuoteValidationIssue =
   | { code: "balance_issue" }
   | { code: "simulation_incomplete" }
   | { code: "fee_missing" }
-  | { code: "fee_below_minimum"; usd: number }
   | { code: "quote_expired"; ageMs: number }
   | { code: "price_impact_severe"; bps: number };
 
@@ -74,8 +70,6 @@ export function validateQuote<T extends ZeroExPriceResponse | ZeroExQuoteRespons
   const hasFeeAmount = Boolean(integratorFee?.amount) && BigInt(integratorFee?.amount ?? "0") > 0n;
   if (!hasFeeAmount) {
     issues.push({ code: "fee_missing" });
-  } else if (!meetsMinimumFee(ctx.feeUsd)) {
-    issues.push({ code: "fee_below_minimum", usd: ctx.feeUsd ?? 0 });
   }
 
   const ageMs = Date.now() - ctx.fetchedAt;

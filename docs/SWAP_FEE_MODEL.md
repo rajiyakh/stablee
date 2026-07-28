@@ -6,12 +6,14 @@
 |---|---|---|
 | Default platform fee | 10 bps (0.10%) | `ROBINPULSE_SWAP_FEE_BPS` |
 | Hardcoded fee ceiling | 30 bps (0.30%) | not env-configurable — see below |
-| Minimum swap amount | $20 | `ROBINPULSE_MINIMUM_SWAP_USD` |
-| Minimum expected fee | $0.02 | fixed — `MIN_FEE_USD` in `src/lib/swap/fees.ts` |
+| Minimum swap amount | none | — |
 | 0x's own platform limit on `swapFeeBps` | 1000 bps (10%) | not RobinPulse's concern — we stay far under it |
 
-$20 × 0.10% = $0.02 — the minimum swap amount exists specifically to guarantee the minimum fee
-is meetable, per the spec's requirement.
+There is no minimum swap amount and no minimum-fee floor. Every swap, regardless of size, is
+charged the same 0.10% fee, sent to the treasury wallet. The one remaining server-side check is
+mechanical, not a policy: if the computed fee rounds to literally 0 in the fee token's base units,
+`validateQuote()` rejects the quote with `fee_missing` — there's nothing to charge, not "too little
+to bother with."
 
 ## Why the 30 bps ceiling is hardcoded, not env-read
 
@@ -52,30 +54,25 @@ Priority order, exactly as specified:
 The function's return value is always either `sellToken` or `buyToken` — 0x requires
 `swapFeeToken` to be one of the two, and there is no code path that can return anything else.
 
-## Verifying the $20 minimum before requesting a firm quote
+## Why sell-side USD value is still resolved
 
-1. `resolveUsdValue()` (`src/lib/swap/usdValue.server.ts`) prices the sell amount — see its
-   4-tier priority in `docs/0X_SWAP_SETUP.md`'s linked source, or just read the file: USDG face
-   value → 0x indicative price against USDG → Chainlink (configured for 8 tokenized-equity feeds,
-   see `chainlinkFeeds.ts`) → DEX Screener (reusing the site's existing Robinhood Mainnet provider).
-2. If the USD value can't be determined by any tier, the swap is blocked with:
-   *"Unable to verify the USD value of this trade. RobinPulse cannot confirm the minimum
-   platform fee, so this swap cannot be submitted."*
-3. If it's determinable but below $20:
-   *"Minimum swap amount is $20 to cover the RobinPulse platform fee."*
-4. Neither check ever silently raises the user's typed amount to meet the minimum — the user
-   must increase it themselves.
+Even with no minimum-swap gate, `/api/swap/price` and `/api/swap/quote` still call
+`resolveUsdValue()` (`src/lib/swap/usdValue.server.ts`) on the sell amount — see its 4-tier
+priority in `docs/0X_SWAP_SETUP.md`'s linked source, or just read the file: USDG face value → 0x
+indicative price against USDG → Chainlink (configured for 8 tokenized-equity feeds, see
+`chainlinkFeeds.ts`) → DEX Screener (reusing the site's existing Robinhood Mainnet provider). That
+value feeds `priceImpactBps` (still computed and still blocks execution at the existing 3%
+threshold — see `PRICE_IMPACT_MAX_BPS`) and the fee-in-USD display shown in the UI. It's purely
+informational/protective now, not a gate on swap size — `computePriceImpactBps()` and the UI are
+both already null-safe when the USD value can't be resolved.
 
-## Verifying the fee again at the firm-quote stage
+## Firm-quote validation
 
-Prices move between the indicative price call and the firm quote. `src/routes/api/swap/quote.ts`
-re-runs the $20 check immediately before calling 0x, and after the firm quote returns,
-`validateQuote()` re-checks that `fees.integratorFee` is present and its USD value (again via
-`resolveUsdValue()`, priced on the fee token specifically — not derived proportionally from the
-sell-side USD value) is at least $0.02. If it's below that:
-
-*"The current quote does not meet the minimum platform fee requirement. Increase the swap amount
-and request a new quote."*
+`validateQuote()` (`src/lib/swap/validateQuote.ts`) still re-checks, on the firm quote returned
+from `/api/swap/quote`: liquidity, token match, transaction presence, balance/simulation issues,
+that `fees.integratorFee` is actually present (`fee_missing` — the one remaining mechanical fee
+check, see above), quote expiry, and the 3% price-impact ceiling. There is no fee-USD-value check
+anymore.
 
 ## Changing the fee safely
 
