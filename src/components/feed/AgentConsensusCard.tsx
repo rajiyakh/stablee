@@ -26,12 +26,12 @@ const labelTone: Record<ConsensusSummary["label"], string> = {
 export function AgentConsensusCard({ consensus }: { consensus: ConsensusSummary }) {
   return (
     <div className="rounded-xl border border-border bg-card p-4">
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-sm font-semibold text-foreground">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className="min-w-0 truncate text-sm font-semibold text-foreground">
           {consensus.token.symbol} consensus
         </span>
         <span
-          className={`rounded-full px-2 py-0.5 text-xs font-semibold ${labelTone[consensus.label]}`}
+          className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold ${labelTone[consensus.label]}`}
         >
           {labelText[consensus.label]}
         </span>

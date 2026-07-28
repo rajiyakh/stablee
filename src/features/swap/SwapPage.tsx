@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { robinhoodChain } from "@/config/robinhoodChain";
+import { WALLET_NOT_CONFIGURED_MESSAGE } from "@/config/project";
 import {
   swapTokens,
   WETH_ADDRESS,
@@ -336,7 +337,7 @@ export function SwapPage({
   if (!robinhoodChain) {
     return (
       <div className="mx-auto max-w-md rounded-xl border border-border bg-card p-6 text-center text-sm text-muted-foreground">
-        Wallet integration is not yet configured.
+        {WALLET_NOT_CONFIGURED_MESSAGE}
       </div>
     );
   }

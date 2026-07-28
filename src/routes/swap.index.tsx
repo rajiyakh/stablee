@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import { PageContainer } from "@/components/layout/AppShell";
 import { SectionHeading } from "@/components/common/SectionHeading";
-import { isWalletConfigured } from "@/config/project";
+import { isWalletConfigured, WALLET_NOT_CONFIGURED_MESSAGE } from "@/config/project";
 
 /**
  * Lazy, not a static import: swap.index.tsx is statically imported by the
@@ -51,7 +51,7 @@ function SwapRoute() {
         <SectionHeading
           eyebrow="Instant Swap · Robinhood Mainnet"
           title="Swap"
-          description="Swap is not yet available. Wallet integration is not yet configured for this deployment."
+          description={`Swap is not yet available. ${WALLET_NOT_CONFIGURED_MESSAGE}`}
         />
       </PageContainer>
     );

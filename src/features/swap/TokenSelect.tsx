@@ -125,8 +125,8 @@ export function TokenSelect({
                 ) : resolved ? (
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <span className="font-medium">{resolved.symbol}</span>
-                      <span className="truncate text-xs text-muted-foreground">
+                      <span className="shrink-0 font-medium">{resolved.symbol}</span>
+                      <span className="min-w-0 truncate text-xs text-muted-foreground">
                         {resolved.name}
                       </span>
                       {!resolved.verified ? (
@@ -193,8 +193,10 @@ export function TokenSelect({
                   onSelect={() => selectToken(token)}
                 >
                   <div className="flex w-full items-center gap-2">
-                    <span className="font-medium">{token.symbol}</span>
-                    <span className="truncate text-xs text-muted-foreground">{token.name}</span>
+                    <span className="shrink-0 font-medium">{token.symbol}</span>
+                    <span className="min-w-0 truncate text-xs text-muted-foreground">
+                      {token.name}
+                    </span>
                     {token.verified ? (
                       <BadgeCheck
                         className="ml-auto size-3.5 shrink-0 text-positive"

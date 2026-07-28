@@ -67,6 +67,10 @@ export const projectConfig = {
 
 export type ProjectConfig = typeof projectConfig;
 
+/** Shared copy for every wallet-gated page/section — keeps wording in sync. */
+export const WALLET_NOT_CONFIGURED_MESSAGE =
+  "Wallet integration is not yet configured for this deployment.";
+
 /** Wallet connection is only possible once every required field is supplied. */
 export function isWalletConfigured(): boolean {
   const w = projectConfig.wallet;

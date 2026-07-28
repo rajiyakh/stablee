@@ -17,7 +17,7 @@ export function NewLaunchPanel({ launches }: { launches: NewLaunchInfo[] }) {
             <Link
               to="/token/$chainId/$address"
               params={{ chainId: l.chainId, address: l.address }}
-              className="truncate text-xs font-semibold text-foreground hover:underline"
+              className="min-w-0 truncate text-xs font-semibold text-foreground hover:underline"
             >
               {l.symbol}
             </Link>

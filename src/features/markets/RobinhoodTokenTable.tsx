@@ -240,8 +240,8 @@ export function RobinhoodTokenTable({
                         {token.symbol.slice(0, 2).toUpperCase()}
                       </div>
                     )}
-                    <div>
-                      <p className="font-medium text-foreground">{token.symbol}</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-medium text-foreground">{token.symbol}</p>
                       <p className="text-xs text-muted-foreground">
                         {formatPairAge(token.ageSeconds)} old
                       </p>

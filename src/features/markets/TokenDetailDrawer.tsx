@@ -15,6 +15,7 @@ import {
   formatNumber,
   formatPairAge,
   formatPercent,
+  shortenAddress,
 } from "@/lib/market/format";
 import type { RobinhoodHotSearchToken, RobinhoodTrendingToken } from "@/types/gmgn";
 
@@ -76,10 +77,12 @@ export function TokenDetailDrawer({
         </SheetHeader>
 
         <div className="space-y-4 px-4 pb-6">
-          <div className="flex items-center justify-between rounded-lg border border-border bg-muted/30 p-3">
-            <div>
+          <div className="flex items-center justify-between gap-2 rounded-lg border border-border bg-muted/30 p-3">
+            <div className="min-w-0">
               <p className="text-xs text-muted-foreground">Contract</p>
-              <p className="font-mono text-xs">{token.address}</p>
+              <p className="truncate font-mono text-xs" title={token.address}>
+                {shortenAddress(token.address, 6)}
+              </p>
             </div>
             <CopyContractButton address={token.address} />
           </div>
