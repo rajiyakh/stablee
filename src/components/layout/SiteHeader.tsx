@@ -8,7 +8,6 @@ import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/s
 import { useSidebar } from "@/components/ui/sidebar";
 import { WalletConnectButton } from "@/components/wallet/WalletConnectButton";
 import { cn } from "@/lib/utils";
-import { GlobalSearch } from "./GlobalSearch";
 
 // Most important destinations only — everything else lives in the left
 // sidebar (see AppSidebar.tsx) to keep this from getting crowded.
@@ -83,9 +82,6 @@ export function SiteHeader() {
             {projectConfig.name}
           </span>
         </Link>
-
-        <SidebarToggle className="hidden md:inline-flex" />
-        <GlobalSearch />
 
         <nav className="hidden items-center gap-1 xl:flex" aria-label="Primary">
           {navItems.map((item) => (
