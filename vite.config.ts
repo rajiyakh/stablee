@@ -21,11 +21,23 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 // origins (per docs.privy.io/security/implementation-guide/content-security-policy)
 // so wallet connect doesn't silently break the moment VITE_WALLET_ENABLED
 // flips true — added ahead of go-live since a CSP violation fails closed
-// with no visible error to the developer testing it. Inert today: no Privy
-// script loads at all while wallet connect is off (see docs/WALLET_SETUP.md).
+// with no visible error to the developer testing it.
+//
+// connect-src also allowlists the Robinhood Chain RPC directly — every
+// client-side on-chain read (wallet balance via wagmi's useReadContract/
+// useBalance) goes straight from the browser to this RPC, not through our
+// own API. This was missing entirely (connect-src was just 'self' before
+// any Privy work), so it silently blocked every balance read in production
+// from the moment wallet connect went live — worked in local dev (no CSP
+// applied there) and looked identical to a query stuck loading forever
+// (a CSP-blocked fetch throws, exhausting wagmi/react-query's retries
+// with no visible error) rather than an obvious CSP violation. Found by
+// comparing a live production network trace against local dev, not
+// guessed — see the balance-display fix in useSwapTokenBalance.ts.
+const ROBINHOOD_RPC_URL = "https://rpc.mainnet.chain.robinhood.com";
 const securityHeaders = {
   "Content-Security-Policy":
-    "default-src 'self'; script-src 'self' 'unsafe-inline' https://s3.tradingview.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://auth.privy.io https://*.rpc.privy.systems https://explorer-api.walletconnect.com wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org; frame-src https://dexscreener.com https://www.tradingview-widget.com https://s.tradingview.com https://auth.privy.io https://verify.walletconnect.com https://verify.walletconnect.org https://challenges.cloudflare.com; frame-ancestors 'none'; object-src 'none'; base-uri 'self'",
+    `default-src 'self'; script-src 'self' 'unsafe-inline' https://s3.tradingview.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' ${ROBINHOOD_RPC_URL} https://auth.privy.io https://*.rpc.privy.systems https://explorer-api.walletconnect.com wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org; frame-src https://dexscreener.com https://www.tradingview-widget.com https://s.tradingview.com https://auth.privy.io https://verify.walletconnect.com https://verify.walletconnect.org https://challenges.cloudflare.com; frame-ancestors 'none'; object-src 'none'; base-uri 'self'`,
   "X-Content-Type-Options": "nosniff",
   "Referrer-Policy": "strict-origin-when-cross-origin",
   "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
