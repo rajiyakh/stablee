@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, Check, ChevronDown, Loader2 } from "lucide-react";
+import { AlertTriangle, BadgeCheck, Check, ChevronDown, Loader2 } from "lucide-react";
 import {
   Command,
   CommandEmpty,
@@ -89,19 +89,21 @@ export function TokenSelect({
           type="button"
           variant="outline"
           aria-label={label}
-          className="h-11 w-full min-w-[9rem] justify-between font-normal"
+          className="h-9 min-w-[6.5rem] justify-between gap-1.5 rounded-full px-3 font-normal"
         >
           {value ? (
-            <span className="flex items-center gap-2 overflow-hidden">
+            <span className="flex items-center gap-1.5 overflow-hidden">
               <span className="truncate font-medium">{value.symbol}</span>
-              {!value.verified ? (
+              {value.verified ? (
+                <BadgeCheck className="size-3.5 shrink-0 text-positive" aria-label="Verified" />
+              ) : (
                 <Badge variant="destructive" className="text-[10px]">
                   Unverified
                 </Badge>
-              ) : null}
+              )}
             </span>
           ) : (
-            <span className="text-muted-foreground">Select token</span>
+            <span className="text-muted-foreground">Select</span>
           )}
           <ChevronDown className="size-4 shrink-0 opacity-50" />
         </Button>
@@ -193,11 +195,16 @@ export function TokenSelect({
                   <div className="flex w-full items-center gap-2">
                     <span className="font-medium">{token.symbol}</span>
                     <span className="truncate text-xs text-muted-foreground">{token.name}</span>
-                    {!token.verified ? (
+                    {token.verified ? (
+                      <BadgeCheck
+                        className="ml-auto size-3.5 shrink-0 text-positive"
+                        aria-label="Verified"
+                      />
+                    ) : (
                       <span className="ml-auto inline-flex items-center gap-1 text-xs text-warning">
                         <AlertTriangle className="size-3" /> Unverified
                       </span>
-                    ) : null}
+                    )}
                   </div>
                 </CommandItem>
               ))}

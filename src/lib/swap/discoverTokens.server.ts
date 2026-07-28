@@ -104,9 +104,14 @@ export async function resolveCustomToken(address: string): Promise<DiscoveredSwa
  * with each candidate's decimals independently confirmed on-chain before
  * it's ever treated as swappable. Returns [] (never fabricated rows) when
  * GMGN isn't configured, the call fails, or a candidate's decimals can't be
- * confirmed. Every discovered token is `verified: false` — the UI shows the
- * Unverified badge and risk warnings for these, same as any other
- * community token.
+ * confirmed. Discovered tokens are `verified: true` — they're actively
+ * listed elsewhere on the site (Trending/Markets/etc.) and their decimals
+ * are independently confirmed on-chain, so the UI treats them as trusted
+ * the same way it treats the curated list. This is NOT a contract-safety
+ * audit (honeypot/scam risk isn't checked here — see security.honeypot on
+ * the trending feed for that signal); it only means "this app surfaces the
+ * token elsewhere," which is distinct from resolveCustomToken() below,
+ * where an arbitrary pasted address nobody has browsed to stays unverified.
  */
 export async function discoverSwapTokens(): Promise<DiscoveredSwapToken[]> {
   if (cache && cache.expiresAt > Date.now()) return cache.tokens;
@@ -140,7 +145,7 @@ export async function discoverSwapTokens(): Promise<DiscoveredSwapToken[]> {
           name: candidate.name,
           decimals,
           logoUrl: candidate.logoUrl,
-          verified: false,
+          verified: true,
           source: "gmgn",
         };
       }),

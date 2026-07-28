@@ -91,7 +91,7 @@ describe("discoverSwapTokens", () => {
     const found = result.find((t) => t.address === NEW_TOKEN);
     expect(found).toBeDefined();
     expect(found?.decimals).toBe(9);
-    expect(found?.verified).toBe(false);
+    expect(found?.verified).toBe(true);
     expect(found?.source).toBe("gmgn");
   });
 

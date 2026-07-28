@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +17,7 @@ export function SwapAmountInput({
   onRetryBalance,
   onMax,
   readOnly,
+  tokenSelect,
 }: {
   label: string;
   token: SwapTokenConfig | null;
@@ -29,6 +31,8 @@ export function SwapAmountInput({
   onRetryBalance?: () => void;
   onMax?: () => void;
   readOnly?: boolean;
+  /** Token picker rendered inline next to the amount, on this same row. */
+  tokenSelect?: ReactNode;
 }) {
   return (
     <div className="rounded-xl border border-border bg-muted/30 p-3">
@@ -67,17 +71,20 @@ export function SwapAmountInput({
           </span>
         ) : null}
       </div>
-      <Input
-        inputMode="decimal"
-        placeholder="0.0"
-        value={value}
-        readOnly={readOnly}
-        onChange={(e) => {
-          const next = e.target.value;
-          if (DECIMAL_INPUT_RE.test(next)) onChange?.(next);
-        }}
-        className="mt-1 h-10 border-none bg-transparent px-0 text-2xl font-semibold tabular-nums shadow-none focus-visible:ring-0"
-      />
+      <div className="mt-1 flex items-center gap-2">
+        <Input
+          inputMode="decimal"
+          placeholder="0.0"
+          value={value}
+          readOnly={readOnly}
+          onChange={(e) => {
+            const next = e.target.value;
+            if (DECIMAL_INPUT_RE.test(next)) onChange?.(next);
+          }}
+          className="h-10 min-w-0 flex-1 border-none bg-transparent px-0 text-2xl font-semibold tabular-nums shadow-none focus-visible:ring-0"
+        />
+        {tokenSelect ? <div className="shrink-0">{tokenSelect}</div> : null}
+      </div>
     </div>
   );
 }

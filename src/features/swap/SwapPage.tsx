@@ -369,6 +369,16 @@ export function SwapPage({
                     ? () => setSellAmountInput(balance.maxSellFormatted!)
                     : undefined
                 }
+                tokenSelect={
+                  <TokenSelect
+                    tokens={availableTokens}
+                    value={sellToken}
+                    onChange={setSellToken}
+                    onCustomTokenResolved={rememberCustomToken}
+                    excludeAddress={buyToken?.address}
+                    label="Sell token"
+                  />
+                }
               />
               <div className="flex justify-center">
                 <Button
@@ -397,25 +407,16 @@ export function SwapPage({
                     : ""
                 }
                 readOnly
-              />
-            </div>
-
-            <div className="flex gap-2">
-              <TokenSelect
-                tokens={availableTokens}
-                value={sellToken}
-                onChange={setSellToken}
-                onCustomTokenResolved={rememberCustomToken}
-                excludeAddress={buyToken?.address}
-                label="Sell token"
-              />
-              <TokenSelect
-                tokens={availableTokens}
-                value={buyToken}
-                onChange={setBuyToken}
-                onCustomTokenResolved={rememberCustomToken}
-                excludeAddress={sellToken?.address}
-                label="Buy token"
+                tokenSelect={
+                  <TokenSelect
+                    tokens={availableTokens}
+                    value={buyToken}
+                    onChange={setBuyToken}
+                    onCustomTokenResolved={rememberCustomToken}
+                    excludeAddress={sellToken?.address}
+                    label="Buy token"
+                  />
+                }
               />
             </div>
 
