@@ -57,8 +57,7 @@ export function GlobalSearch() {
         className="h-9 gap-2 text-muted-foreground"
       >
         <Search className="h-4 w-4" aria-hidden="true" />
-        <span className="hidden sm:inline">Search markets</span>
-        <kbd className="hidden rounded border border-border px-1 text-[10px] sm:inline">⌘K</kbd>
+        <span className="hidden sm:inline">Search</span>
       </Button>
 
       <CommandDialog open={open} onOpenChange={setOpen}>

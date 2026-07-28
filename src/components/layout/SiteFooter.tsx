@@ -1,8 +1,11 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { configuredSocialLinks, projectConfig } from "@/config/project";
 
 export function SiteFooter() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
   const socials = configuredSocialLinks();
+
+  if (pathname !== "/ai-feed") return null;
 
   return (
     <footer className="mt-20 border-t border-border/70 bg-card/40">

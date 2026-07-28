@@ -160,6 +160,22 @@
   box-shadow: var(--shadow-card);
 }
 
+/* New-launches header ticker — content is duplicated once in the component
+   so this loops seamlessly at the halfway point. Paused on hover via the
+   group-hover utility in NewLaunchTicker.tsx. */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@utility ticker-track {
+  animation: marquee 32s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

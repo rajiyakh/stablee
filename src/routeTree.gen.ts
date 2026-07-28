@@ -32,6 +32,7 @@ import { Route as MarketsTrendingRouteImport } from './routes/markets.trending'
 import { Route as SwapIndexRouteImport } from './routes/swap.index'
 import { Route as TokenIndexRouteImport } from './routes/token.index'
 import { Route as ApiAnalyticsSwapEventRouteImport } from './routes/api/analytics/swap-event'
+import { Route as ApiFeedNewLaunchesRouteImport } from './routes/api/feed/new-launches'
 import { Route as ApiFeedSnapshotRouteImport } from './routes/api/feed/snapshot'
 import { Route as ApiMarketStatusRouteImport } from './routes/api/market/status'
 import { Route as ApiPortfolioHoldingsRouteImport } from './routes/api/portfolio/holdings'
@@ -171,6 +172,11 @@ const TokenIndexRoute = TokenIndexRouteImport.update({
 const ApiAnalyticsSwapEventRoute = ApiAnalyticsSwapEventRouteImport.update({
   id: '/api/analytics/swap-event',
   path: '/api/analytics/swap-event',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiFeedNewLaunchesRoute = ApiFeedNewLaunchesRouteImport.update({
+  id: '/api/feed/new-launches',
+  path: '/api/feed/new-launches',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiFeedSnapshotRoute = ApiFeedSnapshotRouteImport.update({
@@ -338,6 +344,7 @@ export interface FileRoutesByFullPath {
   '/swap/': typeof SwapIndexRoute
   '/token/': typeof TokenIndexRoute
   '/api/analytics/swap-event': typeof ApiAnalyticsSwapEventRoute
+  '/api/feed/new-launches': typeof ApiFeedNewLaunchesRoute
   '/api/feed/snapshot': typeof ApiFeedSnapshotRoute
   '/api/market/status': typeof ApiMarketStatusRoute
   '/api/portfolio/holdings': typeof ApiPortfolioHoldingsRoute
@@ -385,6 +392,7 @@ export interface FileRoutesByTo {
   '/swap': typeof SwapIndexRoute
   '/token': typeof TokenIndexRoute
   '/api/analytics/swap-event': typeof ApiAnalyticsSwapEventRoute
+  '/api/feed/new-launches': typeof ApiFeedNewLaunchesRoute
   '/api/feed/snapshot': typeof ApiFeedSnapshotRoute
   '/api/market/status': typeof ApiMarketStatusRoute
   '/api/portfolio/holdings': typeof ApiPortfolioHoldingsRoute
@@ -436,6 +444,7 @@ export interface FileRoutesById {
   '/swap/': typeof SwapIndexRoute
   '/token/': typeof TokenIndexRoute
   '/api/analytics/swap-event': typeof ApiAnalyticsSwapEventRoute
+  '/api/feed/new-launches': typeof ApiFeedNewLaunchesRoute
   '/api/feed/snapshot': typeof ApiFeedSnapshotRoute
   '/api/market/status': typeof ApiMarketStatusRoute
   '/api/portfolio/holdings': typeof ApiPortfolioHoldingsRoute
@@ -488,6 +497,7 @@ export interface FileRouteTypes {
     | '/swap/'
     | '/token/'
     | '/api/analytics/swap-event'
+    | '/api/feed/new-launches'
     | '/api/feed/snapshot'
     | '/api/market/status'
     | '/api/portfolio/holdings'
@@ -535,6 +545,7 @@ export interface FileRouteTypes {
     | '/swap'
     | '/token'
     | '/api/analytics/swap-event'
+    | '/api/feed/new-launches'
     | '/api/feed/snapshot'
     | '/api/market/status'
     | '/api/portfolio/holdings'
@@ -585,6 +596,7 @@ export interface FileRouteTypes {
     | '/swap/'
     | '/token/'
     | '/api/analytics/swap-event'
+    | '/api/feed/new-launches'
     | '/api/feed/snapshot'
     | '/api/market/status'
     | '/api/portfolio/holdings'
@@ -629,6 +641,7 @@ export interface RootRouteChildren {
   XstocksRoute: typeof XstocksRoute
   CoinCoinIdRoute: typeof CoinCoinIdRoute
   ApiAnalyticsSwapEventRoute: typeof ApiAnalyticsSwapEventRoute
+  ApiFeedNewLaunchesRoute: typeof ApiFeedNewLaunchesRoute
   ApiFeedSnapshotRoute: typeof ApiFeedSnapshotRoute
   ApiMarketStatusRoute: typeof ApiMarketStatusRoute
   ApiPortfolioHoldingsRoute: typeof ApiPortfolioHoldingsRoute
@@ -815,6 +828,13 @@ declare module '@tanstack/react-router' {
       path: '/api/analytics/swap-event'
       fullPath: '/api/analytics/swap-event'
       preLoaderRoute: typeof ApiAnalyticsSwapEventRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/feed/new-launches': {
+      id: '/api/feed/new-launches'
+      path: '/api/feed/new-launches'
+      fullPath: '/api/feed/new-launches'
+      preLoaderRoute: typeof ApiFeedNewLaunchesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/feed/snapshot': {
@@ -1064,6 +1084,7 @@ const rootRouteChildren: RootRouteChildren = {
   XstocksRoute: XstocksRoute,
   CoinCoinIdRoute: CoinCoinIdRoute,
   ApiAnalyticsSwapEventRoute: ApiAnalyticsSwapEventRoute,
+  ApiFeedNewLaunchesRoute: ApiFeedNewLaunchesRoute,
   ApiFeedSnapshotRoute: ApiFeedSnapshotRoute,
   ApiMarketStatusRoute: ApiMarketStatusRoute,
   ApiPortfolioHoldingsRoute: ApiPortfolioHoldingsRoute,

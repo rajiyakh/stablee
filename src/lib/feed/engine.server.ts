@@ -25,6 +25,7 @@ import type {
   FeedThread,
   MarketEvent,
   MarketEventType,
+  NewLaunchInfo,
   ThreadStatus,
   TokenRef,
 } from "./types";
@@ -65,6 +66,56 @@ function toRef(m: ScoredMarket): TokenRef {
     symbol: m.market.baseToken.symbol ?? "UNKNOWN",
     name: m.market.baseToken.name ?? m.market.baseToken.symbol ?? "Unknown token",
   };
+}
+
+/**
+ * Pure filter/map over already-fetched ranked markets — no network call, no
+ * store mutation. Shared by getFeedSnapshot() (which already has `ranked`
+ * on hand) and getNewLaunchesOnly() below (a lightweight standalone call
+ * for callers, like the header ticker, that only need this and shouldn't
+ * pay for full agent-message generation).
+ */
+export function computeNewLaunches(ranked: ScoredMarket[]): NewLaunchInfo[] {
+  return ranked
+    .map((m, index) => ({ m, index }))
+    .filter(({ m }) => {
+      const age = m.market.pairCreatedAt ? (Date.now() - m.market.pairCreatedAt) / 60000 : null;
+      return (
+        newLaunchConfig.requireProviderPairTimestamp &&
+        age !== null &&
+        age <= newLaunchConfig.recentLaunchWindowMinutes
+      );
+    })
+    .map(({ m, index }) => {
+      const age = m.market.pairCreatedAt ? (Date.now() - m.market.pairCreatedAt) / 60000 : 0;
+      return {
+        ...toRef(m),
+        pairAgeMinutes: age,
+        priceUsd: m.market.priceUsd,
+        volumeSinceLaunch: m.market.volume.h1,
+        liquidityUsd: m.market.liquidityUsd,
+        buys: m.market.txns.h24.buys,
+        sells: m.market.txns.h24.sells,
+        priceChange1h: m.market.priceChange.h1,
+        trendingRank: index < 30 ? index + 1 : null,
+        riskFlags: m.risks,
+        trendingWithinOneHour: age <= 60 && index < 30,
+      };
+    });
+}
+
+/**
+ * Lightweight standalone read — same provider call getFeedSnapshot() makes
+ * (hits the same fetchJson provider-level cache, so calling both is cheap),
+ * but skips event detection, message generation, and the store mutation
+ * getFeedSnapshot() does as a side effect. Safe to call from anywhere
+ * (e.g. site-wide, every page load) without those costs.
+ */
+export async function getNewLaunchesOnly(): Promise<NewLaunchInfo[]> {
+  const chainId = robinhoodChainId();
+  if (!chainId) return [];
+  const result = await getRobinhoodMainnetMarkets(chainId);
+  return computeNewLaunches(result.markets);
 }
 
 function makeEvent(type: MarketEventType, m: ScoredMarket, fetchedAt: string): MarketEvent {
@@ -375,32 +426,7 @@ export async function getFeedSnapshot(): Promise<FeedSnapshot> {
     consensusByToken[key] = computeConsensus(msgs[0].token, msgs);
   }
 
-  const newLaunches = ranked
-    .map((m, index) => ({ m, index }))
-    .filter(({ m }) => {
-      const age = m.market.pairCreatedAt ? (Date.now() - m.market.pairCreatedAt) / 60000 : null;
-      return (
-        newLaunchConfig.requireProviderPairTimestamp &&
-        age !== null &&
-        age <= newLaunchConfig.recentLaunchWindowMinutes
-      );
-    })
-    .map(({ m, index }) => {
-      const age = m.market.pairCreatedAt ? (Date.now() - m.market.pairCreatedAt) / 60000 : 0;
-      return {
-        ...toRef(m),
-        pairAgeMinutes: age,
-        priceUsd: m.market.priceUsd,
-        volumeSinceLaunch: m.market.volume.h1,
-        liquidityUsd: m.market.liquidityUsd,
-        buys: m.market.txns.h24.buys,
-        sells: m.market.txns.h24.sells,
-        priceChange1h: m.market.priceChange.h1,
-        trendingRank: index < 30 ? index + 1 : null,
-        riskFlags: m.risks,
-        trendingWithinOneHour: age <= 60 && index < 30,
-      };
-    });
+  const newLaunches = computeNewLaunches(ranked);
 
   return {
     generatedAt,

@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Activity, Menu } from "lucide-react";
+import { Activity, Menu, PanelLeft } from "lucide-react";
 import { useState } from "react";
 import { isWalletConfigured, projectConfig } from "@/config/project";
 import { Button } from "@/components/ui/button";
@@ -46,16 +46,22 @@ function XIcon({ className }: { className?: string }) {
 }
 
 /**
- * Text label instead of the shared SidebarTrigger's icon-only look — this is
- * the sidebar's own single call site, so a small local trigger built on the
- * already-exported useSidebar() hook is simpler than hand-editing the
- * generated shadcn primitive for its one consumer.
+ * Icon-only sidebar toggle — this is the sidebar's own single call site, so
+ * a small local trigger built on the already-exported useSidebar() hook is
+ * simpler than hand-editing the generated shadcn primitive for its one
+ * consumer.
  */
-function MoreMenuTrigger({ className }: { className?: string }) {
+function SidebarToggle({ className }: { className?: string }) {
   const { toggleSidebar } = useSidebar();
   return (
-    <Button variant="outline" size="sm" className={className} onClick={toggleSidebar}>
-      More
+    <Button
+      variant="outline"
+      size="icon"
+      className={className}
+      onClick={toggleSidebar}
+      aria-label="Toggle menu"
+    >
+      <PanelLeft className="h-4 w-4" aria-hidden="true" />
     </Button>
   );
 }
@@ -78,6 +84,9 @@ export function SiteHeader() {
             {projectConfig.name}
           </span>
         </Link>
+
+        <SidebarToggle className="hidden md:inline-flex" />
+        <GlobalSearch />
 
         <nav className="hidden items-center gap-1 xl:flex" aria-label="Primary">
           {navItems.map((item) => (
@@ -112,8 +121,6 @@ export function SiteHeader() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
-          <MoreMenuTrigger className="hidden md:inline-flex" />
-          <GlobalSearch />
           {projectConfig.socialLinks.x ? (
             <a
               href={projectConfig.socialLinks.x}
