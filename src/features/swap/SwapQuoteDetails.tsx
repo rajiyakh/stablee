@@ -1,7 +1,9 @@
 import { formatUnits } from "viem";
 import { AlertTriangle } from "lucide-react";
 import { PRICE_IMPACT_MAX_BPS, PRICE_IMPACT_WARN_BPS, QUOTE_TTL_MS } from "@/config/swapPolicy";
+import { FEE_BPS_DEFAULT } from "@/lib/swap/fees";
 import { detectTokenTax } from "@/lib/swap/tokenTax";
+import { humanizeRouteSources } from "@/lib/swap/route";
 import { useQuoteAge } from "./hooks/useQuoteAge";
 import type { SwapTokenConfig } from "@/config/swapTokens";
 import type { SwapPriceData, SwapQuoteData } from "@/lib/swap/client";
@@ -24,11 +26,13 @@ export function SwapQuoteDetails({
   buyToken,
   quote,
   fetchedAt,
+  slippageBps,
 }: {
   sellToken: SwapTokenConfig;
   buyToken: SwapTokenConfig;
   quote: SwapPriceData | SwapQuoteData;
   fetchedAt: number;
+  slippageBps: number;
 }) {
   const ageMs = useQuoteAge(fetchedAt);
   const remainingMs = Math.max(0, QUOTE_TTL_MS - ageMs);
@@ -51,6 +55,8 @@ export function SwapQuoteDetails({
   const fee = quote.fees?.integratorFee;
   const networkFeeWei = quote.totalNetworkFee;
   const tax = detectTokenTax(quote);
+  const route = humanizeRouteSources("route" in quote ? quote.route : undefined);
+  const feePercent = (FEE_BPS_DEFAULT / 100).toFixed(2);
 
   return (
     <div className="space-y-2 rounded-xl border border-border bg-muted/20 p-3 text-sm">
@@ -58,6 +64,7 @@ export function SwapQuoteDetails({
         label="Rate"
         value={`1 ${sellToken.symbol} = ${rate.toLocaleString("en-US", { maximumFractionDigits: 6 })} ${buyToken.symbol}`}
       />
+      {route ? <Row label="Route" value={route} /> : null}
       <Row
         label="Minimum received"
         value={
@@ -76,14 +83,14 @@ export function SwapQuoteDetails({
         value={networkFeeWei ? `${formatUnits(BigInt(networkFeeWei), 18)} ETH` : "—"}
       />
       <Row
-        label="RobinPulse fee"
+        label={`RobinPulse fee (${feePercent}%)`}
         value={
           fee
             ? `${formatTokenAmount(fee.amount, sellToken.address.toLowerCase() === fee.token.toLowerCase() ? sellToken.decimals : buyToken.decimals)} ${fee.token.toLowerCase() === sellToken.address.toLowerCase() ? sellToken.symbol : buyToken.symbol}${quote.feeUsd !== null ? ` (~$${quote.feeUsd.toFixed(4)})` : ""}`
-            : "Not returned by 0x"
+            : "Included in quote"
         }
       />
-      <Row label="Slippage" value="0.5% default" />
+      <Row label="Slippage tolerance" value={`${(slippageBps / 100).toFixed(2)}%`} />
 
       <div className="flex items-center justify-between border-t border-border/60 pt-2 text-xs text-muted-foreground">
         <span>Quote expiry</span>

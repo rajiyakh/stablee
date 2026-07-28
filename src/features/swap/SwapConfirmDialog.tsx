@@ -11,6 +11,8 @@ import {
 import { AlertTriangle } from "lucide-react";
 import { shortenAddress } from "@/lib/market/format";
 import { detectTokenTax } from "@/lib/swap/tokenTax";
+import { humanizeRouteSources } from "@/lib/swap/route";
+import { FEE_BPS_DEFAULT } from "@/lib/swap/fees";
 import { QUOTE_TTL_MS } from "@/config/swapPolicy";
 import { useQuoteAge } from "./hooks/useQuoteAge";
 import type { SwapTokenConfig } from "@/config/swapTokens";
@@ -23,6 +25,7 @@ export function SwapConfirmDialog({
   buyToken,
   quote,
   fetchedAt,
+  slippageBps,
   onConfirm,
   isSubmitting,
 }: {
@@ -33,6 +36,7 @@ export function SwapConfirmDialog({
   quote: SwapQuoteData;
   /** Epoch ms when this firm quote was fetched — used to disable Confirm once it's stale. */
   fetchedAt: number;
+  slippageBps: number;
   onConfirm: () => void;
   isSubmitting: boolean;
 }) {
@@ -50,6 +54,8 @@ export function SwapConfirmDialog({
   const fee = quote.fees?.integratorFee;
   const tax = detectTokenTax(quote);
   const remainingSeconds = Math.max(0, Math.ceil((QUOTE_TTL_MS - ageMs) / 1000));
+  const route = humanizeRouteSources(quote.route);
+  const feePercent = (FEE_BPS_DEFAULT / 100).toFixed(2);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -83,7 +89,17 @@ export function SwapConfirmDialog({
             {minReceived} {buyToken.symbol}
           </dd>
 
-          <dt className="text-muted-foreground">RobinPulse platform fee</dt>
+          <dt className="text-muted-foreground">Slippage tolerance</dt>
+          <dd className="text-right">{(slippageBps / 100).toFixed(2)}%</dd>
+
+          {route ? (
+            <>
+              <dt className="text-muted-foreground">Route</dt>
+              <dd className="text-right">{route}</dd>
+            </>
+          ) : null}
+
+          <dt className="text-muted-foreground">RobinPulse platform fee ({feePercent}%)</dt>
           <dd className="text-right">
             {fee
               ? `${formatUnits(BigInt(fee.amount), fee.token.toLowerCase() === sellToken.address.toLowerCase() ? sellToken.decimals : buyToken.decimals)} ${fee.token.toLowerCase() === sellToken.address.toLowerCase() ? sellToken.symbol : buyToken.symbol}`
@@ -99,9 +115,9 @@ export function SwapConfirmDialog({
         </dl>
 
         <p className="rounded-lg bg-muted/40 p-2.5 text-xs text-muted-foreground">
-          RobinPulse charges a 0.10% platform fee on completed swaps. The minimum supported swap
-          amount is $20, which is designed to produce a minimum platform fee of approximately $0.02.
-          The actual fee token and amount are shown in the live quote before confirmation.
+          RobinPulse charges a {feePercent}% platform fee on completed swaps. The minimum supported
+          swap amount is $20, which is designed to produce a minimum platform fee of approximately
+          $0.02. The actual fee token and amount are shown in the live quote before confirmation.
         </p>
 
         {!sellToken.verified || !buyToken.verified ? (

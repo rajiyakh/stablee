@@ -29,6 +29,7 @@ import { TokenSelect } from "./TokenSelect";
 import { SwapAmountInput } from "./SwapAmountInput";
 import { SwapQuoteDetails } from "./SwapQuoteDetails";
 import { SwapConfirmDialog } from "./SwapConfirmDialog";
+import { SlippageControl } from "./SlippageControl";
 import { useSwapTokenBalance } from "./hooks/useSwapTokenBalance";
 import { useTokenApproval } from "./hooks/useTokenApproval";
 import { useSwapExecution } from "./hooks/useSwapExecution";
@@ -47,6 +48,7 @@ export function SwapPage() {
     findSwapToken(USDG_ADDRESS) ?? swapTokens[1],
   );
   const [sellAmountInput, setSellAmountInput] = useState("");
+  const [slippageBps, setSlippageBps] = useState(SLIPPAGE_DEFAULT_BPS);
   const [flow, setFlow] = useState<FlowState>("idle");
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [firmQuote, setFirmQuote] = useState<{ data: SwapQuoteData; fetchedAt: number } | null>(
@@ -79,7 +81,7 @@ export function SwapPage() {
     buyToken: buyToken?.address ?? "",
     sellAmount: sellAmountBaseUnits || undefined,
     taker: address,
-    slippageBps: SLIPPAGE_DEFAULT_BPS,
+    slippageBps,
   };
   const priceQuery = useQuery(
     swapPriceQuery(
@@ -93,12 +95,28 @@ export function SwapPage() {
   // Curated tokens, broadened with GMGN-discovered + on-chain-decimals-confirmed
   // tokens where available. Falls back to the static curated list only.
   const tokensQuery = useQuery(swapTokensQuery());
-  const availableTokens = tokensQuery.data?.data ?? swapTokens;
+  // Session-only: tokens the user resolved by pasting a contract address in
+  // TokenSelect. Never persisted — the server independently re-resolves any
+  // address via the same on-chain lookup, so nothing here is trusted as-is.
+  const [customTokens, setCustomTokens] = useState<SwapTokenConfig[]>([]);
+  const baseTokens = tokensQuery.data?.data ?? swapTokens;
+  const availableTokens = useMemo(() => {
+    const known = new Set(baseTokens.map((t) => t.address.toLowerCase()));
+    return [...baseTokens, ...customTokens.filter((t) => !known.has(t.address.toLowerCase()))];
+  }, [baseTokens, customTokens]);
+
+  function rememberCustomToken(token: SwapTokenConfig) {
+    setCustomTokens((prev) =>
+      prev.some((t) => t.address.toLowerCase() === token.address.toLowerCase())
+        ? prev
+        : [...prev, token],
+    );
+  }
 
   useEffect(() => {
     setFlow("idle");
     setFirmQuote(null);
-  }, [sellToken?.address, buyToken?.address, sellAmountInput]);
+  }, [sellToken?.address, buyToken?.address, sellAmountInput, slippageBps]);
 
   useEffect(() => {
     if (approval.isConfirmed) {
@@ -257,23 +275,34 @@ export function SwapPage() {
       <div className="card-surface space-y-4 p-5">
         <div className="flex items-center justify-between">
           <h1 className="font-display text-xl font-semibold text-foreground">Swap</h1>
-          {isConnected ? (
-            <Button variant="outline" size="sm" onClick={() => logout()} className="gap-1.5">
-              <Wallet className="size-3.5" />
-              {shortenAddress(address, 4)}
-            </Button>
-          ) : (
-            <Button
-              size="sm"
-              disabled={!privyReady}
-              onClick={() => connectWallet()}
-              className="gap-1.5"
-            >
-              <Wallet className="size-3.5" />
-              Connect Wallet
-            </Button>
-          )}
+          <div className="flex items-center gap-1.5">
+            <SlippageControl slippageBps={slippageBps} onChange={setSlippageBps} />
+            {isConnected ? (
+              <Button variant="outline" size="sm" onClick={() => logout()} className="gap-1.5">
+                <Wallet className="size-3.5" />
+                {shortenAddress(address, 4)}
+              </Button>
+            ) : (
+              <Button
+                size="sm"
+                disabled={!privyReady}
+                onClick={() => connectWallet()}
+                className="gap-1.5"
+              >
+                <Wallet className="size-3.5" />
+                Connect Wallet
+              </Button>
+            )}
+          </div>
         </div>
+
+        <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-muted-foreground">
+          <span>Audited infrastructure</span>
+          <span aria-hidden="true">·</span>
+          <span>No custody</span>
+          <span aria-hidden="true">·</span>
+          <span>Transparent 0.10% fee</span>
+        </p>
 
         {wrongNetwork ? (
           <div className="rounded-lg border border-warning/40 bg-warning/10 p-3 text-sm text-warning">
@@ -297,6 +326,9 @@ export function SwapPage() {
             value={sellAmountInput}
             onChange={setSellAmountInput}
             balanceFormatted={balance.formatted}
+            balanceLoading={isConnected && balance.isLoading}
+            balanceError={isConnected && balance.isError}
+            onRetryBalance={balance.refetch}
             onMax={
               balance.maxSellFormatted
                 ? () => setSellAmountInput(balance.maxSellFormatted!)
@@ -336,6 +368,7 @@ export function SwapPage() {
             tokens={availableTokens}
             value={sellToken}
             onChange={setSellToken}
+            onCustomTokenResolved={rememberCustomToken}
             excludeAddress={buyToken?.address}
             label="Sell token"
           />
@@ -343,6 +376,7 @@ export function SwapPage() {
             tokens={availableTokens}
             value={buyToken}
             onChange={setBuyToken}
+            onCustomTokenResolved={rememberCustomToken}
             excludeAddress={sellToken?.address}
             label="Buy token"
           />
@@ -362,6 +396,7 @@ export function SwapPage() {
             buyToken={buyToken}
             quote={priceQuery.data.data}
             fetchedAt={Date.parse(priceQuery.data.fetchedAt ?? new Date().toISOString())}
+            slippageBps={slippageBps}
           />
         ) : null}
 
@@ -425,6 +460,7 @@ export function SwapPage() {
           buyToken={buyToken}
           quote={firmQuote.data}
           fetchedAt={firmQuote.fetchedAt}
+          slippageBps={slippageBps}
           onConfirm={handleConfirmSwap}
           isSubmitting={execution.isSwapping || execution.isConfirming}
         />

@@ -35,6 +35,7 @@ import { Route as ApiFeedSnapshotRouteImport } from './routes/api/feed/snapshot'
 import { Route as ApiMarketStatusRouteImport } from './routes/api/market/status'
 import { Route as ApiSwapPriceRouteImport } from './routes/api/swap/price'
 import { Route as ApiSwapQuoteRouteImport } from './routes/api/swap/quote'
+import { Route as ApiSwapResolveTokenRouteImport } from './routes/api/swap/resolve-token'
 import { Route as ApiSwapTokensRouteImport } from './routes/api/swap/tokens'
 import { Route as MarketsRobinhoodTokenAddressRouteImport } from './routes/markets.robinhood.$tokenAddress'
 import { Route as TokenChainIdAddressRouteImport } from './routes/token.$chainId.$address'
@@ -185,6 +186,11 @@ const ApiSwapQuoteRoute = ApiSwapQuoteRouteImport.update({
   path: '/api/swap/quote',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiSwapResolveTokenRoute = ApiSwapResolveTokenRouteImport.update({
+  id: '/api/swap/resolve-token',
+  path: '/api/swap/resolve-token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiSwapTokensRoute = ApiSwapTokensRouteImport.update({
   id: '/api/swap/tokens',
   path: '/api/swap/tokens',
@@ -323,6 +329,7 @@ export interface FileRoutesByFullPath {
   '/api/market/status': typeof ApiMarketStatusRoute
   '/api/swap/price': typeof ApiSwapPriceRoute
   '/api/swap/quote': typeof ApiSwapQuoteRoute
+  '/api/swap/resolve-token': typeof ApiSwapResolveTokenRoute
   '/api/swap/tokens': typeof ApiSwapTokensRoute
   '/markets/robinhood/$tokenAddress': typeof MarketsRobinhoodTokenAddressRoute
   '/token/$chainId/$address': typeof TokenChainIdAddressRoute
@@ -367,6 +374,7 @@ export interface FileRoutesByTo {
   '/api/market/status': typeof ApiMarketStatusRoute
   '/api/swap/price': typeof ApiSwapPriceRoute
   '/api/swap/quote': typeof ApiSwapQuoteRoute
+  '/api/swap/resolve-token': typeof ApiSwapResolveTokenRoute
   '/api/swap/tokens': typeof ApiSwapTokensRoute
   '/markets/robinhood/$tokenAddress': typeof MarketsRobinhoodTokenAddressRoute
   '/token/$chainId/$address': typeof TokenChainIdAddressRoute
@@ -415,6 +423,7 @@ export interface FileRoutesById {
   '/api/market/status': typeof ApiMarketStatusRoute
   '/api/swap/price': typeof ApiSwapPriceRoute
   '/api/swap/quote': typeof ApiSwapQuoteRoute
+  '/api/swap/resolve-token': typeof ApiSwapResolveTokenRoute
   '/api/swap/tokens': typeof ApiSwapTokensRoute
   '/markets/robinhood/$tokenAddress': typeof MarketsRobinhoodTokenAddressRoute
   '/token/$chainId/$address': typeof TokenChainIdAddressRoute
@@ -464,6 +473,7 @@ export interface FileRouteTypes {
     | '/api/market/status'
     | '/api/swap/price'
     | '/api/swap/quote'
+    | '/api/swap/resolve-token'
     | '/api/swap/tokens'
     | '/markets/robinhood/$tokenAddress'
     | '/token/$chainId/$address'
@@ -508,6 +518,7 @@ export interface FileRouteTypes {
     | '/api/market/status'
     | '/api/swap/price'
     | '/api/swap/quote'
+    | '/api/swap/resolve-token'
     | '/api/swap/tokens'
     | '/markets/robinhood/$tokenAddress'
     | '/token/$chainId/$address'
@@ -555,6 +566,7 @@ export interface FileRouteTypes {
     | '/api/market/status'
     | '/api/swap/price'
     | '/api/swap/quote'
+    | '/api/swap/resolve-token'
     | '/api/swap/tokens'
     | '/markets/robinhood/$tokenAddress'
     | '/token/$chainId/$address'
@@ -596,6 +608,7 @@ export interface RootRouteChildren {
   ApiMarketStatusRoute: typeof ApiMarketStatusRoute
   ApiSwapPriceRoute: typeof ApiSwapPriceRoute
   ApiSwapQuoteRoute: typeof ApiSwapQuoteRoute
+  ApiSwapResolveTokenRoute: typeof ApiSwapResolveTokenRoute
   ApiSwapTokensRoute: typeof ApiSwapTokensRoute
   ApiMarketCoingeckoCoinsRoute: typeof ApiMarketCoingeckoCoinsRoute
   ApiMarketCoingeckoSearchRoute: typeof ApiMarketCoingeckoSearchRoute
@@ -797,6 +810,13 @@ declare module '@tanstack/react-router' {
       path: '/api/swap/quote'
       fullPath: '/api/swap/quote'
       preLoaderRoute: typeof ApiSwapQuoteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/swap/resolve-token': {
+      id: '/api/swap/resolve-token'
+      path: '/api/swap/resolve-token'
+      fullPath: '/api/swap/resolve-token'
+      preLoaderRoute: typeof ApiSwapResolveTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/swap/tokens': {
@@ -1007,6 +1027,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiMarketStatusRoute: ApiMarketStatusRoute,
   ApiSwapPriceRoute: ApiSwapPriceRoute,
   ApiSwapQuoteRoute: ApiSwapQuoteRoute,
+  ApiSwapResolveTokenRoute: ApiSwapResolveTokenRoute,
   ApiSwapTokensRoute: ApiSwapTokensRoute,
   ApiMarketCoingeckoCoinsRoute: ApiMarketCoingeckoCoinsRoute,
   ApiMarketCoingeckoSearchRoute: ApiMarketCoingeckoSearchRoute,

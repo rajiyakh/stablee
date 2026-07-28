@@ -52,12 +52,19 @@ export function useSwapTokenBalance(token: SwapTokenConfig | null) {
   const value = native ? nativeQuery.data?.value : erc20Query.data;
   const formatted = value !== undefined && token ? formatUnits(value, token.decimals) : null;
   const maxSellFormatted = token ? computeMaxSellFormatted(value, token.decimals, native) : null;
+  const activeQuery = native ? nativeQuery : erc20Query;
 
   return {
     balance: value ?? null,
     formatted,
     maxSellFormatted,
-    isLoading: native ? nativeQuery.isLoading : erc20Query.isLoading,
-    refetch: native ? nativeQuery.refetch : erc20Query.refetch,
+    // Loading/error are surfaced explicitly (not just "no value yet") so the
+    // UI can distinguish "still fetching" and "the read failed, retry" from
+    // "wallet not connected" instead of rendering identically blank for all
+    // three — a real gap that made a transient RPC hiccup indistinguishable
+    // from a permanent bug in the balance line.
+    isLoading: activeQuery.isLoading,
+    isError: activeQuery.isError,
+    refetch: activeQuery.refetch,
   };
 }

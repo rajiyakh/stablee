@@ -21,7 +21,7 @@ export const Route = createFileRoute("/swap/")({
       {
         name: "description",
         content:
-          "Swap Robinhood Mainnet tokens via the 0x Swap API, with a transparent RobinPulse platform fee.",
+          "Trade Robinhood Mainnet tokens instantly, routed through audited on-chain infrastructure with a transparent RobinPulse platform fee.",
       },
     ],
   }),
@@ -33,7 +33,7 @@ function SwapRoute() {
     return (
       <PageContainer>
         <SectionHeading
-          eyebrow="0x Swap API · Robinhood Mainnet"
+          eyebrow="Instant Swap · Robinhood Mainnet"
           title="Swap"
           description="Swap is not yet available. Wallet integration is not yet configured for this deployment."
         />
@@ -44,9 +44,9 @@ function SwapRoute() {
   return (
     <PageContainer>
       <SectionHeading
-        eyebrow="0x Swap API · Robinhood Mainnet"
+        eyebrow="Instant Swap · Robinhood Mainnet"
         title="Swap"
-        description="Swap Robinhood Mainnet tokens through 0x's audited swap infrastructure. RobinPulse charges a transparent 0.10% platform fee on completed swaps."
+        description="Trade Robinhood Mainnet tokens in seconds — real-time pricing, best-available routing across on-chain liquidity, and a transparent 0.10% platform fee. Your funds never leave your wallet until the moment you confirm."
       />
       <div className="mt-6">
         <Suspense fallback={null}>

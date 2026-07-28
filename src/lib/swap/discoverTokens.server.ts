@@ -8,9 +8,11 @@ import { normalizeTrending } from "@/providers/gmgn/normalize";
 
 const MAX_DISCOVERED_TOKENS = 20;
 const DISCOVERY_CACHE_TTL_MS = 60_000;
+const CUSTOM_TOKEN_CACHE_TTL_MS = 5 * 60_000;
+const EVM_ADDRESS_RE = /^0x[a-fA-F0-9]{40}$/;
 
 export interface DiscoveredSwapToken extends SwapTokenConfig {
-  source: "gmgn";
+  source: "gmgn" | "custom";
 }
 
 let publicClient: ReturnType<typeof createPublicClient> | null = null;
@@ -47,6 +49,53 @@ async function readDecimalsOnChain(address: string): Promise<number | null> {
 }
 
 let cache: { tokens: DiscoveredSwapToken[]; expiresAt: number } | null = null;
+const customTokenCache = new Map<
+  string,
+  { token: DiscoveredSwapToken | null; expiresAt: number }
+>();
+
+/**
+ * Third resolution tier, tried only after the curated list and GMGN's
+ * trending dataset both miss — resolves ANY syntactically valid address by
+ * reading decimals()/symbol()/name() directly on-chain, same trust model as
+ * discoverSwapTokens(): every field comes from a real on-chain read, never
+ * fabricated or trusted from the caller. Returns null (not a token, or the
+ * calls revert/fail — e.g. not a contract, not ERC-20-shaped) rather than
+ * ever guessing. Cached per-address for a few minutes so re-selecting the
+ * same custom token doesn't re-read on every request.
+ */
+export async function resolveCustomToken(address: string): Promise<DiscoveredSwapToken | null> {
+  if (!EVM_ADDRESS_RE.test(address)) return null;
+  const key = address.toLowerCase();
+
+  const cached = customTokenCache.get(key);
+  if (cached && cached.expiresAt > Date.now()) return cached.token;
+
+  const client = getPublicClient();
+  if (!client) return null;
+
+  let token: DiscoveredSwapToken | null = null;
+  try {
+    const [decimals, symbol, name] = await Promise.all([
+      client.readContract({ address: address as Address, abi: erc20Abi, functionName: "decimals" }),
+      client.readContract({ address: address as Address, abi: erc20Abi, functionName: "symbol" }),
+      client.readContract({ address: address as Address, abi: erc20Abi, functionName: "name" }),
+    ]);
+    token = {
+      address,
+      symbol,
+      name,
+      decimals: Number(decimals),
+      verified: false,
+      source: "custom",
+    };
+  } catch {
+    token = null; // not a contract, not ERC-20-shaped, or the RPC call failed — never guess
+  }
+
+  customTokenCache.set(key, { token, expiresAt: Date.now() + CUSTOM_TOKEN_CACHE_TTL_MS });
+  return token;
+}
 
 /**
  * Broadens the swap-eligible token list beyond the small hardcoded
@@ -98,13 +147,23 @@ export async function discoverSwapTokens(): Promise<DiscoveredSwapToken[]> {
   }
 }
 
-/** Curated tokens first, then anything GMGN-discovered and on-chain-confirmed. */
+/**
+ * Curated tokens first, then anything GMGN-discovered and on-chain-confirmed,
+ * then — for any address neither of those know about — a direct on-chain
+ * lookup (see resolveCustomToken). This is the only function callers should
+ * use to resolve a token from an address; it's what makes a pasted contract
+ * address tradeable via /api/swap/price and /api/swap/quote, not just
+ * selectable in the picker.
+ */
 export async function resolveSwapToken(address: string): Promise<SwapTokenConfig | null> {
   const curated = findSwapToken(address);
   if (curated) return curated;
 
   const discovered = await discoverSwapTokens();
-  return discovered.find((t) => t.address.toLowerCase() === address.toLowerCase()) ?? null;
+  const fromDiscovery = discovered.find((t) => t.address.toLowerCase() === address.toLowerCase());
+  if (fromDiscovery) return fromDiscovery;
+
+  return resolveCustomToken(address);
 }
 
 export async function allSwapTokens(): Promise<SwapTokenConfig[]> {

@@ -54,6 +54,7 @@ export const swapKeys = {
   price: (params: SwapRequestParams) => ["swap", "price", buildParams(params)] as const,
   quote: (params: SwapRequestParams) => ["swap", "quote", buildParams(params)] as const,
   tokens: ["swap", "tokens"] as const,
+  resolveToken: (address: string) => ["swap", "resolve-token", address.toLowerCase()] as const,
 };
 
 /** Curated tokens merged with GMGN-discovered, on-chain-decimals-confirmed tokens. */
@@ -62,6 +63,19 @@ export const swapTokensQuery = () =>
     queryKey: swapKeys.tokens,
     queryFn: () => getEnvelope<SwapTokenConfig[]>("/api/swap/tokens"),
     staleTime: 60_000,
+  });
+
+/** Resolves a pasted contract address — curated/GMGN/direct-on-chain, see resolve-token.ts. */
+export const resolveTokenQuery = (address: string, enabled: boolean) =>
+  queryOptions({
+    queryKey: swapKeys.resolveToken(address),
+    queryFn: () =>
+      getEnvelope<SwapTokenConfig | null>(
+        `/api/swap/resolve-token?address=${encodeURIComponent(address)}`,
+      ),
+    enabled: enabled && /^0x[a-fA-F0-9]{40}$/.test(address),
+    staleTime: 5 * 60_000,
+    retry: false,
   });
 
 export const swapPriceQuery = (params: SwapRequestParams, enabled: boolean) =>

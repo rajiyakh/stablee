@@ -1,3 +1,4 @@
+import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { SwapTokenConfig } from "@/config/swapTokens";
@@ -10,6 +11,9 @@ export function SwapAmountInput({
   value,
   onChange,
   balanceFormatted,
+  balanceLoading,
+  balanceError,
+  onRetryBalance,
   onMax,
   readOnly,
 }: {
@@ -18,6 +22,11 @@ export function SwapAmountInput({
   value: string;
   onChange?: (value: string) => void;
   balanceFormatted?: string | null;
+  /** Wallet is connected and a balance read is in flight — distinct from "not connected". */
+  balanceLoading?: boolean;
+  /** The balance read failed after wagmi's own retries were exhausted. */
+  balanceError?: boolean;
+  onRetryBalance?: () => void;
   onMax?: () => void;
   readOnly?: boolean;
 }) {
@@ -38,6 +47,22 @@ export function SwapAmountInput({
               >
                 MAX
               </Button>
+            ) : null}
+          </span>
+        ) : balanceLoading ? (
+          <span className="text-muted-foreground/70">Loading balance…</span>
+        ) : balanceError ? (
+          <span className="flex items-center gap-1 text-warning">
+            Balance unavailable
+            {onRetryBalance ? (
+              <button
+                type="button"
+                onClick={onRetryBalance}
+                aria-label="Retry loading balance"
+                className="inline-flex items-center rounded p-0.5 hover:bg-warning/10"
+              >
+                <RefreshCw className="size-3" />
+              </button>
             ) : null}
           </span>
         ) : null}
