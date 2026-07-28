@@ -6,12 +6,15 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { GlobalSearch } from "./GlobalSearch";
+import { SidebarToggle } from "./SiteHeader";
 
 // Leaderboard and Data Sources are intentionally left out (still reachable
 // directly at /leaderboard and /data) — hidden from nav, not deleted.
@@ -32,6 +35,12 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon" className="top-16 h-[calc(100svh-4rem)]">
+      <SidebarHeader className="flex-row items-center gap-2 group-data-[collapsible=icon]:flex-col">
+        <SidebarToggle />
+        <div className="group-data-[collapsible=icon]:hidden">
+          <GlobalSearch />
+        </div>
+      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>More</SidebarGroupLabel>

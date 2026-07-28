@@ -46,12 +46,11 @@ function XIcon({ className }: { className?: string }) {
 }
 
 /**
- * Icon-only sidebar toggle — this is the sidebar's own single call site, so
- * a small local trigger built on the already-exported useSidebar() hook is
- * simpler than hand-editing the generated shadcn primitive for its one
- * consumer.
+ * Icon-only sidebar toggle, built on useSidebar() rather than hand-editing
+ * the generated shadcn SidebarTrigger primitive. Exported for reuse in
+ * AppSidebar.tsx (the sidebar shows its own copy at the top when expanded).
  */
-function SidebarToggle({ className }: { className?: string }) {
+export function SidebarToggle({ className }: { className?: string }) {
   const { toggleSidebar } = useSidebar();
   return (
     <Button
