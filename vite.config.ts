@@ -36,8 +36,7 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 // guessed — see the balance-display fix in useSwapTokenBalance.ts.
 const ROBINHOOD_RPC_URL = "https://rpc.mainnet.chain.robinhood.com";
 const securityHeaders = {
-  "Content-Security-Policy":
-    `default-src 'self'; script-src 'self' 'unsafe-inline' https://s3.tradingview.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' ${ROBINHOOD_RPC_URL} https://auth.privy.io https://*.rpc.privy.systems https://explorer-api.walletconnect.com wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org; frame-src https://dexscreener.com https://www.tradingview-widget.com https://s.tradingview.com https://auth.privy.io https://verify.walletconnect.com https://verify.walletconnect.org https://challenges.cloudflare.com; frame-ancestors 'none'; object-src 'none'; base-uri 'self'`,
+  "Content-Security-Policy": `default-src 'self'; script-src 'self' 'unsafe-inline' https://s3.tradingview.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' ${ROBINHOOD_RPC_URL} https://auth.privy.io https://*.rpc.privy.systems https://explorer-api.walletconnect.com wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org; frame-src https://dexscreener.com https://www.tradingview-widget.com https://s.tradingview.com https://auth.privy.io https://verify.walletconnect.com https://verify.walletconnect.org https://challenges.cloudflare.com; frame-ancestors 'none'; object-src 'none'; base-uri 'self'`,
   "X-Content-Type-Options": "nosniff",
   "Referrer-Policy": "strict-origin-when-cross-origin",
   "Permissions-Policy": "camera=(), microphone=(), geolocation=()",

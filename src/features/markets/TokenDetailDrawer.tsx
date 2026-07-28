@@ -1,6 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import { CopyContractButton } from "@/components/feed/CopyContractButton";
 import { WatchButton } from "@/components/common/WatchButton";
+import { BuySwapButton } from "@/components/market/BuySwapButton";
 import {
   Sheet,
   SheetContent,
@@ -8,7 +9,6 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { ExternalBuyButton } from "./ExternalBuyButton";
 import {
   changeClass,
   formatCompactUsd,
@@ -126,7 +126,9 @@ export function TokenDetailDrawer({
           {token.externalLinks ? (
             <div className="flex flex-wrap gap-3 text-xs">
               {Object.entries(token.externalLinks).map(([key, url]) =>
-                url ? (
+                // "gmgn" is GMGN's own trading page, not a neutral info/social
+                // link — the Buy button below is this app's only trade route.
+                url && key !== "gmgn" ? (
                   <a
                     key={key}
                     href={url}
@@ -142,7 +144,7 @@ export function TokenDetailDrawer({
           ) : null}
 
           <div className="flex items-center gap-2 pt-2">
-            <ExternalBuyButton token={token} size="default" />
+            <BuySwapButton chainId="robinhood" address={token.address} size="default" />
             <WatchButton
               entry={{
                 kind: "dex",

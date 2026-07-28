@@ -8,6 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { WatchButton } from "@/components/common/WatchButton";
+import { BuySwapButton } from "@/components/market/BuySwapButton";
 import { CopyContractButton } from "@/components/feed/CopyContractButton";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
@@ -18,7 +19,6 @@ import {
   formatPercent,
 } from "@/lib/market/format";
 import { cn } from "@/lib/utils";
-import { ExternalBuyButton } from "./ExternalBuyButton";
 import {
   intervalBuys,
   intervalPriceChange,
@@ -299,7 +299,7 @@ export function RobinhoodTokenTable({
                   )}
                 </TableCell>
                 <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
-                  <ExternalBuyButton token={token} />
+                  <BuySwapButton chainId="robinhood" address={token.address} />
                 </TableCell>
               </TableRow>
             );

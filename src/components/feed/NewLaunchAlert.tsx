@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Rocket } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { RiskFlags } from "@/components/market/RiskFlags";
+import { BuySwapButton } from "@/components/market/BuySwapButton";
 import { CopyContractButton } from "./CopyContractButton";
 import { MarketMetricsRow } from "./MarketMetricsRow";
 import { formatUsd, changeClass, formatPercent } from "@/lib/market/format";
@@ -43,6 +44,7 @@ export function NewLaunchAlert({ launch }: { launch: NewLaunchInfo }) {
         {launch.trendingRank ? (
           <span className="text-xs text-muted-foreground">Trending #{launch.trendingRank}</span>
         ) : null}
+        <BuySwapButton chainId={launch.chainId} address={launch.address} className="ml-auto" />
       </div>
 
       <MarketMetricsRow

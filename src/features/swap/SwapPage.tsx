@@ -17,6 +17,7 @@ import {
 } from "@/config/swapTokens";
 import { PRICE_IMPACT_MAX_BPS, QUOTE_TTL_MS, SLIPPAGE_DEFAULT_BPS } from "@/config/swapPolicy";
 import {
+  resolveTokenQuery,
   swapPriceQuery,
   swapQuoteQuery,
   swapTokensQuery,
@@ -36,7 +37,14 @@ import { useSwapExecution } from "./hooks/useSwapExecution";
 
 type FlowState = "idle" | "needs-approval" | "approving" | "ready" | "success";
 
-export function SwapPage() {
+export function SwapPage({
+  initialBuyAddress,
+  initialSellAddress,
+}: {
+  /** Deep-links a token in as the buy/sell side — see BuySwapButton, the only producer of these. */
+  initialBuyAddress?: string;
+  initialSellAddress?: string;
+}) {
   const { address, isConnected, chainId } = useAccount();
   const { ready: privyReady, connectWallet, logout } = usePrivy();
   const { switchChain, isPending: isSwitching } = useSwitchChain();
@@ -47,6 +55,44 @@ export function SwapPage() {
   const [buyToken, setBuyToken] = useState<SwapTokenConfig | null>(
     findSwapToken(USDG_ADDRESS) ?? swapTokens[1],
   );
+
+  // Resolves via the same curated -> GMGN -> on-chain lookup TokenSelect's
+  // paste-address flow uses (resolveSwapToken() server-side) — never trusts
+  // the caller's claimed symbol/decimals, only the address itself.
+  const resolvedBuyQuery = useQuery(
+    resolveTokenQuery(initialBuyAddress ?? "", Boolean(initialBuyAddress)),
+  );
+  const resolvedSellQuery = useQuery(
+    resolveTokenQuery(initialSellAddress ?? "", Boolean(initialSellAddress)),
+  );
+
+  useEffect(() => {
+    const resolved = resolvedBuyQuery.data?.data;
+    if (!resolved) return;
+    setBuyToken(resolved);
+    // Never leave both sides on the same token — if no explicit sell address
+    // was requested and the buy token happens to match the current sell
+    // default, fall back sell to the other default instead.
+    if (!initialSellAddress) {
+      setSellToken((prevSell) => {
+        if (!prevSell || prevSell.address.toLowerCase() !== resolved.address.toLowerCase()) {
+          return prevSell;
+        }
+        const fallback =
+          resolved.address.toLowerCase() === WETH_ADDRESS.toLowerCase()
+            ? findSwapToken(USDG_ADDRESS)
+            : findSwapToken(WETH_ADDRESS);
+        return fallback ?? prevSell;
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resolvedBuyQuery.data]);
+
+  useEffect(() => {
+    const resolved = resolvedSellQuery.data?.data;
+    if (!resolved) return;
+    setSellToken(resolved);
+  }, [resolvedSellQuery.data]);
   const [sellAmountInput, setSellAmountInput] = useState("");
   const [slippageBps, setSlippageBps] = useState(SLIPPAGE_DEFAULT_BPS);
   const [flow, setFlow] = useState<FlowState>("idle");

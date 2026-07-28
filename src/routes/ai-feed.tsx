@@ -7,6 +7,7 @@ import { EmptyState } from "@/components/common/EmptyState";
 import { ErrorState } from "@/components/common/ErrorState";
 import { CardSkeleton } from "@/components/common/Skeletons";
 import { Badge } from "@/components/ui/badge";
+import { BuySwapButton } from "@/components/market/BuySwapButton";
 import { chainTrendingQuery, globalTrendingQuery } from "@/lib/market/client";
 import { projectConfig } from "@/config/project";
 import { buildAutomatedSummaries } from "@/lib/feed/summaries";
@@ -74,13 +75,21 @@ function AiFeedPage() {
                     {relativeTime(summary.dataTimestamp)}
                   </span>
                 </div>
-                <Link
-                  to={summary.asset.href.to}
-                  params={summary.asset.href.params}
-                  className="mt-3 block text-sm font-semibold text-foreground hover:text-primary"
-                >
-                  {summary.asset.name} ({summary.asset.symbol})
-                </Link>
+                <div className="mt-3 flex items-center justify-between gap-2">
+                  <Link
+                    to={summary.asset.href.to}
+                    params={summary.asset.href.params}
+                    className="block text-sm font-semibold text-foreground hover:text-primary"
+                  >
+                    {summary.asset.name} ({summary.asset.symbol})
+                  </Link>
+                  {summary.asset.href.to === "/token/$chainId/$address" ? (
+                    <BuySwapButton
+                      chainId={summary.asset.href.params.chainId}
+                      address={summary.asset.href.params.address}
+                    />
+                  ) : null}
+                </div>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   {summary.headline}
                 </p>

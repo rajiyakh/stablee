@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { BuySwapButton } from "@/components/market/BuySwapButton";
 import { formatUsd, changeClass, formatPercent } from "@/lib/market/format";
 import type { TrendingTokenInfo } from "@/lib/feed/types";
 
@@ -40,6 +41,9 @@ export function TrendingTokenPanel({
               className={`w-14 shrink-0 text-right text-[11px] tabular-nums ${changeClass(t.priceChange1h)}`}
             >
               {formatPercent(t.priceChange1h)}
+            </span>
+            <span onClick={(e) => e.stopPropagation()} className="shrink-0">
+              <BuySwapButton chainId={t.chainId} address={t.address} />
             </span>
           </button>
         </li>

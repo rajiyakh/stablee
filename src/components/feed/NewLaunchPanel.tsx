@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Badge } from "@/components/ui/badge";
+import { BuySwapButton } from "@/components/market/BuySwapButton";
 import { formatUsd } from "@/lib/market/format";
 import type { NewLaunchInfo } from "@/lib/feed/types";
 
@@ -26,11 +27,14 @@ export function NewLaunchPanel({ launches }: { launches: NewLaunchInfo[] }) {
           </div>
           <div className="mt-1 flex items-center justify-between gap-2">
             <span className="text-[11px] text-muted-foreground">{formatUsd(l.priceUsd)}</span>
-            {l.trendingWithinOneHour ? (
-              <Badge className="rounded-full bg-brand px-1.5 py-0 text-[9px] text-brand-foreground">
-                Trending 1H
-              </Badge>
-            ) : null}
+            <div className="flex items-center gap-1.5">
+              {l.trendingWithinOneHour ? (
+                <Badge className="rounded-full bg-brand px-1.5 py-0 text-[9px] text-brand-foreground">
+                  Trending 1H
+                </Badge>
+              ) : null}
+              <BuySwapButton chainId={l.chainId} address={l.address} />
+            </div>
           </div>
         </li>
       ))}

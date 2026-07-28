@@ -50,7 +50,7 @@ export function isFeedStale(ageSeconds: number, heartbeatSeconds: number): boole
  * Reads a real Chainlink AggregatorV3Interface feed. Wired, functional, and
  * has real entries for the 8 confirmed Robinhood tokenized-equity feeds —
  * see chainlinkFeeds.ts. Every other token still falls through to the next
- * USD-pricing tier, exactly like tradingDestinations.ts's disabled entries.
+ * USD-pricing tier.
  */
 export async function readChainlinkPrice(feed: ChainlinkFeedConfig): Promise<number | null> {
   const publicClient = getClient();

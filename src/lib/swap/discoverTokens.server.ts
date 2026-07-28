@@ -119,26 +119,35 @@ export async function discoverSwapTokens(): Promise<DiscoveredSwapToken[]> {
       limit: MAX_DISCOVERED_TOKENS,
     });
     const parsed = gmgnTrendingResponseSchema.parse(res.data);
-    const candidates = normalizeTrending(parsed, "24h");
+    const candidates = normalizeTrending(parsed, "24h").filter(
+      (candidate) => !findSwapToken(candidate.address), // already curated — don't duplicate
+    );
 
-    const discovered: DiscoveredSwapToken[] = [];
-    for (const candidate of candidates) {
-      if (discovered.length >= MAX_DISCOVERED_TOKENS) break;
-      if (findSwapToken(candidate.address)) continue; // already curated — don't duplicate
-
-      const decimals = await readDecimalsOnChain(candidate.address);
-      if (decimals === null) continue; // couldn't confirm on-chain — never guess a decimals value
-
-      discovered.push({
-        address: candidate.address,
-        symbol: candidate.symbol,
-        name: candidate.name,
-        decimals,
-        logoUrl: candidate.logoUrl,
-        verified: false,
-        source: "gmgn",
-      });
-    }
+    // Decimals reads run in parallel. This used to be a sequential
+    // await-in-a-loop (one RPC round trip at a time, up to 20 candidates) —
+    // measured at 5+ seconds end to end. That latency was mostly invisible
+    // while this only backed a background token-list refresh, but became a
+    // real, felt delay once resolveSwapToken() started being called
+    // synchronously from a Buy-button deep link (a user expects /swap to
+    // already show their token, not spend 5+ seconds resolving it).
+    const resolved = await Promise.all(
+      candidates.map(async (candidate): Promise<DiscoveredSwapToken | null> => {
+        const decimals = await readDecimalsOnChain(candidate.address);
+        if (decimals === null) return null; // couldn't confirm on-chain — never guess a decimals value
+        return {
+          address: candidate.address,
+          symbol: candidate.symbol,
+          name: candidate.name,
+          decimals,
+          logoUrl: candidate.logoUrl,
+          verified: false,
+          source: "gmgn",
+        };
+      }),
+    );
+    const discovered = resolved
+      .filter((t): t is DiscoveredSwapToken => t !== null)
+      .slice(0, MAX_DISCOVERED_TOKENS);
 
     cache = { tokens: discovered, expiresAt: Date.now() + DISCOVERY_CACHE_TTL_MS };
     return discovered;

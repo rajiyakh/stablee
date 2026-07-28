@@ -94,8 +94,12 @@ export type SecurityFlags = {
   creatorHoldingPercent?: number;
 };
 
+/**
+ * Deliberately no `gmgn` field — GMGN's own token page is a trading
+ * interface, not a neutral info/social link, and this app never links to an
+ * external DEX (see BuySwapButton / docs/TRADING_DESTINATIONS.md).
+ */
 export type ExternalLinks = {
-  gmgn?: string;
   dexScreener?: string;
   website?: string;
   x?: string;

@@ -3,6 +3,7 @@ import { PageContainer } from "@/components/layout/AppShell";
 import { SectionHeading } from "@/components/common/SectionHeading";
 import { EmptyState } from "@/components/common/EmptyState";
 import { Button } from "@/components/ui/button";
+import { BuySwapButton } from "@/components/market/BuySwapButton";
 import { useWatchlist } from "@/lib/watchlist";
 
 export const Route = createFileRoute("/watchlist")({
@@ -74,14 +75,14 @@ function WatchlistPage() {
                   </Link>
                 )}
                 <span className="text-xs uppercase text-muted-foreground">{entry.symbol}</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="ml-auto"
-                  onClick={() => remove(entry.key)}
-                >
-                  Remove
-                </Button>
+                <div className="ml-auto flex items-center gap-1.5">
+                  {entry.kind === "dex" && entry.chainId && entry.address ? (
+                    <BuySwapButton chainId={entry.chainId} address={entry.address} />
+                  ) : null}
+                  <Button variant="ghost" size="sm" onClick={() => remove(entry.key)}>
+                    Remove
+                  </Button>
+                </div>
               </li>
             ))}
           </ul>

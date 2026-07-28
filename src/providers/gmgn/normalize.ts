@@ -44,9 +44,7 @@ function buildSecurity(item: GmgnRankItemParsed): SecurityFlags | undefined {
 }
 
 function buildExternalLinks(item: GmgnRankItemParsed): RobinhoodTrendingToken["externalLinks"] {
-  const links: RobinhoodTrendingToken["externalLinks"] = {
-    gmgn: `https://gmgn.ai/robinhood/token/${item.address}`,
-  };
+  const links: RobinhoodTrendingToken["externalLinks"] = {};
   if (item.pair_address)
     links.dexScreener = `https://dexscreener.com/robinhood/${item.pair_address}`;
   if (item.website) links.website = item.website;

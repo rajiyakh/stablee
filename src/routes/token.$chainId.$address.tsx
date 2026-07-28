@@ -6,6 +6,7 @@ import { ErrorState } from "@/components/common/ErrorState";
 import { CardSkeleton } from "@/components/common/Skeletons";
 import { ChangeBadge } from "@/components/common/ChangeBadge";
 import { WatchButton } from "@/components/common/WatchButton";
+import { BuySwapButton } from "@/components/market/BuySwapButton";
 import { RiskFlags } from "@/components/market/RiskFlags";
 import { DexChartEmbed } from "@/components/market/DexChartEmbed";
 import { EmptyState } from "@/components/common/EmptyState";
@@ -74,6 +75,7 @@ function TokenPage() {
             {formatUsd(top.priceUsd)}
           </span>
           <ChangeBadge value={top.priceChange.h24} />
+          <BuySwapButton chainId={chainId} address={address} />
           <WatchButton
             entry={{
               kind: "dex",

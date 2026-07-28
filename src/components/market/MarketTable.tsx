@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { ChangeBadge } from "@/components/common/ChangeBadge";
 import { TrendScoreBadge } from "@/components/common/TrendScoreBadge";
 import { WatchButton } from "@/components/common/WatchButton";
+import { BuySwapButton } from "./BuySwapButton";
 import { RiskFlags } from "./RiskFlags";
 import { formatAge, formatNumber, formatUsd, shortenAddress } from "@/lib/market/format";
 import type { ScoredMarket } from "@/lib/market/types";
@@ -169,16 +170,19 @@ export function MarketTable({
                   )}
                 </TableCell>
                 <TableCell>
-                  <WatchButton
-                    entry={{
-                      kind: "dex",
-                      id: m.pairAddress,
-                      chainId: m.chainId,
-                      address: m.baseToken.address,
-                      symbol: m.baseToken.symbol ?? shortenAddress(m.baseToken.address),
-                      name: m.baseToken.name ?? m.baseToken.symbol ?? "Unknown token",
-                    }}
-                  />
+                  <div className="flex items-center justify-end gap-1.5">
+                    <BuySwapButton chainId={m.chainId} address={m.baseToken.address} />
+                    <WatchButton
+                      entry={{
+                        kind: "dex",
+                        id: m.pairAddress,
+                        chainId: m.chainId,
+                        address: m.baseToken.address,
+                        symbol: m.baseToken.symbol ?? shortenAddress(m.baseToken.address),
+                        name: m.baseToken.name ?? m.baseToken.symbol ?? "Unknown token",
+                      }}
+                    />
+                  </div>
                 </TableCell>
               </TableRow>
             );
