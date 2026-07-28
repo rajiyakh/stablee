@@ -121,6 +121,15 @@ export function SwapPage({
     }
   }, [sellToken, sellAmountInput]);
 
+  // Pure client-side check against the already-fetched wallet balance — no
+  // need to wait for a quote round trip to tell the user they've typed more
+  // than they hold.
+  const insufficientBalance =
+    isConnected &&
+    balance.balance !== null &&
+    sellAmountBaseUnits !== "" &&
+    BigInt(sellAmountBaseUnits) > balance.balance;
+
   const priceParams = {
     sellToken: sellToken?.address ?? "",
     buyToken: buyToken?.address ?? "",
@@ -441,6 +450,12 @@ export function SwapPage({
               />
             </div>
 
+            {insufficientBalance ? (
+              <p className="rounded-lg border border-negative/30 bg-negative/10 p-3 text-sm text-negative">
+                Insufficient {sellToken?.symbol} balance.
+              </p>
+            ) : null}
+
             {flow === "needs-approval" ? (
               <Button
                 className="w-full"
@@ -458,6 +473,7 @@ export function SwapPage({
                   !isConnected ||
                   Boolean(wrongNetwork) ||
                   !sellAmountBaseUnits ||
+                  insufficientBalance ||
                   (priceQuery.data?.data?.priceImpactBps !== null &&
                     priceQuery.data?.data?.priceImpactBps !== undefined &&
                     priceQuery.data.data.priceImpactBps >= PRICE_IMPACT_MAX_BPS) ||
@@ -465,7 +481,11 @@ export function SwapPage({
                 }
                 onClick={handleSwapClick}
               >
-                {quoteQuery.isFetching ? "Fetching quote…" : "Review Swap"}
+                {insufficientBalance
+                  ? "Insufficient balance"
+                  : quoteQuery.isFetching
+                    ? "Fetching quote…"
+                    : "Review Swap"}
               </Button>
             )}
 

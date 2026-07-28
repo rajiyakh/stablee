@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useDisconnect } from "wagmi";
 import { usePrivy } from "@privy-io/react-auth";
 import { ChevronDown, Copy, ExternalLink, LogOut, Wallet } from "lucide-react";
 import { toast } from "sonner";
@@ -38,7 +38,19 @@ export function WalletConnectButton({ className }: { className?: string }) {
 
 function WalletConnectButtonInner({ className }: { className?: string }) {
   const { address, isConnected } = useAccount();
+  const { disconnect } = useDisconnect();
   const { ready: privyReady, connectWallet, logout } = usePrivy();
+
+  // wagmi's disconnect() is a synchronous local store mutation — isConnected
+  // flips immediately. Privy's logout() also revokes the session/embedded
+  // wallet server-side, which is real async work; firing it right after
+  // (not awaited) keeps that cleanup happening without making the UI wait
+  // on it. A rejection there is backgrounded cleanup failing, not something
+  // the click handler needs to surface.
+  function handleDisconnect() {
+    disconnect();
+    logout().catch(() => {});
+  }
 
   if (isConnected && address) {
     return (
@@ -81,7 +93,10 @@ function WalletConnectButtonInner({ className }: { className?: string }) {
             </DropdownMenuItem>
           ) : null}
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => logout()} className="text-negative focus:text-negative">
+          <DropdownMenuItem
+            onClick={handleDisconnect}
+            className="text-negative focus:text-negative"
+          >
             <LogOut className="size-3.5" />
             Disconnect
           </DropdownMenuItem>
