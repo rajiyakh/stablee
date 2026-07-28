@@ -14,7 +14,7 @@ import { GlobalSearch } from "./GlobalSearch";
 // sidebar (see AppSidebar.tsx) to keep this from getting crowded.
 const navItems = [
   { to: "/", label: "Overview" },
-  { to: "/ai-feed", label: "AI Feed" },
+  { to: "/ai-feed", label: "AI Feed", hot: true },
   { to: "/markets", label: "Markets" },
   {
     to: "/swap",
