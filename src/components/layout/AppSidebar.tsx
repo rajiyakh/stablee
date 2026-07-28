@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Coins, Database, Star, TrendingUp, Trophy, Users } from "lucide-react";
+import { Coins, Star, TrendingUp, Users } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -13,13 +13,13 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 
+// Leaderboard and Data Sources are intentionally left out (still reachable
+// directly at /leaderboard and /data) — hidden from nav, not deleted.
 const secondaryItems = [
   { to: "/trending", label: "Robinhood Trends", icon: TrendingUp },
   { to: "/agents", label: "Agents", icon: Users },
-  { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
   { to: "/watchlist", label: "Watchlist", icon: Star },
   { to: "/token", label: "Token", icon: Coins, badge: "Soon" },
-  { to: "/data", label: "Data Sources", icon: Database },
 ] as const;
 
 /**

@@ -62,7 +62,7 @@ function SwapRoute() {
       <SectionHeading
         eyebrow="Instant Swap · Robinhood Mainnet"
         title="Swap"
-        description="Trade Robinhood Mainnet tokens in seconds — real-time pricing, best-available routing across on-chain liquidity, and a transparent 0.10% platform fee. Your funds never leave your wallet until the moment you confirm."
+        description="Trade Robinhood Mainnet tokens in seconds — real-time pricing and best-available routing across on-chain liquidity."
       />
       <div className="mt-6">
         <Suspense fallback={null}>
