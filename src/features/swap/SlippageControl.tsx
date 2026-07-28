@@ -10,16 +10,24 @@ function bpsToPercentInput(bps: number): string {
   return (bps / 100).toString();
 }
 
-/** Uniswap-style slippage tolerance control: presets + a custom value, clamped to the same SLIPPAGE_MAX_BPS the server enforces. */
+/**
+ * Uniswap-style slippage tolerance control: Auto (default — 0x selects an
+ * appropriate tolerance for the pair) + presets + a custom value, the latter
+ * two clamped to the same SLIPPAGE_MAX_BPS the server enforces.
+ */
 export function SlippageControl({
   slippageBps,
   onChange,
 }: {
-  slippageBps: number;
-  onChange: (bps: number) => void;
+  /** null means Auto. */
+  slippageBps: number | null;
+  onChange: (bps: number | null) => void;
 }) {
-  const isPreset = (SLIPPAGE_PRESETS_BPS as readonly number[]).includes(slippageBps);
-  const [customInput, setCustomInput] = useState(isPreset ? "" : bpsToPercentInput(slippageBps));
+  const isPreset =
+    slippageBps !== null && (SLIPPAGE_PRESETS_BPS as readonly number[]).includes(slippageBps);
+  const [customInput, setCustomInput] = useState(
+    slippageBps !== null && !isPreset ? bpsToPercentInput(slippageBps) : "",
+  );
   const [customError, setCustomError] = useState<string | null>(null);
 
   function applyCustom(raw: string) {
@@ -42,7 +50,7 @@ export function SlippageControl({
     onChange(bps);
   }
 
-  const warnHigh = slippageBps >= SLIPPAGE_WARN_BPS;
+  const warnHigh = slippageBps !== null && slippageBps >= SLIPPAGE_WARN_BPS;
 
   return (
     <Popover>
@@ -54,12 +62,25 @@ export function SlippageControl({
           className={cn("h-8 gap-1.5 px-2.5 text-xs", warnHigh && "border-warning text-warning")}
         >
           <Settings2 className="size-3.5" />
-          {(slippageBps / 100).toFixed(2)}%
+          {slippageBps === null ? "Auto" : `${(slippageBps / 100).toFixed(2)}%`}
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="w-64 space-y-3">
         <p className="text-xs font-medium text-muted-foreground">Slippage tolerance</p>
         <div className="flex gap-1.5">
+          <Button
+            type="button"
+            size="sm"
+            variant={slippageBps === null ? "default" : "outline"}
+            className="h-7 flex-1 px-0 text-xs"
+            onClick={() => {
+              setCustomInput("");
+              setCustomError(null);
+              onChange(null);
+            }}
+          >
+            Auto
+          </Button>
           {SLIPPAGE_PRESETS_BPS.map((preset) => (
             <Button
               key={preset}

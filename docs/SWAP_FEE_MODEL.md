@@ -4,26 +4,32 @@
 
 | Parameter | Value | Env var |
 |---|---|---|
-| Default platform fee | 10 bps (0.10%) | `ROBINPULSE_SWAP_FEE_BPS` |
-| Hardcoded fee ceiling | 30 bps (0.30%) | not env-configurable — see below |
+| Default platform fee | 100 bps (1.00%) | `ROBINPULSE_SWAP_FEE_BPS` |
+| Hardcoded fee ceiling | 100 bps (1.00%) | not env-configurable — see below |
 | Minimum swap amount | none | — |
 | 0x's own platform limit on `swapFeeBps` | 1000 bps (10%) | not RobinPulse's concern — we stay far under it |
 
 There is no minimum swap amount and no minimum-fee floor. Every swap, regardless of size, is
-charged the same 0.10% fee, sent to the treasury wallet. The one remaining server-side check is
+charged the same 1% fee, sent to the treasury wallet. The one remaining server-side check is
 mechanical, not a policy: if the computed fee rounds to literally 0 in the fee token's base units,
 `validateQuote()` rejects the quote with `fee_missing` — there's nothing to charge, not "too little
 to bother with."
 
-## Why the 30 bps ceiling is hardcoded, not env-read
+The fee percentage/amount is intentionally not shown anywhere in the swap UI (neither the inline
+quote details nor the confirm dialog) — it's still charged exactly as described here, just not
+surfaced as a line item to the user.
+
+## Why the 100 bps ceiling is hardcoded, not env-read
 
 `ROBINPULSE_SWAP_FEE_BPS` (the fee actually charged) is read from the environment and can be
-tuned per deployment — e.g. a promotional 5 bps period. `ROBINPULSE_MAX_SWAP_FEE_BPS=30` exists
-in `.env.example` for documentation/self-description, but the actual safety ceiling enforced in
-code (`FEE_BPS_MAX` in `src/lib/swap/fees.ts`) is a compile-time constant of `30`, not read from
-that env var. This is deliberate: a misconfigured or compromised environment variable should
-never be able to silently raise the fee cap. Changing the real ceiling requires a code change and
-a new deployment, not just an env edit.
+tuned per deployment. `ROBINPULSE_MAX_SWAP_FEE_BPS` exists in `.env.example` for
+documentation/self-description, but the actual safety ceiling enforced in code (`FEE_BPS_MAX` in
+`src/lib/swap/fees.ts`) is a compile-time constant, not read from that env var. This is
+deliberate: a misconfigured or compromised environment variable should never be able to silently
+raise the fee cap. Changing the real ceiling requires a code change and a new deployment, not
+just an env edit. **Note:** since the default and the ceiling are currently equal (100 bps), the
+env var can only ever lower the fee below 1%, never raise it — raising it requires editing
+`FEE_BPS_MAX` itself.
 
 ## How the fee is charged
 
@@ -31,13 +37,14 @@ RobinPulse never invents a fee amount. Every request to 0x includes:
 
 ```
 swapFeeRecipient=<ROBINPULSE_FEE_RECIPIENT>   (server-only, from feeConfig.server.ts)
-swapFeeBps=<computeSwapFeeBps(), clamped to 30>
+swapFeeBps=<computeSwapFeeBps(), clamped to 100>
 swapFeeToken=<selectFeeToken(sellToken, buyToken)>
 ```
 
 0x charges the fee onchain and returns the real amount in `fees.integratorFee.{amount,token,type}`.
-The UI shows exactly that value — `src/routes/api/swap/quote.ts` and `price.ts` never
-recompute, round, or otherwise second-guess it after the firm quote is returned.
+`src/routes/api/swap/quote.ts` and `price.ts` never recompute, round, or otherwise second-guess it
+after the firm quote is returned — even though the UI no longer displays it as a line item, the
+server-side values are still the real, unmodified numbers 0x returned.
 
 ## Fee token selection (`selectFeeToken` in `src/lib/swap/fees.ts`)
 
@@ -62,9 +69,10 @@ priority in `docs/0X_SWAP_SETUP.md`'s linked source, or just read the file: USDG
 indicative price against USDG → Chainlink (configured for 8 tokenized-equity feeds, see
 `chainlinkFeeds.ts`) → DEX Screener (reusing the site's existing Robinhood Mainnet provider). That
 value feeds `priceImpactBps` (still computed and still blocks execution at the existing 3%
-threshold — see `PRICE_IMPACT_MAX_BPS`) and the fee-in-USD display shown in the UI. It's purely
-informational/protective now, not a gate on swap size — `computePriceImpactBps()` and the UI are
-both already null-safe when the USD value can't be resolved.
+threshold — see `PRICE_IMPACT_MAX_BPS`) and the server-side `feeUsd` field (no longer rendered in
+the UI, but still computed for potential future use/analytics). It's purely
+informational/protective now, not a gate on swap size — `computePriceImpactBps()` is already
+null-safe when the USD value can't be resolved.
 
 ## Firm-quote validation
 
@@ -77,8 +85,8 @@ anymore.
 ## Changing the fee safely
 
 1. Change `ROBINPULSE_SWAP_FEE_BPS` in the hosting platform's env vars (no code change needed,
-   as long as the new value is ≤ 30).
-2. To raise the 30 bps ceiling itself, edit `FEE_BPS_MAX` in `src/lib/swap/fees.ts`, update the
+   as long as the new value is ≤ 100).
+2. To raise the 100 bps ceiling itself, edit `FEE_BPS_MAX` in `src/lib/swap/fees.ts`, update the
    corresponding Vitest boundary tests in `fees.test.ts`, and redeploy — this is an intentional
    extra step, not an oversight.
 3. Never change the fee recipient by editing anything other than `ROBINPULSE_FEE_RECIPIENT` — see

@@ -15,7 +15,7 @@ import {
   findSwapToken,
   type SwapTokenConfig,
 } from "@/config/swapTokens";
-import { PRICE_IMPACT_MAX_BPS, QUOTE_TTL_MS, SLIPPAGE_DEFAULT_BPS } from "@/config/swapPolicy";
+import { PRICE_IMPACT_MAX_BPS, QUOTE_TTL_MS } from "@/config/swapPolicy";
 import {
   resolveTokenQuery,
   swapPriceQuery,
@@ -92,7 +92,8 @@ export function SwapPage({
     setSellToken(resolved);
   }, [resolvedSellQuery.data]);
   const [sellAmountInput, setSellAmountInput] = useState("");
-  const [slippageBps, setSlippageBps] = useState(SLIPPAGE_DEFAULT_BPS);
+  // null means Auto — 0x selects an appropriate tolerance for the pair.
+  const [slippageBps, setSlippageBps] = useState<number | null>(null);
   const [flow, setFlow] = useState<FlowState>("idle");
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [firmQuote, setFirmQuote] = useState<{ data: SwapQuoteData; fetchedAt: number } | null>(
@@ -125,7 +126,9 @@ export function SwapPage({
     buyToken: buyToken?.address ?? "",
     sellAmount: sellAmountBaseUnits || undefined,
     taker: address,
-    slippageBps,
+    // undefined (not null) omits the param entirely — 0x then selects an
+    // appropriate slippage tolerance for the pair automatically.
+    slippageBps: slippageBps ?? undefined,
   };
   const priceQuery = useQuery(
     swapPriceQuery(

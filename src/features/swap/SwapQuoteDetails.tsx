@@ -1,7 +1,6 @@
 import { formatUnits } from "viem";
 import { AlertTriangle } from "lucide-react";
 import { PRICE_IMPACT_MAX_BPS, PRICE_IMPACT_WARN_BPS, QUOTE_TTL_MS } from "@/config/swapPolicy";
-import { FEE_BPS_DEFAULT } from "@/lib/swap/fees";
 import { detectTokenTax } from "@/lib/swap/tokenTax";
 import { humanizeRouteSources } from "@/lib/swap/route";
 import { useQuoteAge } from "./hooks/useQuoteAge";
@@ -32,7 +31,8 @@ export function SwapQuoteDetails({
   buyToken: SwapTokenConfig;
   quote: SwapPriceData | SwapQuoteData;
   fetchedAt: number;
-  slippageBps: number;
+  /** null means Auto — 0x selects an appropriate tolerance for the pair. */
+  slippageBps: number | null;
 }) {
   const ageMs = useQuoteAge(fetchedAt);
   const remainingMs = Math.max(0, QUOTE_TTL_MS - ageMs);
@@ -52,11 +52,9 @@ export function SwapQuoteDetails({
   const impactBps = quote.priceImpactBps;
   const impactSevere = impactBps !== null && impactBps >= PRICE_IMPACT_MAX_BPS;
   const impactWarn = impactBps !== null && impactBps >= PRICE_IMPACT_WARN_BPS && !impactSevere;
-  const fee = quote.fees?.integratorFee;
   const networkFeeWei = quote.totalNetworkFee;
   const tax = detectTokenTax(quote);
   const route = humanizeRouteSources("route" in quote ? quote.route : undefined);
-  const feePercent = (FEE_BPS_DEFAULT / 100).toFixed(2);
 
   return (
     <div className="space-y-2 rounded-xl border border-border bg-muted/20 p-3 text-sm">
@@ -83,14 +81,9 @@ export function SwapQuoteDetails({
         value={networkFeeWei ? `${formatUnits(BigInt(networkFeeWei), 18)} ETH` : "—"}
       />
       <Row
-        label={`RobinPulse fee (${feePercent}%)`}
-        value={
-          fee
-            ? `${formatTokenAmount(fee.amount, sellToken.address.toLowerCase() === fee.token.toLowerCase() ? sellToken.decimals : buyToken.decimals)} ${fee.token.toLowerCase() === sellToken.address.toLowerCase() ? sellToken.symbol : buyToken.symbol}${quote.feeUsd !== null ? ` (~$${quote.feeUsd.toFixed(4)})` : ""}`
-            : "Included in quote"
-        }
+        label="Slippage tolerance"
+        value={slippageBps === null ? "Auto" : `${(slippageBps / 100).toFixed(2)}%`}
       />
-      <Row label="Slippage tolerance" value={`${(slippageBps / 100).toFixed(2)}%`} />
 
       <div className="flex items-center justify-between border-t border-border/60 pt-2 text-xs text-muted-foreground">
         <span>Quote expiry</span>

@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useAccount } from "wagmi";
+import { Link } from "@tanstack/react-router";
 import { AlertTriangle, Wallet } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/common/EmptyState";
 import { Skeleton } from "@/components/ui/skeleton";
 import { WalletConnectButton } from "@/components/wallet/WalletConnectButton";
+import { BuySwapButton } from "@/components/market/BuySwapButton";
 import { robinhoodChain } from "@/config/robinhoodChain";
 import { formatNumber, formatUsd } from "@/lib/market/format";
 import { ApiError } from "@/lib/market/client";
@@ -128,7 +131,7 @@ function HoldingRow({ holding }: { holding: PortfolioHolding }) {
   const showIcon = holding.logoUrl && !imgError;
 
   return (
-    <div className="flex items-center gap-3 rounded-lg p-3 transition-colors hover:bg-secondary/40">
+    <div className="flex flex-wrap items-center gap-3 rounded-lg p-3 transition-colors hover:bg-secondary/40">
       {showIcon ? (
         <img
           src={holding.logoUrl!}
@@ -163,6 +166,15 @@ function HoldingRow({ holding }: { holding: PortfolioHolding }) {
           {formatNumber(Number(holding.balanceFormatted), true)} {holding.symbol}
         </p>
         <p className="text-xs tabular-nums text-muted-foreground">{formatUsd(holding.valueUsd)}</p>
+      </div>
+
+      <div className="flex shrink-0 items-center gap-1.5">
+        <BuySwapButton chainId="robinhood" address={holding.address} size="sm" />
+        <Button asChild variant="outline" size="sm">
+          <Link to="/swap" search={{ sell: holding.address }}>
+            Sell
+          </Link>
+        </Button>
       </div>
     </div>
   );

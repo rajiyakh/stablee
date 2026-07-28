@@ -41,12 +41,15 @@ function buildQuery(params: ZeroExRequestParams): URLSearchParams {
     swapFeeRecipient: feeRecipient,
     swapFeeBps: String(feeBps),
     swapFeeToken: feeToken,
-    slippageBps: String(params.slippageBps ?? 100),
   });
 
   if (params.sellAmount) query.set("sellAmount", params.sellAmount);
   if (params.buyAmount) query.set("buyAmount", params.buyAmount);
   if (params.taker) query.set("taker", params.taker);
+  // Omitted (not defaulted) when unset — 0x selects an appropriate slippage
+  // tolerance for the pair automatically. Confirmed live: omitting this
+  // param returns a valid quote with 0x's own computed minBuyAmount.
+  if (params.slippageBps) query.set("slippageBps", String(params.slippageBps));
 
   return query;
 }

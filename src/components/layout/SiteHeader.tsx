@@ -5,7 +5,7 @@ import { isWalletConfigured, projectConfig } from "@/config/project";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useSidebar } from "@/components/ui/sidebar";
 import { WalletConnectButton } from "@/components/wallet/WalletConnectButton";
 import { cn } from "@/lib/utils";
 import { GlobalSearch } from "./GlobalSearch";
@@ -42,6 +42,21 @@ function XIcon({ className }: { className?: string }) {
     <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
       <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
     </svg>
+  );
+}
+
+/**
+ * Text label instead of the shared SidebarTrigger's icon-only look — this is
+ * the sidebar's own single call site, so a small local trigger built on the
+ * already-exported useSidebar() hook is simpler than hand-editing the
+ * generated shadcn primitive for its one consumer.
+ */
+function MoreMenuTrigger({ className }: { className?: string }) {
+  const { toggleSidebar } = useSidebar();
+  return (
+    <Button variant="outline" size="sm" className={className} onClick={toggleSidebar}>
+      More
+    </Button>
   );
 }
 
@@ -97,7 +112,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
-          <SidebarTrigger className="hidden md:inline-flex" aria-label="Toggle more navigation" />
+          <MoreMenuTrigger className="hidden md:inline-flex" />
           <GlobalSearch />
           {projectConfig.socialLinks.x ? (
             <a

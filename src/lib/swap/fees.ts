@@ -7,9 +7,9 @@ import { swapTokens, USDG_ADDRESS } from "@/config/swapTokens";
  * spec's stated defaults, used directly by the client for display/preflight
  * math against numbers the server has already returned in a quote.
  */
-export const FEE_BPS_DEFAULT = 10;
+export const FEE_BPS_DEFAULT = 100;
 /** Hardcoded safety ceiling — never raised by an env var, only lowered/set below it. */
-export const FEE_BPS_MAX = 30;
+export const FEE_BPS_MAX = 100;
 
 /** Clamps to [0, FEE_BPS_MAX] — a caller can never push the fee above the hardcoded cap. */
 export function computeSwapFeeBps(overrideBps?: number): number {

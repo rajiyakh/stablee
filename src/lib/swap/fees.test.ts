@@ -3,13 +3,13 @@ import { computeSwapFeeBps, FEE_BPS_MAX, selectFeeToken } from "./fees";
 import { USDG_ADDRESS, WETH_ADDRESS } from "@/config/swapTokens";
 
 describe("computeSwapFeeBps", () => {
-  it("defaults to 10 bps when no override is given", () => {
-    expect(computeSwapFeeBps()).toBe(10);
+  it("defaults to 100 bps when no override is given", () => {
+    expect(computeSwapFeeBps()).toBe(100);
   });
 
-  it("clamps to the 30 bps ceiling even if a caller asks for more", () => {
+  it("clamps to the 100 bps ceiling even if a caller asks for more", () => {
     expect(computeSwapFeeBps(1000)).toBe(FEE_BPS_MAX);
-    expect(computeSwapFeeBps(31)).toBe(FEE_BPS_MAX);
+    expect(computeSwapFeeBps(101)).toBe(FEE_BPS_MAX);
   });
 
   it("clamps negative values to 0", () => {
@@ -17,7 +17,7 @@ describe("computeSwapFeeBps", () => {
   });
 
   it("falls back to the default for non-finite input", () => {
-    expect(computeSwapFeeBps(Number.NaN)).toBe(10);
+    expect(computeSwapFeeBps(Number.NaN)).toBe(100);
   });
 });
 
