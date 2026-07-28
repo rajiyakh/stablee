@@ -118,7 +118,7 @@ export function TokenDetailDrawer({
                 </span>
               ) : null}
               {!token.security ? (
-                <span className="text-muted-foreground">Not reported by GMGN.</span>
+                <span className="text-muted-foreground">Not reported.</span>
               ) : null}
             </div>
           </div>

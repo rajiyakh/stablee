@@ -307,7 +307,7 @@ export function RobinhoodTokenTable({
         </TableBody>
       </Table>
       <p className="border-t border-border/60 px-4 py-2 text-xs text-muted-foreground">
-        {formatNumber(rows.length)} Robinhood Mainnet tokens · GMGN, {interval} interval
+        {formatNumber(rows.length)} Robinhood Mainnet tokens · {interval} interval
       </p>
     </div>
   );

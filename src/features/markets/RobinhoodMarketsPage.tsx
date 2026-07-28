@@ -16,12 +16,12 @@ const COPY: Record<"trending" | "hot-searches", { title: string; description: st
   trending: {
     title: "Trending",
     description:
-      "Trending ranks Robinhood Mainnet tokens using current GMGN market and swap activity. Rankings may change rapidly and do not represent an endorsement by RobinPulse AI.",
+      "Trending ranks Robinhood Mainnet tokens using current market and swap activity. Rankings may change rapidly and do not represent an endorsement by RobinPulse AI.",
   },
   "hot-searches": {
     title: "Hot Searches",
     description:
-      "Hot Searches ranks Robinhood Mainnet tokens by current GMGN search attention. High search activity does not necessarily mean strong liquidity, safety, or positive price performance.",
+      "Hot Searches ranks Robinhood Mainnet tokens by current search attention. High search activity does not necessarily mean strong liquidity, safety, or positive price performance.",
   },
 };
 
@@ -70,7 +70,7 @@ export function RobinhoodMarketsPage({
   return (
     <div className="space-y-6">
       <SectionHeading
-        eyebrow="GMGN · Robinhood Mainnet"
+        eyebrow="Robinhood Mainnet"
         title={copy.title}
         description={copy.description}
       />
@@ -139,7 +139,11 @@ export function RobinhoodMarketsPage({
 
       {status ? (
         <div className="flex items-center gap-2">
-          <DataSourceNote source="GMGN" fetchedAt={status.fetchedAt} stale={status.stale} />
+          <DataSourceNote
+            source="Robinhood Mainnet"
+            fetchedAt={status.fetchedAt}
+            stale={status.stale}
+          />
           {status.stale ? (
             <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-600 dark:text-amber-400">
               Delayed

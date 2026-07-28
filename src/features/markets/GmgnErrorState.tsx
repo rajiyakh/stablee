@@ -8,8 +8,8 @@ export function GmgnErrorState({ error, onRetry }: { error: unknown; onRetry: ()
   if (code === "not_configured") {
     return (
       <ErrorState
-        title="GMGN market data is not configured"
-        message="GMGN market data is not configured. Add a valid GMGN API key to enable Robinhood Mainnet Trending and Hot Searches."
+        title="Market data is not configured"
+        message="Robinhood Mainnet Trending and Hot Searches are not yet configured for this deployment."
       />
     );
   }
@@ -18,7 +18,7 @@ export function GmgnErrorState({ error, onRetry }: { error: unknown; onRetry: ()
     return (
       <ErrorState
         title="Rate limited"
-        message="GMGN is temporarily rate-limiting requests. Cached data will remain visible where available."
+        message="The data provider is temporarily rate-limiting requests. Cached data will remain visible where available."
         onRetry={onRetry}
       />
     );

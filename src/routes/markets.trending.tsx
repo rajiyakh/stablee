@@ -30,8 +30,7 @@ export const Route = createFileRoute("/markets/trending")({
       { title: "Robinhood Mainnet Trending — RobinPulse AI" },
       {
         name: "description",
-        content:
-          "Real-time Robinhood Mainnet trending tokens, ranked by GMGN market and swap activity.",
+        content: "Real-time Robinhood Mainnet trending tokens, ranked by market and swap activity.",
       },
     ],
   }),

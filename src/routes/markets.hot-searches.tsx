@@ -30,7 +30,7 @@ export const Route = createFileRoute("/markets/hot-searches")({
       { title: "Robinhood Mainnet Hot Searches — RobinPulse AI" },
       {
         name: "description",
-        content: "Real-time Robinhood Mainnet hot searches, ranked by GMGN search attention.",
+        content: "Real-time Robinhood Mainnet hot searches, ranked by search attention.",
       },
     ],
   }),
