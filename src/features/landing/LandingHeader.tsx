@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 const anchorLinks = [
   { href: "#what-is", label: "Product" },
   { href: "#features", label: "Features" },
-  { href: "#terminal", label: "Terminal" },
   { href: "#agents", label: "Agents" },
   { href: "#roadmap", label: "Roadmap" },
 ];

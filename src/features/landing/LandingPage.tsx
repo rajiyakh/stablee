@@ -14,16 +14,8 @@ const WhatIsSection = lazy(() =>
 const FeaturesSection = lazy(() =>
   import("./sections/FeaturesSection").then((m) => ({ default: m.FeaturesSection })),
 );
-const TerminalPreviewSection = lazy(() =>
-  import("./sections/TerminalPreviewSection").then((m) => ({
-    default: m.TerminalPreviewSection,
-  })),
-);
 const AgentsSection = lazy(() =>
   import("./sections/AgentsSection").then((m) => ({ default: m.AgentsSection })),
-);
-const FeedPreviewSection = lazy(() =>
-  import("./sections/FeedPreviewSection").then((m) => ({ default: m.FeedPreviewSection })),
 );
 const RoadmapSection = lazy(() =>
   import("./sections/RoadmapSection").then((m) => ({ default: m.RoadmapSection })),
@@ -45,7 +37,6 @@ export function LandingPage() {
   const feed = useQuery({ ...feedSnapshotQuery(), refetchIntervalInBackground: false });
   const snapshot = feed.data;
   const trendingTokens = snapshot?.trendingTokens ?? [];
-  const messages = snapshot?.messages ?? [];
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -62,15 +53,7 @@ export function LandingPage() {
         </Suspense>
 
         <Suspense fallback={<SectionFallback />}>
-          <TerminalPreviewSection trendingTokens={trendingTokens} isLoading={feed.isPending} />
-        </Suspense>
-
-        <Suspense fallback={<SectionFallback />}>
           <AgentsSection />
-        </Suspense>
-
-        <Suspense fallback={<SectionFallback />}>
-          <FeedPreviewSection messages={messages} isLoading={feed.isPending} />
         </Suspense>
 
         <Suspense fallback={<SectionFallback />}>
