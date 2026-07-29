@@ -69,10 +69,10 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-lg [background-image:linear-gradient(to_right,transparent,var(--color-border)_15%,var(--color-border)_85%,transparent)] [background-position:bottom] [background-repeat:no-repeat] [background-size:100%_1px]">
-      <div className="mx-auto flex h-14 w-full max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto grid h-14 w-full max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-4 px-4 sm:px-6 lg:px-8">
         <Link
           to="/"
-          className="flex shrink-0 items-center gap-2"
+          className="flex shrink-0 items-center gap-2 justify-self-start"
           aria-label={`${projectConfig.name} home`}
         >
           <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
@@ -83,7 +83,7 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-1 xl:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-1 justify-self-center xl:flex" aria-label="Primary">
           {navItems.map((item) => (
             <Link
               key={item.to}
@@ -115,7 +115,7 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="flex items-center gap-2 justify-self-end">
           {projectConfig.socialLinks.x ? (
             <a
               href={projectConfig.socialLinks.x}
