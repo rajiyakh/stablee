@@ -9,11 +9,11 @@ export const newLaunchConfig = {
   enabled: true,
 
   /** A token counts as newly launched if its real pair age is under this many minutes. */
-  recentLaunchWindowMinutes: 60,
+  recentLaunchWindowMinutes: 180,
 
-  minimumLiquidityUsd: 10_000,
-  minimumTransactions5m: 10,
-  minimumVolume5mUsd: 5_000,
+  minimumLiquidityUsd: 3_000,
+  minimumTransactions5m: 4,
+  minimumVolume5mUsd: 1_500,
 
   requireProviderPairTimestamp: true,
 
