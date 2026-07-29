@@ -17,8 +17,8 @@ import {
 import { cn } from "@/lib/utils";
 import { relativeTime } from "@/lib/market/format";
 import { statusQuery } from "@/lib/market/client";
-import { feedSnapshotQuery } from "@/lib/feed/client";
 import { deriveProviderStates } from "@/lib/feed/providerStatus";
+import { agents } from "@/lib/agents";
 import { feedConfig, feedFilters, type FeedFilterValue } from "@/config/feed";
 import { GlobalSearch } from "./GlobalSearch";
 import { SidebarToggle } from "./SiteHeader";
@@ -41,96 +41,102 @@ const stateLabel: Record<string, string> = {
 };
 
 /**
- * The Overview page's feed filters + status block, merged into the sidebar
- * itself rather than living in a second column next to it. AppSidebar only
- * mounts this while on "/", so these queries never fire on other routes —
- * and while on "/", they share a cache entry (same queryKey) with the ones
- * Home itself runs, so this doesn't add a second network call.
+ * The Overview page's feed-filter shortcuts, merged into the sidebar itself
+ * rather than living in a second column next to it. Only rendered while on
+ * "/" — these filters mean nothing on any other route.
  */
-function OverviewFeedSection() {
+function OverviewFeedTabs() {
   const navigate = useNavigate();
   const activeFilter = useRouterState({
     select: (s) =>
       (s.location.search as { filter?: FeedFilterValue }).filter ?? feedConfig.defaultFilter,
   });
+
+  return (
+    <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+      <SidebarGroupContent>
+        <SidebarMenu>
+          {feedFilters
+            .filter((f) =>
+              ["all", "conversations", "trending", "new_launches", "trade_setups"].includes(
+                f.value,
+              ),
+            )
+            .map((f) => (
+              <SidebarMenuItem key={f.value}>
+                <SidebarMenuButton
+                  isActive={activeFilter === f.value}
+                  onClick={() => navigate({ to: "/", search: { filter: f.value } })}
+                >
+                  <span>{f.label}</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  );
+}
+
+/**
+ * Live platform status — provider health plus the (static) agent count.
+ * Deliberately cheap enough to run on every route: statusQuery() is already
+ * lightweight/cached everywhere, and activeAgentCount is just agents.length
+ * (a static config array), not anything derived from the heavy feed engine.
+ */
+function SidebarStatusSummary() {
   const status = useQuery(statusQuery());
-  const feed = useQuery({ ...feedSnapshotQuery(), refetchIntervalInBackground: false });
   const { marketDataState, robinhoodState } = deriveProviderStates(status.data?.providers);
   const marketDataLive = marketDataState === "live";
   const robinhoodLive = robinhoodState === "live" || robinhoodState === "delayed";
 
   return (
-    <>
-      <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-        <SidebarGroupContent>
-          <SidebarMenu>
-            {feedFilters
-              .filter((f) =>
-                ["all", "conversations", "trending", "new_launches", "trade_setups"].includes(
-                  f.value,
-                ),
-              )
-              .map((f) => (
-                <SidebarMenuItem key={f.value}>
-                  <SidebarMenuButton
-                    isActive={activeFilter === f.value}
-                    onClick={() => navigate({ to: "/", search: { filter: f.value } })}
-                  >
-                    <span>{f.label}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
-
-      <div className="space-y-2 border-t border-sidebar-border px-4 py-3 text-xs group-data-[collapsible=icon]:hidden">
-        <div className="flex items-center justify-between">
-          <span className="text-muted-foreground">Market data</span>
+    <div className="space-y-2 border-t border-sidebar-border px-4 py-3 text-xs group-data-[collapsible=icon]:hidden">
+      <div className="flex items-center justify-between">
+        <span className="text-muted-foreground">Market data</span>
+        <span
+          className={cn(
+            "flex items-center gap-1.5 font-medium",
+            marketDataLive ? "text-positive" : "text-muted-foreground",
+          )}
+        >
           <span
             className={cn(
-              "flex items-center gap-1.5 font-medium",
-              marketDataLive ? "text-positive" : "text-muted-foreground",
+              "h-1.5 w-1.5 rounded-full",
+              marketDataLive ? "bg-positive" : "bg-muted-foreground",
             )}
-          >
-            <span
-              className={cn(
-                "h-1.5 w-1.5 rounded-full",
-                marketDataLive ? "bg-positive" : "bg-muted-foreground",
-              )}
-            />
-            {stateLabel[marketDataState] ?? "Unavailable"}
-          </span>
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="text-muted-foreground">Robinhood network</span>
-          <span
-            className={cn(
-              "flex items-center gap-1.5 font-medium",
-              robinhoodLive ? "text-positive" : "text-muted-foreground",
-            )}
-          >
-            <span
-              className={cn(
-                "h-1.5 w-1.5 rounded-full",
-                robinhoodLive ? "bg-positive" : "bg-muted-foreground",
-              )}
-            />
-            {stateLabel[robinhoodState] ?? "Not configured"}
-          </span>
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="text-muted-foreground">Active agents</span>
-          <span className="font-medium text-foreground">{feed.data?.activeAgentCount ?? 0}</span>
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="text-muted-foreground">Last refresh</span>
-          <span className="font-medium text-foreground">
-            {relativeTime(feed.data?.generatedAt ?? null)}
-          </span>
-        </div>
+          />
+          {stateLabel[marketDataState] ?? "Unavailable"}
+        </span>
       </div>
-    </>
+      <div className="flex items-center justify-between">
+        <span className="text-muted-foreground">Robinhood network</span>
+        <span
+          className={cn(
+            "flex items-center gap-1.5 font-medium",
+            robinhoodLive ? "text-positive" : "text-muted-foreground",
+          )}
+        >
+          <span
+            className={cn(
+              "h-1.5 w-1.5 rounded-full",
+              robinhoodLive ? "bg-positive" : "bg-muted-foreground",
+            )}
+          />
+          {stateLabel[robinhoodState] ?? "Not configured"}
+        </span>
+      </div>
+      <div className="flex items-center justify-between">
+        <span className="text-muted-foreground">Active agents</span>
+        <span className="font-medium text-foreground">{agents.length}</span>
+      </div>
+      <div className="flex items-center justify-between">
+        <span className="text-muted-foreground">Last refresh</span>
+        <span className="font-medium text-foreground">
+          {relativeTime(status.data?.generatedAt ?? null)}
+        </span>
+      </div>
+    </div>
   );
 }
 
@@ -151,9 +157,12 @@ export function AppSidebar() {
       <SidebarContent>
         {isHome ? (
           <div className="hidden lg:contents">
-            <OverviewFeedSection />
+            <OverviewFeedTabs />
+            <SidebarStatusSummary />
           </div>
-        ) : null}
+        ) : (
+          <SidebarStatusSummary />
+        )}
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
