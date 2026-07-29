@@ -83,7 +83,7 @@ function AiFeedPage() {
                   >
                     {summary.asset.name} ({summary.asset.symbol})
                   </Link>
-                  {summary.asset.href.to === "/token/$chainId/$address" ? (
+                  {summary.asset.href.to === "/app/token/$chainId/$address" ? (
                     <BuySwapButton
                       chainId={summary.asset.href.params.chainId}
                       address={summary.asset.href.params.address}

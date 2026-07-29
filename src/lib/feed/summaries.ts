@@ -36,7 +36,7 @@ export function buildAutomatedSummaries(
       asset: {
         symbol: coin.symbol.toUpperCase(),
         name: coin.name,
-        href: { to: "/coin/$coinId", params: { coinId: coin.id } },
+        href: { to: "/app/coin/$coinId", params: { coinId: coin.id } },
       },
       dataProvider: "CoinGecko",
       dataTimestamp: generatedAt,
@@ -61,7 +61,7 @@ export function buildAutomatedSummaries(
         symbol,
         name: entry.market.baseToken.name ?? symbol,
         href: {
-          to: "/token/$chainId/$address",
+          to: "/app/token/$chainId/$address",
           params: { chainId: entry.market.chainId, address: entry.market.baseToken.address },
         },
       },

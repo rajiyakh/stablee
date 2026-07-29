@@ -30,8 +30,8 @@ const TABS: Array<{
   label: string;
   to?: string;
 }> = [
-  { id: "trending", label: "Trending", to: "/markets/trending" },
-  { id: "hot-searches", label: "Hot Searches", to: "/markets/hot-searches" },
+  { id: "trending", label: "Trending", to: "/app/markets/trending" },
+  { id: "hot-searches", label: "Hot Searches", to: "/app/markets/hot-searches" },
   { id: "new-pairs", label: "New Pairs" },
   { id: "signals", label: "Signals" },
 ];

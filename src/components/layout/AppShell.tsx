@@ -3,7 +3,6 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
 import { AppSidebar } from "./AppSidebar";
-import { NewLaunchTicker } from "./NewLaunchTicker";
 
 export function AppShell({ children }: { children: ReactNode }) {
   return (
@@ -16,10 +15,9 @@ export function AppShell({ children }: { children: ReactNode }) {
       </a>
       <div className="flex min-h-screen w-full flex-col bg-background">
         <SiteHeader />
-        <NewLaunchTicker />
         <div className="flex flex-1">
           <AppSidebar />
-          <SidebarInset id="main-content" className="flex-1 bg-background">
+          <SidebarInset id="main-content" className="min-w-0 flex-1 bg-background">
             {children}
             <SiteFooter />
           </SidebarInset>

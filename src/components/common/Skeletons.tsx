@@ -3,12 +3,15 @@ import { cn } from "@/lib/utils";
 
 export function TableSkeleton({ rows = 8, columns = 6 }: { rows?: number; columns?: number }) {
   return (
-    <div className="space-y-2" aria-busy="true" aria-live="polite">
+    <div className="space-y-2 overflow-x-auto" aria-busy="true" aria-live="polite">
       {Array.from({ length: rows }).map((_, rowIndex) => (
         <div
           key={rowIndex}
           className="grid items-center gap-4 rounded-lg border border-border/60 bg-card px-4 py-3"
-          style={{ gridTemplateColumns: `2fr repeat(${Math.max(1, columns - 1)}, 1fr)` }}
+          style={{
+            gridTemplateColumns: `minmax(0,2fr) repeat(${Math.max(1, columns - 1)}, minmax(0,1fr))`,
+            minWidth: columns > 8 ? `${columns * 96}px` : undefined,
+          }}
         >
           {Array.from({ length: columns }).map((__, colIndex) => (
             <Skeleton
