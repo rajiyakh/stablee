@@ -45,7 +45,7 @@ export function TerminalPreviewSection({
               {isLoading ? (
                 <CardSkeleton count={4} />
               ) : (
-                <TrendingTokenPanel tokens={trendingTokens} />
+                <TrendingTokenPanel tokens={trendingTokens} interactive={false} />
               )}
             </div>
           </div>

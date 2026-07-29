@@ -12,7 +12,7 @@ const capabilities = [
   },
   {
     icon: Radar,
-    label: "GMGN market intelligence",
+    label: "Market intelligence & trend scoring",
     copy: "Trend scoring built from real volume, liquidity and momentum.",
   },
   {
@@ -83,7 +83,7 @@ export function WhatIsSection({
             {isLoading ? (
               <CardSkeleton count={4} />
             ) : (
-              <TrendingTokenPanel tokens={trendingTokens} />
+              <TrendingTokenPanel tokens={trendingTokens} interactive={false} />
             )}
           </div>
         </Reveal>

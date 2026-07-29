@@ -95,7 +95,7 @@ export function SiteHeader() {
               {"hot" in item && item.hot ? (
                 <span className="relative -top-2 inline-flex self-start">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-negative opacity-75" />
-                  <span className="relative inline-flex items-center rounded-full bg-negative px-1 py-px text-[8px] font-bold uppercase tracking-wide text-white">
+                  <span className="relative inline-flex items-center rounded-full bg-negative px-1 py-px text-[8px] font-bold uppercase tracking-wide text-negative-foreground">
                     Hot
                   </span>
                 </span>

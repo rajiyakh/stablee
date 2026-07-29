@@ -34,7 +34,7 @@ export function FeedPreviewSection({
         ) : preview.length > 0 ? (
           preview.map((message, i) => (
             <Reveal key={message.id} delayMs={i * 100}>
-              <AgentMessageCard message={message} />
+              <AgentMessageCard message={message} interactive={false} />
             </Reveal>
           ))
         ) : (

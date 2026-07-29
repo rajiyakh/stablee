@@ -3,13 +3,12 @@
 @import "tw-animate-css";
 
 /*
- * RobinPulse design system — "Obsidian Lime": a dark, minimal web3
- * dashboard built on the same brand identity as the original light theme.
- *
- * Near-black green-tinted canvas, slightly-lifted card surfaces, a single
- * bright lime accent (unchanged from the light theme's brand color) carried
- * through primary actions, focus rings, and selection. Fixed dark theme —
- * no light/OS-preference variant, chosen deliberately, not defaulted into.
+ * RobinPulse design system — warm off-white canvas, white cards,
+ * forest-green primary, a single bright lime brand accent. This is the
+ * sitewide default (landing page and the /app trading terminal both use
+ * it) — a premium fintech look, not a typical dark crypto-dashboard theme.
+ * The original dark "Obsidian Lime" palette is stashed below under
+ * [data-theme="dark"], unused unless something opts into it explicitly.
  */
 
 @theme inline {
@@ -57,72 +56,20 @@
   --font-display: "Fraunces", ui-serif, Georgia, serif;
   --font-sans: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
-  /* Pure-black shadows at higher opacity — the light theme's soft green
-     shadow would be invisible against a near-black background. */
-  --shadow-card: 0 1px 2px oklch(0 0 0 / 30%), 0 8px 24px oklch(0 0 0 / 25%);
-  --shadow-lift: 0 2px 4px oklch(0 0 0 / 35%), 0 16px 40px oklch(0 0 0 / 30%);
-}
-
-:root {
-  --radius: 0.75rem;
-
-  /* #0E1512 */
-  --background: oklch(0.19 0.018 158);
-  /* #EAF2EC */
-  --foreground: oklch(0.95 0.012 158);
-  /* #16201C */
-  --card: oklch(0.235 0.019 158);
-  --card-foreground: oklch(0.95 0.012 158);
-  --popover: oklch(0.235 0.019 158);
-  --popover-foreground: oklch(0.95 0.012 158);
-  /* #C8F135 — same brand lime as the light theme, now the dominant primary */
-  --primary: oklch(0.9059 0.2018 121.5);
-  /* #10190F */
-  --primary-foreground: oklch(0.16 0.02 158);
-  /* #1C2721 */
-  --secondary: oklch(0.275 0.021 152);
-  --secondary-foreground: oklch(0.95 0.012 158);
-  --surface: oklch(0.275 0.021 152);
-  --muted: oklch(0.275 0.021 152);
-  /* #8CA095 */
-  --muted-foreground: oklch(0.68 0.03 152);
-  --accent: oklch(0.275 0.021 152);
-  --accent-foreground: oklch(0.9059 0.2018 121.5);
-  /* #C8F135 */
-  --brand: oklch(0.9059 0.2018 121.5);
-  --brand-foreground: oklch(0.16 0.02 158);
-  /* #D35C52 — kept close to the light theme's value, already legible on dark */
-  --destructive: oklch(0.6135 0.1584 25.6);
-  --destructive-foreground: oklch(0.16 0.02 158);
-  --negative: oklch(0.6135 0.1584 25.6);
-  --negative-foreground: oklch(0.16 0.02 158);
-  /* #138A55, nudged lighter for contrast against the dark card surface */
-  --positive: oklch(0.62 0.13 160.1);
-  --positive-foreground: oklch(0.16 0.02 158);
-  /* #D69B32 */
-  --warning: oklch(0.7359 0.1281 78.5);
-  --warning-foreground: oklch(0.16 0.02 158);
-  /* #263229 */
-  --border: oklch(0.3 0.023 152);
-  --input: oklch(0.3 0.023 152);
-  --ring: oklch(0.9059 0.2018 121.5);
-
-  --chart-1: oklch(0.9059 0.2018 121.5);
-  --chart-2: oklch(0.62 0.13 160.1);
-  --chart-3: oklch(0.6135 0.1584 25.6);
-  --chart-4: oklch(0.7359 0.1281 78.5);
-  --chart-5: oklch(0.68 0.03 152);
+  /* Soft green-tinted shadows — the light canvas doesn't need pure-black
+     shadows the way the stashed dark theme below does. */
+  --shadow-card: 0 1px 2px oklch(0.25 0.03 150 / 6%), 0 8px 24px oklch(0.25 0.03 150 / 5%);
+  --shadow-lift: 0 2px 4px oklch(0.25 0.03 150 / 7%), 0 16px 40px oklch(0.25 0.03 150 / 8%);
 }
 
 /*
- * Light theme, scoped to the marketing landing page only (routes/index.tsx
- * sets data-theme="light" on its root element) — the app itself
- * (routes/app/**) stays on the dark "Obsidian Lime" theme above unchanged.
  * These are the project's original pre-migration light-theme values
  * (resurrected from git history, commit 4df269c^), not new colors: warm
  * off-white canvas, white cards, forest-green primary, the same brand lime.
  */
-[data-theme="light"] {
+:root {
+  --radius: 0.75rem;
+
   /* #F5F6F0 */
   --background: oklch(0.9702 0.0117 108.66);
   /* #14251C */
@@ -156,16 +103,79 @@
   --border: oklch(0.9111 0.0138 128.3);
   --input: oklch(0.9111 0.0138 128.3);
   --ring: oklch(0.4956 0.1044 158.15);
-  --shadow-card: 0 1px 2px oklch(0.25 0.03 150 / 6%), 0 8px 24px oklch(0.25 0.03 150 / 5%);
-  --shadow-lift: 0 2px 4px oklch(0.25 0.03 150 / 7%), 0 16px 40px oklch(0.25 0.03 150 / 8%);
+
+  --chart-1: oklch(0.9059 0.2018 121.5);
+  --chart-2: oklch(0.5417 0.1206 160.1);
+  --chart-3: oklch(0.6135 0.1584 25.6);
+  --chart-4: oklch(0.7359 0.1281 78.5);
+  --chart-5: oklch(0.5303 0.0201 152.4);
+}
+
+/*
+ * Stashed dark "Obsidian Lime" theme — not applied anywhere by default
+ * (nothing sets data-theme="dark" today). Kept for cheap reversibility if
+ * a dark mode is ever wanted again, rather than deleted outright.
+ */
+[data-theme="dark"] {
+  /* #0E1512 */
+  --background: oklch(0.19 0.018 158);
+  /* #EAF2EC */
+  --foreground: oklch(0.95 0.012 158);
+  /* #16201C */
+  --card: oklch(0.235 0.019 158);
+  --card-foreground: oklch(0.95 0.012 158);
+  --popover: oklch(0.235 0.019 158);
+  --popover-foreground: oklch(0.95 0.012 158);
+  /* #C8F135 — same brand lime as the light theme */
+  --primary: oklch(0.9059 0.2018 121.5);
+  /* #10190F */
+  --primary-foreground: oklch(0.16 0.02 158);
+  /* #1C2721 */
+  --secondary: oklch(0.275 0.021 152);
+  --secondary-foreground: oklch(0.95 0.012 158);
+  --surface: oklch(0.275 0.021 152);
+  --muted: oklch(0.275 0.021 152);
+  /* #8CA095 */
+  --muted-foreground: oklch(0.68 0.03 152);
+  --accent: oklch(0.275 0.021 152);
+  --accent-foreground: oklch(0.9059 0.2018 121.5);
+  /* #C8F135 */
+  --brand: oklch(0.9059 0.2018 121.5);
+  --brand-foreground: oklch(0.16 0.02 158);
+  /* #D35C52 */
+  --destructive: oklch(0.6135 0.1584 25.6);
+  --destructive-foreground: oklch(0.16 0.02 158);
+  --negative: oklch(0.6135 0.1584 25.6);
+  --negative-foreground: oklch(0.16 0.02 158);
+  /* #138A55, nudged lighter for contrast against the dark card surface */
+  --positive: oklch(0.62 0.13 160.1);
+  --positive-foreground: oklch(0.16 0.02 158);
+  /* #D69B32 */
+  --warning: oklch(0.7359 0.1281 78.5);
+  --warning-foreground: oklch(0.16 0.02 158);
+  /* #263229 */
+  --border: oklch(0.3 0.023 152);
+  --input: oklch(0.3 0.023 152);
+  --ring: oklch(0.9059 0.2018 121.5);
+  /* Pure-black shadows — this theme's soft green shadow would be invisible
+     against a near-black background. */
+  --shadow-card: 0 1px 2px oklch(0 0 0 / 30%), 0 8px 24px oklch(0 0 0 / 25%);
+  --shadow-lift: 0 2px 4px oklch(0 0 0 / 35%), 0 16px 40px oklch(0 0 0 / 30%);
+
+  --chart-1: oklch(0.9059 0.2018 121.5);
+  --chart-2: oklch(0.62 0.13 160.1);
+  --chart-3: oklch(0.6135 0.1584 25.6);
+  --chart-4: oklch(0.7359 0.1281 78.5);
+  --chart-5: oklch(0.68 0.03 152);
 
   /* CSS custom properties containing var() are substituted where they're
      DECLARED, not re-evaluated live per descendant — @theme inline's
      --color-X: var(--X) mappings only exist once, at :root, so they'd
-     otherwise keep resolving to :root's dark values even here, no matter
+     otherwise keep resolving to :root's light values even here, no matter
      what --X is overridden to above. Re-declaring the same mappings in
-     this same rule (where --X above already resolves light) is what
-     actually makes every bg-card/text-foreground/etc. utility theme-aware. */
+     this same rule (where --X above already resolves dark) is what would
+     actually make every bg-card/text-foreground/etc. utility theme-aware,
+     if this block is ever activated via data-theme="dark". */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

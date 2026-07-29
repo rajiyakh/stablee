@@ -25,9 +25,12 @@ const categoryLabel: Record<AgentMessage["category"], string> = {
 export function AgentMessageCard({
   message,
   onOpenThread,
+  interactive = true,
 }: {
   message: AgentMessage;
   onOpenThread?: () => void;
+  /** Set false for read-only previews (e.g. the landing page) — no link into /app. */
+  interactive?: boolean;
 }) {
   const agent = getAgent(message.agentSlug);
   if (!agent) return null;
@@ -58,13 +61,19 @@ export function AgentMessageCard({
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-2">
-        <Link
-          to="/app/token/$chainId/$address"
-          params={{ chainId: message.token.chainId, address: message.token.address }}
-          className="inline-flex items-center rounded-md bg-secondary px-2 py-0.5 text-xs font-semibold text-foreground hover:underline"
-        >
-          {message.token.symbol}
-        </Link>
+        {interactive ? (
+          <Link
+            to="/app/token/$chainId/$address"
+            params={{ chainId: message.token.chainId, address: message.token.address }}
+            className="inline-flex items-center rounded-md bg-secondary px-2 py-0.5 text-xs font-semibold text-foreground hover:underline"
+          >
+            {message.token.symbol}
+          </Link>
+        ) : (
+          <span className="inline-flex items-center rounded-md bg-secondary px-2 py-0.5 text-xs font-semibold text-foreground">
+            {message.token.symbol}
+          </span>
+        )}
         <span className="text-xs text-muted-foreground">{message.token.name}</span>
         <CopyContractButton address={message.token.address} />
       </div>

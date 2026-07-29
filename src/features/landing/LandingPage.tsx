@@ -48,7 +48,7 @@ export function LandingPage() {
   const messages = snapshot?.messages ?? [];
 
   return (
-    <div data-theme="light" className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
       <LandingHeader />
       <main>
         <HeroSection tickerTokens={trendingTokens} />

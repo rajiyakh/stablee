@@ -1,7 +1,7 @@
 import { Check, Clock } from "lucide-react";
 import { Reveal } from "../Reveal";
 
-const current = ["AI Feed", "Markets", "GMGN Intelligence", "Swap", "Portfolio"];
+const current = ["AI Feed", "Markets", "Market Intelligence", "Swap", "Portfolio"];
 const upcoming = ["Protocol Token", "Mobile App", "Public API"];
 
 export function RoadmapSection() {
