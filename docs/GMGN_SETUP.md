@@ -105,13 +105,13 @@ chain's token into a Robinhood-only page.
 
 ## Empty and error states (exact copy, do not change without updating the spec)
 
-| Condition | Copy |
-|---|---|
-| No `GMGN_API_KEY` configured | "GMGN market data is not configured. Add a valid GMGN API key to enable Robinhood Mainnet Trending and Hot Searches." |
-| Configured but zero rows returned | "No Robinhood Mainnet tokens were returned for this interval." |
-| Rate limited, no cache available | "GMGN is temporarily rate-limiting requests. Cached data will remain visible where available." |
-| Any other provider failure, no cache available | "Robinhood Mainnet market data is temporarily unavailable." |
-| Stale (cache served after a failure) | "Delayed" badge + real last-successful-fetch timestamp via `DataSourceNote` |
+| Condition                                      | Copy                                                                                                                  |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| No `GMGN_API_KEY` configured                   | "GMGN market data is not configured. Add a valid GMGN API key to enable Robinhood Mainnet Trending and Hot Searches." |
+| Configured but zero rows returned              | "No Robinhood Mainnet tokens were returned for this interval."                                                        |
+| Rate limited, no cache available               | "GMGN is temporarily rate-limiting requests. Cached data will remain visible where available."                        |
+| Any other provider failure, no cache available | "Robinhood Mainnet market data is temporarily unavailable."                                                           |
+| Stale (cache served after a failure)           | "Delayed" badge + real last-successful-fetch timestamp via `DataSourceNote`                                           |
 
 ## Testing without a real key
 

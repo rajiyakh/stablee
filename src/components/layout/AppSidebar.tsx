@@ -149,7 +149,7 @@ function SidebarStatusSummary() {
 /**
  * Secondary navigation, moved out of the top navbar to keep it from getting
  * crowded. The top nav keeps only the most important destinations
- * (Overview, AI Feed, Markets, Swap, xStocks); everything else lives here.
+ * (Overview, AI Feed, Markets, Swap, Portfolio, Agent Hub); everything else lives here.
  */
 export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });

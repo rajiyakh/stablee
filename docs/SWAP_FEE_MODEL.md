@@ -2,12 +2,12 @@
 
 ## The numbers
 
-| Parameter | Value | Env var |
-|---|---|---|
-| Default platform fee | 100 bps (1.00%) | `ROBINPULSE_SWAP_FEE_BPS` |
-| Hardcoded fee ceiling | 100 bps (1.00%) | not env-configurable — see below |
-| Minimum swap amount | none | — |
-| 0x's own platform limit on `swapFeeBps` | 1000 bps (10%) | not RobinPulse's concern — we stay far under it |
+| Parameter                               | Value           | Env var                                         |
+| --------------------------------------- | --------------- | ----------------------------------------------- |
+| Default platform fee                    | 100 bps (1.00%) | `ROBINPULSE_SWAP_FEE_BPS`                       |
+| Hardcoded fee ceiling                   | 100 bps (1.00%) | not env-configurable — see below                |
+| Minimum swap amount                     | none            | —                                               |
+| 0x's own platform limit on `swapFeeBps` | 1000 bps (10%)  | not RobinPulse's concern — we stay far under it |
 
 There is no minimum swap amount and no minimum-fee floor. Every swap, regardless of size, is
 charged the same 1% fee, sent to the treasury wallet. The one remaining server-side check is

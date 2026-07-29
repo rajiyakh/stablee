@@ -23,12 +23,15 @@ Every configurable value lives in `.env` (copy from `.env.example`) and/or `src/
 
 ## Config files (`src/config/`)
 
-| File                | Governs                                                                                |
-| ------------------- | -------------------------------------------------------------------------------------- |
-| `project.ts`        | App name, social links, wallet readiness, data-source flags — reads only `VITE_*` vars |
-| `xstocks.ts`        | The curated, verified xStock registry (see docs/ADDING_XSTOCKS.md)                     |
-| `verifiedTokens.ts` | Owner-verified on-chain token allowlist (see docs/ADDING_VERIFIED_TOKENS.md)           |
-| `trending.ts`       | Trend-score weights, safeguards, cache TTLs (see docs/SCORING_ENGINE.md)               |
-| `token.ts`          | The `/token` announcement page (see docs/TOKEN_PAGE_SETUP.md)                          |
+| File                | Governs                                                                                       |
+| ------------------- | --------------------------------------------------------------------------------------------- |
+| `project.ts`        | App name, social links, wallet readiness, data-source flags — reads only `VITE_*` vars        |
+| `genesisAgents.ts`  | Agent Hub's six Genesis Agent economics/lore (see docs/AGENT_ECONOMY_CONFIG.md)               |
+| `agentHub.ts`       | Agent Hub mode, complete-set-bonus, marketplace/fusion flags (see docs/AGENT_HUB_OVERVIEW.md) |
+| `contracts.ts`      | Agent Hub contract addresses — empty until deployed (see docs/AGENT_CONTRACT_INTEGRATION.md)  |
+| `tge.ts`            | TGE status and $PULSE claim/distribution mode (see docs/PULSE_CLAIM_SETUP.md)                 |
+| `verifiedTokens.ts` | Owner-verified on-chain token allowlist (see docs/ADDING_VERIFIED_TOKENS.md)                  |
+| `trending.ts`       | Trend-score weights, safeguards, cache TTLs (see docs/SCORING_ENGINE.md)                      |
+| `token.ts`          | The `/token` announcement page (see docs/TOKEN_PAGE_SETUP.md)                                 |
 
 Server secrets (API keys) are read directly from `process.env` inside `src/lib/market/*.server.ts` — they are never re-exported through `project.ts` or any client-reachable module.

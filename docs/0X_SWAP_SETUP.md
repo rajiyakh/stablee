@@ -68,11 +68,11 @@ every required wallet field, including `VITE_WALLETCONNECT_PROJECT_ID`, is set.
 see below), each confirmed directly against `robinhoodchain.blockscout.com`'s own token API (not
 a symbol match, not a secondary source):
 
-| Symbol | Address | Decimals |
-|---|---|---|
-| ETH (native) | `0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE` | 18 |
-| WETH | `0x0bd7d308f8e1639fab988df18a8011f41eacad73` | 18 |
-| USDG (Global Dollar) | `0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168` | 6 |
+| Symbol               | Address                                      | Decimals |
+| -------------------- | -------------------------------------------- | -------- |
+| ETH (native)         | `0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE` | 18       |
+| WETH                 | `0x0bd7d308f8e1639fab988df18a8011f41eacad73` | 18       |
+| USDG (Global Dollar) | `0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168` | 6        |
 
 ### Tokenized-equity tokens are NOT in the swap picker (0x restriction, confirmed live)
 
@@ -99,7 +99,7 @@ error will say why, not just that it failed.
 
 All 8 tokens still have a real, cross-verified Chainlink price feed wired in at
 `src/config/chainlinkFeeds.ts` — that data is independently useful (e.g. as a `resolveUsdValue()`
-pricing tier for a token that *can* trade, or for a future swap venue without this restriction)
+pricing tier for a token that _can_ trade, or for a future swap venue without this restriction)
 regardless of 0x's trading restriction, so those entries were kept.
 
 **Beyond the curated list**: `/api/swap/price` and `/api/swap/quote` also accept any token
@@ -111,12 +111,13 @@ asked for (GMGN dataset as a source) while keeping the same safety property as t
 decimals are never trusted from an off-chain source. Discovered tokens are marked `verified: true`
 (they're already surfaced elsewhere on the site — see `discoverTokens.server.ts`'s doc comment for
 the exact reasoning); a raw pasted address nobody has seen before still shows the Unverified badge
-+ risk warnings. Add more
-manually-curated entries to `swapTokens.ts` the same way WETH/USDG were added: confirm the
-address via Blockscout's token API (never from a single unverified source), **and** make one real
-`GET /swap/allowance-holder/price` call for it before adding it to the curated list — Blockscout
-confirms the token is real, it does not confirm 0x will actually let anyone trade it (see the
-tokenized-equity section above, discovered the hard way).
+
+- risk warnings. Add more
+  manually-curated entries to `swapTokens.ts` the same way WETH/USDG were added: confirm the
+  address via Blockscout's token API (never from a single unverified source), **and** make one real
+  `GET /swap/allowance-holder/price` call for it before adding it to the curated list — Blockscout
+  confirms the token is real, it does not confirm 0x will actually let anyone trade it (see the
+  tokenized-equity section above, discovered the hard way).
 
 Native ETH selling is **enabled** (`NATIVE_SELL_ENABLED = true` in `swapTokens.ts`). Confirmed via
 a real `GET /swap/allowance-holder/price` call against chain 4663 with

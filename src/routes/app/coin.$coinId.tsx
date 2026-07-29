@@ -3,14 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 import { PageContainer } from "@/components/layout/AppShell";
 import { StatCard } from "@/components/market/StatCard";
 import { PriceChart } from "@/components/market/PriceChart";
-import { TradingViewAdvancedChart } from "@/components/market/TradingViewAdvancedChart";
 import { ErrorState } from "@/components/common/ErrorState";
 import { CardSkeleton } from "@/components/common/Skeletons";
 import { ChangeBadge } from "@/components/common/ChangeBadge";
 import { WatchButton } from "@/components/common/WatchButton";
 import { coinQuery } from "@/lib/market/client";
 import { formatUsd } from "@/lib/market/format";
-import { xStockRegistry } from "@/config/xstocks";
 
 export const Route = createFileRoute("/app/coin/$coinId")({
   head: ({ params }) => {
@@ -32,7 +30,6 @@ function CoinPage() {
   const { coinId } = Route.useParams();
   const query = useQuery(coinQuery(coinId));
   const coin = query.data?.data;
-  const xStock = xStockRegistry.find((item) => item.coinGeckoId === coinId);
 
   if (query.isPending)
     return (
@@ -87,12 +84,6 @@ function CoinPage() {
       <div className="mt-6">
         <PriceChart coinId={coin.id} />
       </div>
-
-      {xStock?.underlyingTicker ? (
-        <div className="mt-6">
-          <TradingViewAdvancedChart symbol={xStock.underlyingTicker} />
-        </div>
-      ) : null}
 
       {coin.description ? (
         <section className="mt-6 rounded-xl border border-border bg-card p-5">

@@ -1,0 +1,59 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ledger-title">
+  <title id="ledger-title">Ledger — Genesis Agent portrait</title>
+  <style>
+    .ledger-eye { animation: ledger-blink 5.8s ease-in-out infinite; transform-origin: center; }
+    .ledger-eye-l { transform-origin: 210px 244px; }
+    .ledger-eye-r { transform-origin: 302px 244px; animation-delay: 0.05s; }
+    @keyframes ledger-blink {
+      0%, 91%, 100% { transform: scaleY(1); }
+      95% { transform: scaleY(0.1); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .ledger-eye { animation: none; }
+    }
+  </style>
+
+  <!-- collar -->
+  <path d="M192 366 L320 366 L296 412 L216 412 Z" fill="#B97F2E" />
+
+  <!-- shield head -->
+  <path
+    d="M256 92
+       L364 130
+       L364 244
+       C 364 316, 316 358, 256 388
+       C 196 358, 148 316, 148 244
+       L 148 130
+       Z"
+    fill="#D9AF5C"
+  />
+  <path
+    d="M256 92 L364 130 L364 244 C 364 316, 316 358, 256 388 Z"
+    fill="#B97F2E"
+    opacity="0.15"
+  />
+  <path
+    d="M256 92 L364 130 L364 244 C 364 316, 316 358, 256 388 C 196 358, 148 316, 148 244 L 148 130 Z"
+    fill="none"
+    stroke="#B97F2E"
+    stroke-width="6"
+    opacity="0.35"
+  />
+
+  <!-- analytical diamond eyes -->
+  <g class="ledger-eye ledger-eye-l">
+    <path d="M210 214 L232 244 L210 274 L188 244 Z" fill="#14251C" opacity="0.85" />
+  </g>
+  <g class="ledger-eye ledger-eye-r">
+    <path d="M302 214 L324 244 L302 274 L280 244 Z" fill="#14251C" opacity="0.85" />
+  </g>
+
+  <!-- risk indicator ticks -->
+  <g fill="#D35C52">
+    <path d="M186 152 L200 152 L193 138 Z" />
+    <path d="M312 152 L326 152 L319 138 Z" />
+  </g>
+
+  <!-- bridge -->
+  <rect x="246" y="240" width="20" height="8" rx="4" fill="#14251C" opacity="0.5" />
+</svg>

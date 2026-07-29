@@ -1,6 +1,6 @@
 # RobinPulse AI
 
-Public market-intelligence dashboard for tokenized equities (xStocks) and Robinhood Mainnet on-chain tokens. Every number on the site comes from a live, attributed third-party provider (CoinGecko, DEX Screener, GeckoTerminal) or an owner-maintained verified registry — nothing is simulated, estimated, or fabricated. Where a provider cannot supply a value, the UI shows an empty/unavailable state instead of a placeholder number.
+Public market-intelligence dashboard for Robinhood Mainnet on-chain tokens, plus Agent Hub, a pre-TGE AI-agent collectible/farming preview. Every number on the site comes from a live, attributed third-party provider (CoinGecko, DEX Screener, GeckoTerminal) or an owner-maintained verified registry — nothing is simulated, estimated, or fabricated. Where a provider cannot supply a value, the UI shows an empty/unavailable state instead of a placeholder number.
 
 ## Stack
 
@@ -30,7 +30,7 @@ The app works out of the box on CoinGecko's free tier — no API key required. S
 
 - [docs/PROJECT_CONFIGURATION.md](docs/PROJECT_CONFIGURATION.md) — every env var
 - [docs/DATA_PROVIDERS.md](docs/DATA_PROVIDERS.md) — CoinGecko / DEX Screener / GeckoTerminal integration
-- [docs/ADDING_XSTOCKS.md](docs/ADDING_XSTOCKS.md) — extending the xStock registry
+- [docs/AGENT_HUB_OVERVIEW.md](docs/AGENT_HUB_OVERVIEW.md) — Agent Hub, the pre-TGE AI-agent collectible/farming preview
 - [docs/ADDING_ROBINHOOD_NETWORK.md](docs/ADDING_ROBINHOOD_NETWORK.md) — Robinhood Mainnet chain config
 - [docs/ADDING_VERIFIED_TOKENS.md](docs/ADDING_VERIFIED_TOKENS.md) — owner-verified token allowlist
 - [docs/WALLET_SETUP.md](docs/WALLET_SETUP.md) — wallet-connect readiness (currently disabled)

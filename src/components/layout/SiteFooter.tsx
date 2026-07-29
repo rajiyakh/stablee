@@ -34,8 +34,8 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
-                <Link to="/app/xstocks" className="text-muted-foreground hover:text-foreground">
-                  xStocks
+                <Link to="/app/agents-hub" className="text-muted-foreground hover:text-foreground">
+                  Agent Hub
                 </Link>
               </li>
               <li>

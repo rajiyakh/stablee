@@ -1,0 +1,47 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="echo-title">
+  <title id="echo-title">Echo — Genesis Agent portrait</title>
+  <style>
+    .echo-eye { animation: echo-blink 4.6s ease-in-out infinite; transform-origin: 256px 246px; }
+    .echo-ring { animation: echo-pulse 3.2s ease-in-out infinite; transform-origin: 256px 246px; }
+    .echo-ring-2 { animation-delay: 0.5s; }
+    @keyframes echo-blink {
+      0%, 90%, 100% { transform: scaleY(1); }
+      94% { transform: scaleY(0.1); }
+    }
+    @keyframes echo-pulse {
+      0%, 100% { opacity: 0.15; transform: scale(0.92); }
+      50% { opacity: 0.4; transform: scale(1.04); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .echo-eye, .echo-ring { animation: none; }
+    }
+  </style>
+
+  <!-- collar -->
+  <ellipse cx="256" cy="374" rx="76" ry="30" fill="#2E8F8A" />
+
+  <!-- radar rings -->
+  <circle class="echo-ring" cx="256" cy="246" r="150" fill="none" stroke="#2E8F8A" stroke-width="4" opacity="0.25" />
+  <circle class="echo-ring echo-ring-2" cx="256" cy="246" r="118" fill="none" stroke="#2E8F8A" stroke-width="4" opacity="0.3" />
+
+  <!-- rounded head -->
+  <circle cx="256" cy="246" r="118" fill="#8FBF9F" />
+  <circle cx="256" cy="246" r="118" fill="#2E8F8A" opacity="0.12" />
+
+  <!-- ear tufts -->
+  <path d="M158 176 C 140 150, 148 116, 176 106 C 168 138, 168 160, 172 182 Z" fill="#8FBF9F" />
+  <path d="M354 176 C 372 150, 364 116, 336 106 C 344 138, 344 160, 340 182 Z" fill="#8FBF9F" />
+
+  <!-- eye: concentric listening rings -->
+  <g class="echo-eye">
+    <circle cx="256" cy="246" r="44" fill="#14251C" opacity="0.85" />
+    <circle cx="256" cy="246" r="26" fill="none" stroke="#EEF1E8" stroke-width="4" opacity="0.8" />
+    <circle cx="256" cy="246" r="10" fill="#EEF1E8" />
+  </g>
+
+  <!-- signal accent marks -->
+  <g stroke="#2E8F8A" stroke-width="6" stroke-linecap="round" opacity="0.6">
+    <path d="M336 210 C 352 222, 352 246, 336 258" fill="none" />
+    <path d="M176 210 C 160 222, 160 246, 176 258" fill="none" />
+  </g>
+</svg>

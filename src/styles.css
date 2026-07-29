@@ -53,6 +53,16 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  /* Agent Hub rarity/accent tiers — Common/Uncommon reuse --muted-foreground
+     and --positive; these 4 are genuinely new hues (cyan, purple, gold,
+     mythic lime-gold) not covered by the base palette. */
+  --color-agent-cyan: var(--agent-cyan);
+  --color-agent-purple: var(--agent-purple);
+  --color-agent-purple-foreground: var(--agent-purple-foreground);
+  --color-agent-gold: var(--agent-gold);
+  --color-agent-gold-foreground: var(--agent-gold-foreground);
+  --color-agent-mythic: var(--agent-mythic);
+  --color-agent-mythic-foreground: var(--agent-mythic-foreground);
   --font-display: "Fraunces", ui-serif, Georgia, serif;
   --font-sans: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
@@ -109,6 +119,17 @@
   --chart-3: oklch(0.6135 0.1584 25.6);
   --chart-4: oklch(0.7359 0.1281 78.5);
   --chart-5: oklch(0.5303 0.0201 152.4);
+
+  /* Agent Hub rarity tier tokens: Rare = cyan-green, Epic = muted purple,
+     Legendary = soft gold, Mythic = lime-gold premium. Common/Uncommon
+     intentionally reuse --muted-foreground/--positive above (no new token). */
+  --agent-cyan: oklch(0.58 0.11 185);
+  --agent-purple: oklch(0.55 0.09 305);
+  --agent-purple-foreground: oklch(0.98 0.006 108);
+  --agent-gold: oklch(0.78 0.11 85);
+  --agent-gold-foreground: oklch(0.25 0.03 85);
+  --agent-mythic: oklch(0.83 0.16 100);
+  --agent-mythic-foreground: oklch(0.2 0.03 100);
 }
 
 /*
@@ -300,8 +321,7 @@
 
 @utility ecg-path {
   animation: ecg-draw var(--ecg-duration, 2.1s) linear infinite forwards;
-  filter:
-    drop-shadow(0 0 2px var(--color-primary))
+  filter: drop-shadow(0 0 2px var(--color-primary))
     drop-shadow(0 0 4px color-mix(in oklch, var(--color-primary) 40%, transparent));
 }
 

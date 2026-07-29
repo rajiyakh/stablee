@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Menu, PanelLeft } from "lucide-react";
 import { useState } from "react";
 import { isWalletConfigured, projectConfig } from "@/config/project";
+import { agentHubConfig } from "@/config/agentHub";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -23,7 +24,11 @@ const navItems = [
     hot: isWalletConfigured(),
   },
   { to: "/app/portfolio", label: "Portfolio", badge: isWalletConfigured() ? undefined : "Soon" },
-  { to: "/app/xstocks", label: "xStocks" },
+  {
+    to: "/app/agents-hub",
+    label: "Agent Hub",
+    badge: agentHubConfig.mode === "preview" ? "New" : undefined,
+  },
 ] as const;
 
 // Full list for the mobile menu, where there's no separate sidebar affordance.

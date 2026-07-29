@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as AppAgentsRouteImport } from './routes/app/agents'
+import { Route as AppAgentsHubRouteImport } from './routes/app/agents-hub'
 import { Route as AppAiFeedRouteImport } from './routes/app/ai-feed'
 import { Route as AppDataRouteImport } from './routes/app/data'
 import { Route as AppDisclaimerRouteImport } from './routes/app/disclaimer'
@@ -34,6 +35,8 @@ import { Route as ApiSwapPriceRouteImport } from './routes/api/swap/price'
 import { Route as ApiSwapQuoteRouteImport } from './routes/api/swap/quote'
 import { Route as ApiSwapResolveTokenRouteImport } from './routes/api/swap/resolve-token'
 import { Route as ApiSwapTokensRouteImport } from './routes/api/swap/tokens'
+import { Route as AppAgentsHubIndexRouteImport } from './routes/app/agents-hub.index'
+import { Route as AppAgentsHubSlugRouteImport } from './routes/app/agents-hub.$slug'
 import { Route as AppAgentsSlugRouteImport } from './routes/app/agents.$slug'
 import { Route as AppCoinCoinIdRouteImport } from './routes/app/coin.$coinId'
 import { Route as AppMarketsIndexRouteImport } from './routes/app/markets.index'
@@ -79,6 +82,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
 const AppAgentsRoute = AppAgentsRouteImport.update({
   id: '/agents',
   path: '/agents',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAgentsHubRoute = AppAgentsHubRouteImport.update({
+  id: '/agents-hub',
+  path: '/agents-hub',
   getParentRoute: () => AppRoute,
 } as any)
 const AppAiFeedRoute = AppAiFeedRouteImport.update({
@@ -185,6 +193,16 @@ const ApiSwapTokensRoute = ApiSwapTokensRouteImport.update({
   id: '/api/swap/tokens',
   path: '/api/swap/tokens',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppAgentsHubIndexRoute = AppAgentsHubIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppAgentsHubRoute,
+} as any)
+const AppAgentsHubSlugRoute = AppAgentsHubSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => AppAgentsHubRoute,
 } as any)
 const AppAgentsSlugRoute = AppAgentsSlugRouteImport.update({
   id: '/$slug',
@@ -336,6 +354,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/app/agents': typeof AppAgentsRouteWithChildren
+  '/app/agents-hub': typeof AppAgentsHubRouteWithChildren
   '/app/ai-feed': typeof AppAiFeedRoute
   '/app/data': typeof AppDataRoute
   '/app/disclaimer': typeof AppDisclaimerRoute
@@ -358,11 +377,13 @@ export interface FileRoutesByFullPath {
   '/api/swap/quote': typeof ApiSwapQuoteRoute
   '/api/swap/resolve-token': typeof ApiSwapResolveTokenRoute
   '/api/swap/tokens': typeof ApiSwapTokensRoute
+  '/app/agents-hub/$slug': typeof AppAgentsHubSlugRoute
   '/app/agents/$slug': typeof AppAgentsSlugRoute
   '/app/coin/$coinId': typeof AppCoinCoinIdRoute
   '/app/markets/global': typeof AppMarketsGlobalRoute
   '/app/markets/hot-searches': typeof AppMarketsHotSearchesRoute
   '/app/markets/trending': typeof AppMarketsTrendingRoute
+  '/app/agents-hub/': typeof AppAgentsHubIndexRoute
   '/app/markets/': typeof AppMarketsIndexRoute
   '/app/swap/': typeof AppSwapIndexRoute
   '/app/token/': typeof AppTokenIndexRoute
@@ -407,11 +428,13 @@ export interface FileRoutesByTo {
   '/api/swap/quote': typeof ApiSwapQuoteRoute
   '/api/swap/resolve-token': typeof ApiSwapResolveTokenRoute
   '/api/swap/tokens': typeof ApiSwapTokensRoute
+  '/app/agents-hub/$slug': typeof AppAgentsHubSlugRoute
   '/app/agents/$slug': typeof AppAgentsSlugRoute
   '/app/coin/$coinId': typeof AppCoinCoinIdRoute
   '/app/markets/global': typeof AppMarketsGlobalRoute
   '/app/markets/hot-searches': typeof AppMarketsHotSearchesRoute
   '/app/markets/trending': typeof AppMarketsTrendingRoute
+  '/app/agents-hub': typeof AppAgentsHubIndexRoute
   '/app/markets': typeof AppMarketsIndexRoute
   '/app/swap': typeof AppSwapIndexRoute
   '/app/token': typeof AppTokenIndexRoute
@@ -439,6 +462,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/app/agents': typeof AppAgentsRouteWithChildren
+  '/app/agents-hub': typeof AppAgentsHubRouteWithChildren
   '/app/ai-feed': typeof AppAiFeedRoute
   '/app/data': typeof AppDataRoute
   '/app/disclaimer': typeof AppDisclaimerRoute
@@ -461,11 +485,13 @@ export interface FileRoutesById {
   '/api/swap/quote': typeof ApiSwapQuoteRoute
   '/api/swap/resolve-token': typeof ApiSwapResolveTokenRoute
   '/api/swap/tokens': typeof ApiSwapTokensRoute
+  '/app/agents-hub/$slug': typeof AppAgentsHubSlugRoute
   '/app/agents/$slug': typeof AppAgentsSlugRoute
   '/app/coin/$coinId': typeof AppCoinCoinIdRoute
   '/app/markets/global': typeof AppMarketsGlobalRoute
   '/app/markets/hot-searches': typeof AppMarketsHotSearchesRoute
   '/app/markets/trending': typeof AppMarketsTrendingRoute
+  '/app/agents-hub/': typeof AppAgentsHubIndexRoute
   '/app/markets/': typeof AppMarketsIndexRoute
   '/app/swap/': typeof AppSwapIndexRoute
   '/app/token/': typeof AppTokenIndexRoute
@@ -494,6 +520,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/app/agents'
+    | '/app/agents-hub'
     | '/app/ai-feed'
     | '/app/data'
     | '/app/disclaimer'
@@ -516,11 +543,13 @@ export interface FileRouteTypes {
     | '/api/swap/quote'
     | '/api/swap/resolve-token'
     | '/api/swap/tokens'
+    | '/app/agents-hub/$slug'
     | '/app/agents/$slug'
     | '/app/coin/$coinId'
     | '/app/markets/global'
     | '/app/markets/hot-searches'
     | '/app/markets/trending'
+    | '/app/agents-hub/'
     | '/app/markets/'
     | '/app/swap/'
     | '/app/token/'
@@ -565,11 +594,13 @@ export interface FileRouteTypes {
     | '/api/swap/quote'
     | '/api/swap/resolve-token'
     | '/api/swap/tokens'
+    | '/app/agents-hub/$slug'
     | '/app/agents/$slug'
     | '/app/coin/$coinId'
     | '/app/markets/global'
     | '/app/markets/hot-searches'
     | '/app/markets/trending'
+    | '/app/agents-hub'
     | '/app/markets'
     | '/app/swap'
     | '/app/token'
@@ -596,6 +627,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/app/agents'
+    | '/app/agents-hub'
     | '/app/ai-feed'
     | '/app/data'
     | '/app/disclaimer'
@@ -618,11 +650,13 @@ export interface FileRouteTypes {
     | '/api/swap/quote'
     | '/api/swap/resolve-token'
     | '/api/swap/tokens'
+    | '/app/agents-hub/$slug'
     | '/app/agents/$slug'
     | '/app/coin/$coinId'
     | '/app/markets/global'
     | '/app/markets/hot-searches'
     | '/app/markets/trending'
+    | '/app/agents-hub/'
     | '/app/markets/'
     | '/app/swap/'
     | '/app/token/'
@@ -704,6 +738,13 @@ declare module '@tanstack/react-router' {
       path: '/agents'
       fullPath: '/app/agents'
       preLoaderRoute: typeof AppAgentsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/agents-hub': {
+      id: '/app/agents-hub'
+      path: '/agents-hub'
+      fullPath: '/app/agents-hub'
+      preLoaderRoute: typeof AppAgentsHubRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/ai-feed': {
@@ -852,6 +893,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/swap/tokens'
       preLoaderRoute: typeof ApiSwapTokensRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/app/agents-hub/': {
+      id: '/app/agents-hub/'
+      path: '/'
+      fullPath: '/app/agents-hub/'
+      preLoaderRoute: typeof AppAgentsHubIndexRouteImport
+      parentRoute: typeof AppAgentsHubRoute
+    }
+    '/app/agents-hub/$slug': {
+      id: '/app/agents-hub/$slug'
+      path: '/$slug'
+      fullPath: '/app/agents-hub/$slug'
+      preLoaderRoute: typeof AppAgentsHubSlugRouteImport
+      parentRoute: typeof AppAgentsHubRoute
     }
     '/app/agents/$slug': {
       id: '/app/agents/$slug'
@@ -1050,6 +1105,20 @@ const AppAgentsRouteWithChildren = AppAgentsRoute._addFileChildren(
   AppAgentsRouteChildren,
 )
 
+interface AppAgentsHubRouteChildren {
+  AppAgentsHubSlugRoute: typeof AppAgentsHubSlugRoute
+  AppAgentsHubIndexRoute: typeof AppAgentsHubIndexRoute
+}
+
+const AppAgentsHubRouteChildren: AppAgentsHubRouteChildren = {
+  AppAgentsHubSlugRoute: AppAgentsHubSlugRoute,
+  AppAgentsHubIndexRoute: AppAgentsHubIndexRoute,
+}
+
+const AppAgentsHubRouteWithChildren = AppAgentsHubRoute._addFileChildren(
+  AppAgentsHubRouteChildren,
+)
+
 interface AppMarketsRouteChildren {
   AppMarketsGlobalRoute: typeof AppMarketsGlobalRoute
   AppMarketsHotSearchesRoute: typeof AppMarketsHotSearchesRoute
@@ -1097,6 +1166,7 @@ const AppTokenRouteWithChildren = AppTokenRoute._addFileChildren(
 
 interface AppRouteChildren {
   AppAgentsRoute: typeof AppAgentsRouteWithChildren
+  AppAgentsHubRoute: typeof AppAgentsHubRouteWithChildren
   AppAiFeedRoute: typeof AppAiFeedRoute
   AppDataRoute: typeof AppDataRoute
   AppDisclaimerRoute: typeof AppDisclaimerRoute
@@ -1115,6 +1185,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppAgentsRoute: AppAgentsRouteWithChildren,
+  AppAgentsHubRoute: AppAgentsHubRouteWithChildren,
   AppAiFeedRoute: AppAiFeedRoute,
   AppDataRoute: AppDataRoute,
   AppDisclaimerRoute: AppDisclaimerRoute,

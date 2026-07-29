@@ -14,7 +14,7 @@ fallback address anywhere in the codebase — not a developer wallet, not a gene
 a hardcoded sample. If `serverFeeRecipient()` returns `null`:
 
 - `/api/swap/price` and `/api/swap/quote` both return a `not_configured` response with the exact
-  copy: *"RobinPulse fee collection has not been configured. Live swapping is unavailable."*
+  copy: _"RobinPulse fee collection has not been configured. Live swapping is unavailable."_
 - `zeroExConfigured()` returns `false`, so no request to 0x is ever made.
 
 This was the actual state throughout this build — no real treasury address was available, so

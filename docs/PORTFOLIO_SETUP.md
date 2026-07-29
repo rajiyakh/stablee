@@ -14,11 +14,13 @@ an API shape from docs/memory — verify it):
 ```
 GET {explorerUrl}/api/v2/addresses/{address}
 ```
+
 Returns `coin_balance` (native ETH, wei) and `exchange_rate` (native coin's live USD price).
 
 ```
 GET {explorerUrl}/api/v2/addresses/{address}/token-balances
 ```
+
 Returns every ERC-20 the address holds — no enumeration hack, no per-token RPC loop. Each entry
 carries `token.symbol`, `token.name`, `token.decimals`, `token.icon_url` (real CDN image),
 `token.exchange_rate` (live USD price per token), `token.reputation`, and `value` (raw balance).
@@ -45,21 +47,22 @@ which tokens might be relevant.
 
 Every holding the API returns is shown — nothing is dropped for looking unfamiliar or being dust.
 A token gets a visible "Flagged" badge (never dropped) when either:
+
 - Blockscout didn't mark its `reputation` as `"ok"`, or
 - its raw name/symbol is abnormally long (`MAX_NAME_LENGTH` / `MAX_SYMBOL_LENGTH` in
   `holdings.server.ts`).
 
 The second rule exists because of something found live while building this: a real wallet on this
-chain holds an airdropped token whose *name* field is a phishing payload — `"rh-compliance.xyz |
+chain holds an airdropped token whose _name_ field is a phishing payload — `"rh-compliance.xyz |
 TRM LABS ALERT: Your Robinhood Chain wallet flagged by automated risk-scoring system (score
 94/100 - HIGH RISK). All assets TEMPORARILY FROZEN pending KYC verification. Verify at
 rh-compliance.xyz within 72h..."` — and Blockscout's own `reputation` field reported `"ok"` for it
-(their reputation system catches known scam *contracts*, not deceptive *metadata*). Anyone can set
+(their reputation system catches known scam _contracts_, not deceptive _metadata_). Anyone can set
 a token's name to anything; this is a well-known attack pattern (airdrop a token with a scary
 "official-looking" name, hoping the holder panics and visits the embedded domain).
 
 `holdings.server.ts` hard-truncates every name/symbol server-side (never just via CSS `truncate`,
-which only clips the *display* — the full string would still reach the client and could surface
+which only clips the _display_ — the full string would still reach the client and could surface
 elsewhere, e.g. a screen reader or a wider viewport) and flags anything that had to be truncated.
 No real token name is anywhere near 40 characters, so this has no legitimate false-positive cost.
 

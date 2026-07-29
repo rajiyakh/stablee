@@ -18,7 +18,7 @@ calldata-modification surfaces are sound, and found three real gaps, all now fix
   it (so a swap literally cannot be submitted), and the "Review Swap" button is disabled
   pre-flight when the indicative price already shows severe impact.
 - **Wrong-chain execution wasn't re-checked at signing time (MEDIUM).** The `chainId !==
-  robinhoodChain.id` check only gated the initial quote request, not the actual approve/confirm
+robinhoodChain.id` check only gated the initial quote request, not the actual approve/confirm
   actions — if the wallet's active chain changed between quote-fetch and confirm-click, nothing
   stopped signing on the wrong chain. Fixed: `useTokenApproval.ts` and `useSwapExecution.ts` now
   pass an explicit `chainId: robinhoodChain.id` to wagmi's `writeContract`/`sendTransaction` (so
@@ -147,7 +147,7 @@ limiter (same mechanism as every other API route in the app) before doing any wo
   on-chain-decimals-verified tokens when `GMGN_API_KEY` is configured (`discoverTokens.server.ts`)
   — the "chain+address identity, never symbol matching" discipline is applied throughout.
   **Update:** now 3 curated entries (native ETH sentinel, WETH, USDG). AAPL and AMZN were
-  *removed* from the curated list — confirmed live that 0x rejects all 8 real Robinhood
+  _removed_ from the curated list — confirmed live that 0x rejects all 8 real Robinhood
   tokenized-equity tokens (AAPL, AMZN, AMD, ASML, BABA, CLSK, COIN, CRCL) with
   `SELL_TOKEN_NOT_AUTHORIZED_FOR_TRADE`/`BUY_TOKEN_NOT_AUTHORIZED_FOR_TRADE` — a permanent
   regulatory restriction, not a liquidity gap. Their Chainlink feeds remain wired in

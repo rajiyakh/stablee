@@ -1,0 +1,60 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="atlas-title">
+  <title id="atlas-title">Atlas — Genesis Agent portrait</title>
+  <style>
+    .atlas-eye { animation: atlas-blink 6.4s ease-in-out infinite; transform-origin: 256px 252px; }
+    .atlas-scan { animation: atlas-scan 3.6s ease-in-out infinite; transform-origin: 256px 252px; }
+    @keyframes atlas-blink {
+      0%, 92%, 100% { transform: scaleY(1); }
+      96% { transform: scaleY(0.12); }
+    }
+    @keyframes atlas-scan {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.9; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .atlas-eye, .atlas-scan { animation: none; }
+    }
+  </style>
+
+  <!-- broad collar -->
+  <path d="M170 372 L342 372 L318 424 L194 424 Z" fill="#1B5E3C" />
+
+  <!-- heavy hexagonal head -->
+  <path
+    d="M256 90
+       L370 148
+       L392 262
+       L326 366
+       L186 366
+       L120 262
+       L142 148
+       Z"
+    fill="#3E8A63"
+  />
+  <path
+    d="M256 90 L370 148 L392 262 L326 366 L256 366 Z"
+    fill="#1B5E3C"
+    opacity="0.18"
+  />
+  <path
+    d="M256 90 L370 148 L392 262 L326 366 L186 366 L120 262 L142 148 Z"
+    fill="none"
+    stroke="#1B5E3C"
+    stroke-width="6"
+    opacity="0.3"
+  />
+
+  <!-- plating seams -->
+  <g stroke="#1B5E3C" stroke-width="4" opacity="0.35">
+    <line x1="142" y1="148" x2="186" y2="366" />
+    <line x1="370" y1="148" x2="326" y2="366" />
+  </g>
+
+  <!-- large scanning lens -->
+  <circle class="atlas-scan" cx="256" cy="252" r="86" fill="none" stroke="#C8F135" stroke-width="6" opacity="0.6" />
+  <g class="atlas-eye">
+    <circle cx="256" cy="252" r="66" fill="#14251C" opacity="0.88" />
+    <circle cx="256" cy="252" r="30" fill="#8FBF9F" opacity="0.9" />
+    <circle cx="256" cy="252" r="12" fill="#EEF1E8" />
+  </g>
+</svg>

@@ -51,18 +51,18 @@ export const agents: Agent[] = [
     slug: "meridian",
     name: "Meridian",
     role: "Tokenized equities & correlation",
-    focus: "xStock structure",
+    focus: "Tokenized-equity structure",
     summary:
       "Focuses on tokenized-equity markets and how their on-chain pricing behaves relative to available reference data.",
     methodology: [
-      "Only analyses assets present in the owner-verified xStock registry.",
+      "Only analyses assets present in an owner-verified tokenized-equity registry.",
       "Reads price, volume and market capitalisation from the resolving provider record.",
       "Never asserts backing, redemption, issuer or regulatory status without a verifiable source.",
     ],
     signals: ["Tokenized-stock correlation analysis", "Market observation", "Market recap"],
     inputs: ["Verified registry", "CoinGecko market data", "Contract metadata"],
     limitations:
-      "Remains inactive until verified xStock records with resolvable identifiers are configured.",
+      "Remains inactive until a verified tokenized-equity registry with resolvable identifiers is configured.",
     accent: "primary",
     icon: "GitCompare",
     riskProfile: "low",

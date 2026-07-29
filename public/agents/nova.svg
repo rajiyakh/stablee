@@ -1,0 +1,60 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="nova-title">
+  <title id="nova-title">Nova — Genesis Agent portrait</title>
+  <style>
+    .nova-eye { animation: nova-blink 4.4s ease-in-out infinite; transform-origin: 256px 258px; }
+    .nova-burst { animation: nova-ignite 2.4s ease-in-out infinite; transform-origin: 256px 258px; }
+    @keyframes nova-blink {
+      0%, 88%, 100% { transform: scaleY(1); }
+      93% { transform: scaleY(0.1); }
+    }
+    @keyframes nova-ignite {
+      0%, 100% { opacity: 0.45; transform: scale(0.94); }
+      50% { opacity: 0.85; transform: scale(1.08); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .nova-eye, .nova-burst { animation: none; }
+    }
+  </style>
+
+  <!-- collar -->
+  <path d="M198 360 L314 360 L292 408 L220 408 Z" fill="#7A5FA0" />
+
+  <!-- pointed launch-nose hood -->
+  <path
+    d="M256 84
+       L340 210
+       C 356 234, 360 264, 350 292
+       L 330 348
+       C 322 366, 304 378, 284 378
+       L 228 378
+       C 208 378, 190 366, 182 348
+       L 162 292
+       C 152 264, 156 234, 172 210
+       Z"
+    fill="#7A5FA0"
+  />
+  <path
+    d="M256 84 L340 210 C 356 234, 360 264, 350 292 L 330 348 C 322 366, 304 378, 284 378 L 256 378 Z"
+    fill="#C8F135"
+    opacity="0.16"
+  />
+
+  <!-- starburst ignition rays -->
+  <g class="nova-burst" stroke="#C8F135" stroke-width="7" stroke-linecap="round">
+    <line x1="256" y1="180" x2="256" y2="150" />
+    <line x1="316" y1="212" x2="340" y2="192" />
+    <line x1="196" y1="212" x2="172" y2="192" />
+  </g>
+
+  <!-- single eye -->
+  <g class="nova-eye">
+    <ellipse cx="256" cy="258" rx="46" ry="34" fill="#14251C" opacity="0.88" />
+    <ellipse cx="256" cy="258" rx="20" ry="14" fill="#C8F135" opacity="0.95" />
+  </g>
+
+  <!-- speed streaks -->
+  <g stroke="#EEF1E8" stroke-width="5" stroke-linecap="round" opacity="0.5">
+    <line x1="212" y1="320" x2="198" y2="336" />
+    <line x1="300" y1="320" x2="314" y2="336" />
+  </g>
+</svg>

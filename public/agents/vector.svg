@@ -1,0 +1,59 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="vector-title">
+  <title id="vector-title">Vector — Genesis Agent portrait</title>
+  <style>
+    .vector-eye { animation: vector-blink 5.2s ease-in-out infinite; transform-origin: 256px 234px; }
+    @keyframes vector-blink {
+      0%, 90%, 100% { transform: scaleY(1); }
+      94% { transform: scaleY(0.12); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .vector-eye { animation: none; }
+    }
+  </style>
+
+  <!-- speed lines -->
+  <g stroke="#C8F135" stroke-width="10" stroke-linecap="round" opacity="0.55">
+    <line x1="368" y1="188" x2="426" y2="168" />
+    <line x1="378" y1="222" x2="440" y2="210" />
+    <line x1="372" y1="258" x2="432" y2="256" />
+  </g>
+
+  <!-- collar / base plate -->
+  <path d="M186 358 L326 358 L300 410 L212 410 Z" fill="#1F7A4D" />
+
+  <!-- hood: angular, forward-pointing -->
+  <path
+    d="M256 96
+       L360 156
+       C 372 162, 378 174, 376 188
+       L 360 302
+       C 358 322, 344 338, 324 344
+       L 256 366
+       L 188 344
+       C 168 338, 154 322, 152 302
+       L 136 188
+       C 134 174, 140 162, 152 156
+       Z"
+    fill="#C8F135"
+  />
+  <path
+    d="M256 96
+       L360 156
+       C 372 162, 378 174, 376 188
+       L 360 302
+       C 358 322, 344 338, 324 344
+       L 256 366
+       Z"
+    fill="#1F7A4D"
+    opacity="0.14"
+  />
+
+  <!-- visor / eye -->
+  <g class="vector-eye">
+    <rect x="192" y="220" width="128" height="28" rx="14" fill="#14251C" opacity="0.88" />
+    <rect x="204" y="226" width="46" height="16" rx="8" fill="#EEF1E8" opacity="0.9" />
+  </g>
+
+  <!-- brow accent -->
+  <path d="M198 196 L314 196" stroke="#14251C" stroke-width="6" stroke-linecap="round" opacity="0.35" />
+</svg>

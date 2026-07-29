@@ -1,0 +1,34 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="placeholder-title">
+  <title id="placeholder-title">Agent portrait unavailable</title>
+
+  <!-- collar -->
+  <path d="M198 366 L314 366 L292 412 L220 412 Z" fill="#B7BDB3" />
+
+  <!-- neutral rounded hood -->
+  <path
+    d="M256 96
+       L354 148
+       C 368 156, 376 172, 374 188
+       L 362 296
+       C 358 320, 342 338, 320 346
+       L 256 368
+       L 192 346
+       C 170 338, 154 320, 150 296
+       L 138 188
+       C 136 172, 144 156, 158 148
+       Z"
+    fill="#D6DAD1"
+  />
+  <path
+    d="M256 96 L354 148 C 368 156, 376 172, 374 188 L 362 296 C 358 320, 342 338, 320 346 L 256 368 Z"
+    fill="#8B9186"
+    opacity="0.12"
+  />
+
+  <!-- neutral eyes -->
+  <g fill="#8B9186">
+    <circle cx="216" cy="240" r="14" />
+    <circle cx="296" cy="240" r="14" />
+  </g>
+  <path d="M226 288 Q256 300 286 288" fill="none" stroke="#8B9186" stroke-width="6" stroke-linecap="round" />
+</svg>

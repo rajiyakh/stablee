@@ -1,0 +1,47 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="oracle-title">
+  <title id="oracle-title">Oracle — Genesis Agent portrait</title>
+  <style>
+    .oracle-eye { animation: oracle-blink 5s ease-in-out infinite; transform-origin: 256px 268px; }
+    .oracle-ring-a { animation: oracle-spin-a 9s linear infinite; transform-origin: 256px 268px; }
+    .oracle-ring-b { animation: oracle-spin-b 12s linear infinite; transform-origin: 256px 268px; }
+    @keyframes oracle-blink {
+      0%, 90%, 100% { transform: scaleY(1); }
+      94% { transform: scaleY(0.1); }
+    }
+    @keyframes oracle-spin-a { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes oracle-spin-b { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+    @media (prefers-reduced-motion: reduce) {
+      .oracle-eye, .oracle-ring-a, .oracle-ring-b { animation: none; }
+    }
+  </style>
+
+  <!-- collar -->
+  <path d="M186 384 L326 384 L300 434 L212 434 Z" fill="#B9A23A" />
+
+  <!-- crown points -->
+  <g fill="#DCB35F">
+    <path d="M256 62 L272 118 L240 118 Z" />
+    <path d="M186 82 L212 132 L178 140 Z" />
+    <path d="M326 82 L300 132 L334 140 Z" />
+  </g>
+
+  <!-- rounded head -->
+  <circle cx="256" cy="268" r="128" fill="#DCB35F" />
+  <circle cx="256" cy="268" r="128" fill="#B9A23A" opacity="0.14" />
+  <circle cx="256" cy="268" r="128" fill="none" stroke="#EEF1E8" stroke-width="4" opacity="0.5" />
+
+  <!-- holographic multi-layer rings -->
+  <circle class="oracle-ring-a" cx="256" cy="268" r="96" fill="none" stroke="#C8F135" stroke-width="3" stroke-dasharray="6 10" opacity="0.6" />
+  <circle class="oracle-ring-b" cx="256" cy="268" r="76" fill="none" stroke="#EEF1E8" stroke-width="3" stroke-dasharray="4 8" opacity="0.7" />
+
+  <!-- central holographic eye -->
+  <g class="oracle-eye">
+    <circle cx="256" cy="268" r="50" fill="#14251C" opacity="0.88" />
+    <circle cx="256" cy="268" r="30" fill="#C8F135" opacity="0.5" />
+    <circle cx="256" cy="268" r="14" fill="#EEF1E8" />
+  </g>
+
+  <!-- side facets -->
+  <path d="M128 268 L112 250 L112 286 Z" fill="#DCB35F" />
+  <path d="M384 268 L400 250 L400 286 Z" fill="#DCB35F" />
+</svg>
