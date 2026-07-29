@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import { PageContainer } from "@/components/layout/AppShell";
 import { SectionHeading } from "@/components/common/SectionHeading";
+import { PulseLoadingState } from "@/components/branding/PulseLoadingState";
 import { isWalletConfigured, WALLET_NOT_CONFIGURED_MESSAGE } from "@/config/project";
 
 /**
@@ -65,7 +66,7 @@ function SwapRoute() {
         description="Trade Robinhood Mainnet tokens in seconds — real-time pricing and best-available routing across on-chain liquidity."
       />
       <div className="mt-6">
-        <Suspense fallback={null}>
+        <Suspense fallback={<PulseLoadingState />}>
           <SwapPage initialBuyAddress={buy} initialSellAddress={sell} />
         </Suspense>
       </div>

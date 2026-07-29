@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Activity, Menu, PanelLeft } from "lucide-react";
+import { Menu, PanelLeft } from "lucide-react";
 import { useState } from "react";
 import { isWalletConfigured, projectConfig } from "@/config/project";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useSidebar } from "@/components/ui/sidebar";
 import { WalletConnectButton } from "@/components/wallet/WalletConnectButton";
+import { AnimatedPulseLogo } from "@/components/branding/AnimatedPulseLogo";
 import { cn } from "@/lib/utils";
 
 // Most important destinations only — everything else lives in the left
@@ -72,12 +73,10 @@ export function SiteHeader() {
       <div className="mx-auto grid h-14 w-full max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-4 px-4 sm:px-6 lg:px-8">
         <Link
           to="/"
-          className="flex shrink-0 items-center gap-2 justify-self-start"
+          className="group flex shrink-0 items-center gap-2 justify-self-start"
           aria-label={`${projectConfig.name} home`}
         >
-          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Activity className="h-3.5 w-3.5" aria-hidden="true" />
-          </span>
+          <AnimatedPulseLogo size={28} className="group-hover:[--ecg-duration:1.4s]" />
           <span className="text-sm font-semibold tracking-tight text-foreground">
             {projectConfig.name}
           </span>

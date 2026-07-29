@@ -176,6 +176,47 @@
   animation: marquee 32s linear infinite;
 }
 
+/* RobinPulse ECG logo mark (AnimatedPulseLogo.tsx) — the waveform redraws
+   itself left to right on a loop, with a small scale pulse timed to when
+   the draw crosses the main spike. Both share --ecg-duration (set on the
+   component root, overridden on hover) so they speed up together and stay
+   in sync. animation-fill-mode: forwards matters here: combined with the
+   prefers-reduced-motion rule below (which forces a near-zero duration and
+   a single iteration on every animation site-wide), reduced-motion users
+   land on the fully-drawn, non-pulsing end state automatically. */
+@keyframes ecg-draw {
+  from {
+    stroke-dashoffset: 60;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes ecg-pulse {
+  0%,
+  24%,
+  34%,
+  100% {
+    transform: scale(1);
+  }
+  29% {
+    transform: scale(1.05);
+  }
+}
+
+@utility ecg-path {
+  animation: ecg-draw var(--ecg-duration, 2.1s) linear infinite forwards;
+  filter:
+    drop-shadow(0 0 2px var(--color-primary))
+    drop-shadow(0 0 4px color-mix(in oklch, var(--color-primary) 40%, transparent));
+}
+
+@utility ecg-pulse-group {
+  transform-origin: center;
+  animation: ecg-pulse var(--ecg-duration, 2.1s) linear infinite forwards;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

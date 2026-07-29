@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { PageContainer } from "@/components/layout/AppShell";
 import { SectionHeading } from "@/components/common/SectionHeading";
+import { PulseLoadingState } from "@/components/branding/PulseLoadingState";
 import { isWalletConfigured, WALLET_NOT_CONFIGURED_MESSAGE } from "@/config/project";
 
 /**
@@ -47,7 +48,7 @@ function PortfolioRoute() {
         description="Every token your connected wallet holds on Robinhood Mainnet, priced live."
       />
       <div className="mt-6">
-        <Suspense fallback={null}>
+        <Suspense fallback={<PulseLoadingState />}>
           <PortfolioPage />
         </Suspense>
       </div>
