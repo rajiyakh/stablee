@@ -81,20 +81,6 @@ export function SiteFooter() {
             </ul>
           </div>
         </div>
-
-        <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-border/70 pt-6 text-xs text-muted-foreground">
-          <p>
-            Market data by CoinGecko · DEX market data by DEX Screener · Pool data by GeckoTerminal
-          </p>
-          <p>Not affiliated with Robinhood Markets, Inc. or any tokenized-equity issuer.</p>
-        </div>
-
-        <p className="mt-4 max-w-3xl text-[11px] leading-relaxed text-muted-foreground">
-          RobinPulse provides automated informational market analysis and does not provide financial
-          advice. Digital assets are highly volatile. Entry zones, targets, confidence levels, and
-          risk observations are analytical scenarios, not guarantees. Always verify contract
-          addresses and conduct independent research.
-        </p>
       </div>
     </footer>
   );

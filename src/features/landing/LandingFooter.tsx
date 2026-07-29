@@ -75,11 +75,6 @@ export function LandingFooter() {
             </ul>
           </div>
         </div>
-
-        <div className="mt-10 border-t border-border/70 pt-6 text-xs text-muted-foreground">
-          Not affiliated with Robinhood Markets, Inc. Market data is supplied by third-party
-          providers and may be delayed or incomplete. Nothing on this site is investment advice.
-        </div>
       </div>
     </footer>
   );
