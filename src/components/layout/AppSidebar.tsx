@@ -58,9 +58,15 @@ function OverviewFeedTabs() {
         <SidebarMenu>
           {feedFilters
             .filter((f) =>
-              ["all", "conversations", "trending", "new_launches", "trade_setups"].includes(
-                f.value,
-              ),
+              [
+                "all",
+                "conversations",
+                "trending",
+                "new_launches",
+                "trade_setups",
+                "buy_signal",
+                "sell_signal",
+              ].includes(f.value),
             )
             .map((f) => (
               <SidebarMenuItem key={f.value}>

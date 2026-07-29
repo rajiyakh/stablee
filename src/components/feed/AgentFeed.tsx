@@ -6,9 +6,44 @@ import { CardSkeleton } from "@/components/common/Skeletons";
 import { AgentMessageCard } from "./AgentMessageCard";
 import { RiskAlertCard } from "./RiskAlertCard";
 import { NewLaunchAlert } from "./NewLaunchAlert";
+import { AgentConsensusCard } from "./AgentConsensusCard";
 import { FeedFilters, FeedSortMenu } from "./FeedFilters";
 import { feedConfig, type FeedFilterValue, type FeedSortValue } from "@/config/feed";
-import type { AgentMessage, FeedSnapshot } from "@/lib/feed/types";
+import type { AgentMessage, ConsensusSummary, FeedSnapshot } from "@/lib/feed/types";
+
+/** Ranks sell-signal severity so "avoid" surfaces above a plain bearish lean. */
+const sellSeverity: Record<ConsensusSummary["label"], number> = {
+  avoid: 3,
+  strong_bearish: 2,
+  moderate_bearish: 1,
+  neutral: 0,
+  moderate_bullish: 0,
+  strong_bullish: 0,
+  insufficient_data: 0,
+};
+
+/**
+ * Buy/sell signals are per-token, derived from the same real, multi-agent
+ * consensus already computed for "Highest AI Consensus" (see
+ * lib/feed/consensus.ts) — not a separate heuristic invented for this view.
+ * A token only ever appears once real agent analysis has accumulated for it.
+ */
+function deriveSignals(snapshot: FeedSnapshot | undefined) {
+  const consensus = Object.values(snapshot?.consensusByToken ?? {});
+  const buySignals = consensus
+    .filter((c) => c.label === "strong_bullish" || c.label === "moderate_bullish")
+    .sort((a, b) => (b.averageConfidence ?? 0) - (a.averageConfidence ?? 0));
+  const sellSignals = consensus
+    .filter(
+      (c) => c.label === "avoid" || c.label === "strong_bearish" || c.label === "moderate_bearish",
+    )
+    .sort(
+      (a, b) =>
+        sellSeverity[b.label] - sellSeverity[a.label] ||
+        (b.averageConfidence ?? 0) - (a.averageConfidence ?? 0),
+    );
+  return { buySignals, sellSignals };
+}
 
 const riskSeverity: Record<AgentMessage["riskLevel"], number> = {
   low: 0,
@@ -105,6 +140,9 @@ export function AgentFeed({
     return sortMessages(filterMessages(snapshot.messages, filter, newLaunchKeys), sort);
   }, [snapshot, filter, sort, newLaunchKeys]);
 
+  const { buySignals, sellSignals } = useMemo(() => deriveSignals(snapshot), [snapshot]);
+  const isSignalFilter = filter === "buy_signal" || filter === "sell_signal";
+
   if (isPending) {
     return (
       <div className="space-y-4">
@@ -138,11 +176,24 @@ export function AgentFeed({
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <FeedFilters active={filter} onChange={onFilterChange} />
-        <FeedSortMenu value={sort} onChange={setSort} />
+        {isSignalFilter ? null : <FeedSortMenu value={sort} onChange={setSort} />}
       </div>
 
       <div className="mt-4 space-y-3">
-        {filter === "new_launches" ? (
+        {isSignalFilter ? (
+          (filter === "buy_signal" ? buySignals : sellSignals).length === 0 ? (
+            <EmptyState
+              title={
+                filter === "buy_signal" ? "No buy signals right now" : "No sell signals right now"
+              }
+              description="Signals are drawn from real, multi-agent consensus on trending Robinhood Mainnet tokens — a token only appears once enough analysis has accumulated for it."
+            />
+          ) : (
+            (filter === "buy_signal" ? buySignals : sellSignals).map((c) => (
+              <AgentConsensusCard key={`${c.token.chainId}:${c.token.address}`} consensus={c} />
+            ))
+          )
+        ) : filter === "new_launches" ? (
           newLaunchesInFilter.length === 0 ? (
             <EmptyState
               title="No new launches detected"
@@ -174,7 +225,7 @@ export function AgentFeed({
           )
         )}
 
-        {filter !== "new_launches" && visibleCount < filtered.length ? (
+        {!isSignalFilter && filter !== "new_launches" && visibleCount < filtered.length ? (
           <div className="flex justify-center pt-2">
             <Button
               type="button"

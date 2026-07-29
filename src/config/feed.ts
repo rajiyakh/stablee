@@ -40,6 +40,8 @@ export const feedFilters = [
   { value: "bearish", label: "Bearish" },
   { value: "high_confidence", label: "High Confidence" },
   { value: "low_liquidity", label: "Low Liquidity" },
+  { value: "buy_signal", label: "Buy Signal" },
+  { value: "sell_signal", label: "Sell Signal" },
 ] as const;
 
 export type FeedFilterValue = (typeof feedFilters)[number]["value"];

@@ -9,6 +9,8 @@ const navItems: Array<{ value: FeedFilterValue; label: string }> = [
   { value: "trending", label: "Trending Tokens" },
   { value: "new_launches", label: "New Launches" },
   { value: "trade_setups", label: "Agent Calls" },
+  { value: "buy_signal", label: "Buy Signal" },
+  { value: "sell_signal", label: "Sell Signal" },
 ];
 
 // Leaderboard is intentionally left out (still reachable directly at
