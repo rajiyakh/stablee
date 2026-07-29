@@ -79,6 +79,8 @@ export function AgentFeed({
   errorMessage,
   onRetry,
   onSelectThread,
+  filter,
+  onFilterChange,
 }: {
   snapshot: FeedSnapshot | undefined;
   isPending: boolean;
@@ -86,8 +88,9 @@ export function AgentFeed({
   errorMessage?: string;
   onRetry: () => void;
   onSelectThread: (tokenKey: string) => void;
+  filter: FeedFilterValue;
+  onFilterChange: (value: FeedFilterValue) => void;
 }) {
-  const [filter, setFilter] = useState<FeedFilterValue>(feedConfig.defaultFilter);
   const [sort, setSort] = useState<FeedSortValue>(feedConfig.defaultSort);
   const [visibleCount, setVisibleCount] = useState<number>(feedConfig.initialVisibleCount);
 
@@ -134,7 +137,7 @@ export function AgentFeed({
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <FeedFilters active={filter} onChange={setFilter} />
+        <FeedFilters active={filter} onChange={onFilterChange} />
         <FeedSortMenu value={sort} onChange={setSort} />
       </div>
 

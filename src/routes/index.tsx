@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { PanelsTopLeft } from "lucide-react";
+import { z } from "zod";
 import { PageContainer } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
@@ -13,9 +14,16 @@ import { AgentConsensusCard } from "@/components/feed/AgentConsensusCard";
 import { ThreadView } from "@/components/feed/ThreadView";
 import { feedSnapshotQuery } from "@/lib/feed/client";
 import { statusQuery } from "@/lib/market/client";
-import { feedConfig, type FeedFilterValue } from "@/config/feed";
+import { deriveProviderStates } from "@/lib/feed/providerStatus";
+import { feedConfig, feedFilters, type FeedFilterValue } from "@/config/feed";
+
+const filterValues = feedFilters.map((f) => f.value) as [FeedFilterValue, ...FeedFilterValue[]];
+const searchSchema = z.object({
+  filter: z.enum(filterValues).catch(feedConfig.defaultFilter),
+});
 
 export const Route = createFileRoute("/")({
+  validateSearch: searchSchema,
   head: () => ({
     meta: [
       { title: "RobinPulse AI — Robinhood Mainnet Intelligence Feed" },
@@ -36,30 +44,16 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  const { filter } = Route.useSearch();
+  const navigate = Route.useNavigate();
   const status = useQuery(statusQuery());
   const feed = useQuery({ ...feedSnapshotQuery(), refetchIntervalInBackground: false });
-  const [filter, setFilter] = useState<FeedFilterValue>(feedConfig.defaultFilter);
   const [selectedThreadKey, setSelectedThreadKey] = useState<string | null>(null);
   const [mobileInfoOpen, setMobileInfoOpen] = useState(false);
 
   const snapshot = feed.data;
 
-  const stateRank: Record<string, number> = {
-    live: 3,
-    delayed: 2,
-    unavailable: 1,
-    not_configured: 0,
-  };
-  const bestState = (ids: string[]): string =>
-    (status.data?.providers ?? [])
-      .filter((p) => ids.includes(p.id))
-      .reduce<string>(
-        (best, p) => ((stateRank[p.state] ?? 0) > (stateRank[best] ?? -1) ? p.state : best),
-        "not_configured",
-      );
-
-  const marketDataState = bestState(["coingecko", "dexscreener"]);
-  const robinhoodState = bestState(["robinhood"]);
+  const { marketDataState, robinhoodState } = deriveProviderStates(status.data?.providers);
 
   const selectedThread = useMemo(
     () => snapshot?.threads.find((t) => t.id === selectedThreadKey) ?? null,
@@ -77,10 +71,14 @@ function Home() {
     [snapshot],
   );
 
+  const onFilterChange = (v: FeedFilterValue) => {
+    navigate({ search: { filter: v } });
+  };
+
   const sidebarProps = {
     active: filter,
     onSelect: (v: FeedFilterValue) => {
-      setFilter(v);
+      onFilterChange(v);
       setMobileInfoOpen(false);
     },
     marketDataState,
@@ -116,11 +114,7 @@ function Home() {
         </p>
       </div>
 
-      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[220px_minmax(0,1fr)_280px] lg:items-start">
-        <aside className="hidden lg:block lg:sticky lg:top-20">
-          <FeedSidebarNav {...sidebarProps} />
-        </aside>
-
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
         <main>
           <AgentFeed
             snapshot={snapshot}
@@ -129,6 +123,8 @@ function Home() {
             errorMessage={(feed.error as Error | undefined)?.message}
             onRetry={() => feed.refetch()}
             onSelectThread={setSelectedThreadKey}
+            filter={filter}
+            onFilterChange={onFilterChange}
           />
         </main>
 
