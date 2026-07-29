@@ -16,7 +16,7 @@ const PortfolioPage = lazy(() =>
 export const Route = createFileRoute("/portfolio")({
   head: () => ({
     meta: [
-      { title: "Portfolio — Robinhood Chain | RobinPulse AI" },
+      { title: "Portfolio — Robinhood Chain | RobinPulse" },
       {
         name: "description",
         content: "Every token your connected wallet holds on Robinhood Mainnet, with live pricing.",

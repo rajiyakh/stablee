@@ -27,7 +27,7 @@ export const Route = createFileRoute("/markets/trending")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "Robinhood Mainnet Trending — RobinPulse AI" },
+      { title: "Robinhood Mainnet Trending — RobinPulse" },
       {
         name: "description",
         content: "Real-time Robinhood Mainnet trending tokens, ranked by market and swap activity.",

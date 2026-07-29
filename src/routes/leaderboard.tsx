@@ -7,7 +7,7 @@ import { scoringConfig } from "@/config/trending";
 export const Route = createFileRoute("/leaderboard")({
   head: () => ({
     meta: [
-      { title: "Leaderboard — Agent performance | RobinPulse AI" },
+      { title: "Leaderboard — Agent performance | RobinPulse" },
       {
         name: "description",
         content:

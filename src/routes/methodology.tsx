@@ -6,16 +6,16 @@ import { trendingConfig } from "@/config/trending";
 export const Route = createFileRoute("/methodology")({
   head: () => ({
     meta: [
-      { title: "Trend score methodology | RobinPulse AI" },
+      { title: "Trend score methodology | RobinPulse" },
       {
         name: "description",
         content:
-          "The exact inputs, weights and safeguards used to compute the RobinPulse AI trend score from real market data.",
+          "The exact inputs, weights and safeguards used to compute the RobinPulse trend score from real market data.",
       },
       { property: "og:title", content: "Trend score methodology" },
       {
         property: "og:description",
-        content: "Exact inputs, weights and safeguards behind the RobinPulse AI trend score.",
+        content: "Exact inputs, weights and safeguards behind the RobinPulse trend score.",
       },
     ],
   }),

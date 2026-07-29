@@ -16,7 +16,7 @@ import { relativeTime } from "@/lib/market/format";
 export const Route = createFileRoute("/ai-feed")({
   head: () => ({
     meta: [
-      { title: "AI Feed — Automated market summaries | RobinPulse AI" },
+      { title: "AI Feed — Automated market summaries | RobinPulse" },
       {
         name: "description",
         content:

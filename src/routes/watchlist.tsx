@@ -9,7 +9,7 @@ import { useWatchlist } from "@/lib/watchlist";
 export const Route = createFileRoute("/watchlist")({
   head: () => ({
     meta: [
-      { title: "Watchlist — your saved markets | RobinPulse AI" },
+      { title: "Watchlist — your saved markets | RobinPulse" },
       {
         name: "description",
         content:

@@ -27,7 +27,7 @@ export const Route = createFileRoute("/markets/hot-searches")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "Robinhood Mainnet Hot Searches — RobinPulse AI" },
+      { title: "Robinhood Mainnet Hot Searches — RobinPulse" },
       {
         name: "description",
         content: "Real-time Robinhood Mainnet hot searches, ranked by search attention.",

@@ -90,10 +90,10 @@ export function SiteFooter() {
         </div>
 
         <p className="mt-4 max-w-3xl text-[11px] leading-relaxed text-muted-foreground">
-          RobinPulse AI provides automated informational market analysis and does not provide
-          financial advice. Digital assets are highly volatile. Entry zones, targets, confidence
-          levels, and risk observations are analytical scenarios, not guarantees. Always verify
-          contract addresses and conduct independent research.
+          RobinPulse provides automated informational market analysis and does not provide financial
+          advice. Digital assets are highly volatile. Entry zones, targets, confidence levels, and
+          risk observations are analytical scenarios, not guarantees. Always verify contract
+          addresses and conduct independent research.
         </p>
       </div>
     </footer>

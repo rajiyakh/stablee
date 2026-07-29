@@ -14,7 +14,7 @@ import { xStockRegistry } from "@/config/xstocks";
 
 export const Route = createFileRoute("/coin/$coinId")({
   head: ({ params }) => {
-    const title = `${params.coinId} — live price & market data | RobinPulse AI`;
+    const title = `${params.coinId} — live price & market data | RobinPulse`;
     const description = `Live price, 24h volume, market capitalisation and price history for ${params.coinId}, sourced from CoinGecko.`;
     return {
       meta: [

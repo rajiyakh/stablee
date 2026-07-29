@@ -11,7 +11,7 @@ import { coinsQuery } from "@/lib/market/client";
 export const Route = createFileRoute("/markets/global")({
   head: () => ({
     meta: [
-      { title: "Global Markets — Live crypto market data | RobinPulse AI" },
+      { title: "Global Markets — Live crypto market data | RobinPulse" },
       {
         name: "description",
         content:

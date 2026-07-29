@@ -87,9 +87,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { name: "author", content: "RobinPulse AI" },
+      { name: "author", content: "RobinPulse" },
       { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "RobinPulse AI" },
+      { property: "og:site_name", content: "RobinPulse" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [

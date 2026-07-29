@@ -31,7 +31,7 @@ export const Route = createFileRoute("/swap/")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "Swap — Robinhood Chain | RobinPulse AI" },
+      { title: "Swap — Robinhood Chain | RobinPulse" },
       {
         name: "description",
         content:

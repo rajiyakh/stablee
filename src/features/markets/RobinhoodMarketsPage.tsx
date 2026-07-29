@@ -16,7 +16,7 @@ const COPY: Record<"trending" | "hot-searches", { title: string; description: st
   trending: {
     title: "Trending",
     description:
-      "Trending ranks Robinhood Mainnet tokens using current market and swap activity. Rankings may change rapidly and do not represent an endorsement by RobinPulse AI.",
+      "Trending ranks Robinhood Mainnet tokens using current market and swap activity. Rankings may change rapidly and do not represent an endorsement by RobinPulse.",
   },
   "hot-searches": {
     title: "Hot Searches",

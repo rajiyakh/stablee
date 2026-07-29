@@ -15,7 +15,7 @@ import { projectConfig } from "@/config/project";
 export const Route = createFileRoute("/trending")({
   head: () => ({
     meta: [
-      { title: "Trending markets — transparent trend scoring | RobinPulse AI" },
+      { title: "Trending markets — transparent trend scoring | RobinPulse" },
       {
         name: "description",
         content:

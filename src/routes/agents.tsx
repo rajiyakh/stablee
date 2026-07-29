@@ -6,7 +6,7 @@ import { agents, emptyAgentStats } from "@/lib/agents";
 export const Route = createFileRoute("/agents")({
   head: () => ({
     meta: [
-      { title: "AI analyst agents — published methodologies | RobinPulse AI" },
+      { title: "AI analyst agents — published methodologies | RobinPulse" },
       {
         name: "description",
         content:

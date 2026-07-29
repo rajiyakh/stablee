@@ -13,7 +13,7 @@ import { xStockRegistry } from "@/config/xstocks";
 export const Route = createFileRoute("/xstocks")({
   head: () => ({
     meta: [
-      { title: "xStocks — verified tokenized equity registry | RobinPulse AI" },
+      { title: "xStocks — verified tokenized equity registry | RobinPulse" },
       {
         name: "description",
         content:

@@ -10,7 +10,7 @@ import { tokenConfig, hasTokenUpdatesChannel, primaryTokenUpdatesUrl } from "@/c
 export const Route = createFileRoute("/token/")({
   head: () => ({
     meta: [
-      { title: "Token — RobinPulse Protocol Token | RobinPulse AI" },
+      { title: "Token — RobinPulse Protocol Token | RobinPulse" },
       {
         name: "description",
         content:
@@ -137,8 +137,8 @@ function TokenPage() {
       <section className="mt-16 max-w-3xl">
         <SectionHeading eyebrow="Rationale" title="Why a Protocol Token" />
         <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-          RobinPulse AI is evaluating a future protocol token as a way to connect several parts of
-          the platform that today operate independently: AI-driven market intelligence, user
+          RobinPulse is evaluating a future protocol token as a way to connect several parts of the
+          platform that today operate independently: AI-driven market intelligence, user
           participation, platform access, incentive design, governance, and data services. A token
           is one possible mechanism to align these pieces — it is not a promise of price
           performance, and no utility described on this page is guaranteed. Final protocol design,

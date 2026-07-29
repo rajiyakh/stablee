@@ -7,8 +7,8 @@ export const Route = createFileRoute("/agents/$slug")({
   head: ({ params }) => {
     const agent = getAgent(params.slug);
     const title = agent
-      ? `${agent.name} — ${agent.role} | RobinPulse AI`
-      : "Agent unavailable | RobinPulse AI";
+      ? `${agent.name} — ${agent.role} | RobinPulse`
+      : "Agent unavailable | RobinPulse";
     const description = agent?.summary ?? "This analyst profile is unavailable.";
     return {
       meta: [

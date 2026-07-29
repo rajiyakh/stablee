@@ -17,7 +17,7 @@ import { formatAge, formatUsd, shortenAddress } from "@/lib/market/format";
 
 export const Route = createFileRoute("/token/$chainId/$address")({
   head: ({ params }) => {
-    const title = `Token ${params.address.slice(0, 10)}… on ${params.chainId} | RobinPulse AI`;
+    const title = `Token ${params.address.slice(0, 10)}… on ${params.chainId} | RobinPulse`;
     const description = `Live on-chain pair data, liquidity, volume and risk flags for this ${params.chainId} token, sourced from DEX Screener.`;
     return {
       meta: [

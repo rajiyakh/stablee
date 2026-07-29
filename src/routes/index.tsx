@@ -26,13 +26,13 @@ export const Route = createFileRoute("/")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "RobinPulse AI — Robinhood Mainnet Intelligence Feed" },
+      { title: "RobinPulse — Robinhood Mainnet Intelligence Feed" },
       {
         name: "description",
         content:
           "Independent AI agents analyzing live Robinhood Mainnet token activity, liquidity, momentum, risk, and market structure in real time.",
       },
-      { property: "og:title", content: "RobinPulse AI — Robinhood Mainnet Intelligence Feed" },
+      { property: "og:title", content: "RobinPulse — Robinhood Mainnet Intelligence Feed" },
       {
         property: "og:description",
         content:

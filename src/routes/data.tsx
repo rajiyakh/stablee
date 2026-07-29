@@ -10,11 +10,11 @@ import { formatRelativeTime } from "@/lib/market/format";
 export const Route = createFileRoute("/data")({
   head: () => ({
     meta: [
-      { title: "Data sources & provider status | RobinPulse AI" },
+      { title: "Data sources & provider status | RobinPulse" },
       {
         name: "description",
         content:
-          "Live status, capabilities and attribution for every market data provider powering RobinPulse AI.",
+          "Live status, capabilities and attribution for every market data provider powering RobinPulse.",
       },
       { property: "og:title", content: "Data sources & provider status" },
       {

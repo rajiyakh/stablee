@@ -13,7 +13,7 @@ const env = import.meta.env as Record<string, string | undefined>;
 const read = (key: string): string => (env[key] ?? "").trim();
 
 export const projectConfig = {
-  name: read("VITE_APP_NAME") || "RobinPulse AI",
+  name: read("VITE_APP_NAME") || "RobinPulse",
   shortName: "RobinPulse",
   tagline: "Public AI intelligence for tokenized equities and Robinhood Mainnet markets.",
 
