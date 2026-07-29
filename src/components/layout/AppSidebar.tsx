@@ -149,7 +149,11 @@ export function AppSidebar() {
         <SidebarToggle />
       </SidebarHeader>
       <SidebarContent>
-        {isHome ? <OverviewFeedSection /> : null}
+        {isHome ? (
+          <div className="hidden lg:contents">
+            <OverviewFeedSection />
+          </div>
+        ) : null}
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
