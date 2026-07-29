@@ -11,7 +11,6 @@ import { lazy, Suspense, useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { AppShell } from "@/components/layout/AppShell";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { isWalletConfigured } from "@/config/project";
@@ -140,10 +139,10 @@ function RootComponent() {
 
   const app = (
     <TooltipProvider delayDuration={150}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <AppShell>
-        <Outlet />
-      </AppShell>
+      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes.
+          App chrome (header/sidebar/footer) now lives in routes/app.tsx, scoped to /app/* only —
+          the landing page at "/" renders its own minimal chrome instead. */}
+      <Outlet />
       <Toaster />
     </TooltipProvider>
   );

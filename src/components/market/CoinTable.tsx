@@ -49,7 +49,7 @@ export function CoinTable({
               </TableCell>
               <TableCell>
                 <Link
-                  to="/coin/$coinId"
+                  to="/app/coin/$coinId"
                   params={{ coinId: coin.id }}
                   className="flex items-center gap-2 hover:underline"
                 >

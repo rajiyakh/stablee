@@ -13,28 +13,28 @@ import { cn } from "@/lib/utils";
 // Most important destinations only — everything else lives in the left
 // sidebar (see AppSidebar.tsx) to keep this from getting crowded.
 const navItems = [
-  { to: "/", label: "Overview" },
-  { to: "/ai-feed", label: "AI Feed", hot: true },
-  { to: "/markets", label: "Markets" },
+  { to: "/app", label: "Overview" },
+  { to: "/app/ai-feed", label: "AI Feed", hot: true },
+  { to: "/app/markets", label: "Markets" },
   {
-    to: "/swap",
+    to: "/app/swap",
     label: "Swap",
     badge: isWalletConfigured() ? undefined : "Soon",
     hot: isWalletConfigured(),
   },
-  { to: "/portfolio", label: "Portfolio", badge: isWalletConfigured() ? undefined : "Soon" },
-  { to: "/xstocks", label: "xStocks" },
+  { to: "/app/portfolio", label: "Portfolio", badge: isWalletConfigured() ? undefined : "Soon" },
+  { to: "/app/xstocks", label: "xStocks" },
 ] as const;
 
 // Full list for the mobile menu, where there's no separate sidebar affordance.
 // Leaderboard and Data Sources are intentionally left out of both nav lists
-// (still reachable directly at /leaderboard and /data) — hidden from nav, not deleted.
+// (still reachable directly at /app/leaderboard and /app/data) — hidden from nav, not deleted.
 const mobileNavItems = [
   ...navItems,
-  { to: "/trending", label: "Robinhood Trends" },
-  { to: "/agents", label: "Agents" },
-  { to: "/watchlist", label: "Watchlist" },
-  { to: "/token", label: "Token", badge: "Soon" },
+  { to: "/app/trending", label: "Robinhood Trends" },
+  { to: "/app/agents", label: "Agents" },
+  { to: "/app/watchlist", label: "Watchlist" },
+  { to: "/app/token", label: "Token", badge: "Soon" },
 ] as const;
 
 function XIcon({ className }: { className?: string }) {
@@ -72,7 +72,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-lg [background-image:linear-gradient(to_right,transparent,var(--color-border)_15%,var(--color-border)_85%,transparent)] [background-position:bottom] [background-repeat:no-repeat] [background-size:100%_1px]">
       <div className="mx-auto grid h-14 w-full max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-4 px-4 sm:px-6 lg:px-8">
         <Link
-          to="/"
+          to="/app"
           className="group flex shrink-0 items-center gap-2 justify-self-start"
           aria-label={`${projectConfig.name} home`}
         >
@@ -87,7 +87,7 @@ export function SiteHeader() {
             <Link
               key={item.to}
               to={item.to}
-              activeOptions={{ exact: item.to === "/" }}
+              activeOptions={{ exact: item.to === "/app" }}
               activeProps={{ className: "text-foreground [&_.nav-underline]:scale-x-100" }}
               inactiveProps={{ className: "text-muted-foreground hover:text-foreground" }}
               className="group relative inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-semibold uppercase tracking-widest transition-colors"
@@ -140,7 +140,7 @@ export function SiteHeader() {
                   <Link
                     key={item.to}
                     to={item.to}
-                    activeOptions={{ exact: item.to === "/" }}
+                    activeOptions={{ exact: item.to === "/app" }}
                     onClick={() => setOpen(false)}
                     activeProps={{ className: "bg-secondary text-foreground" }}
                     className={cn(

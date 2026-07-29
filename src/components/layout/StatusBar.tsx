@@ -37,7 +37,7 @@ export function StatusBar() {
             <span className="opacity-70">{stateLabel[provider.state]}</span>
           </span>
         ))}
-        <Link to="/data" className="ml-auto font-medium text-foreground hover:underline">
+        <Link to="/app/data" className="ml-auto font-medium text-foreground hover:underline">
           Details
         </Link>
       </div>

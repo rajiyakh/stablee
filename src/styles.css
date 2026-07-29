@@ -114,6 +114,89 @@
   --chart-5: oklch(0.68 0.03 152);
 }
 
+/*
+ * Light theme, scoped to the marketing landing page only (routes/index.tsx
+ * sets data-theme="light" on its root element) — the app itself
+ * (routes/app/**) stays on the dark "Obsidian Lime" theme above unchanged.
+ * These are the project's original pre-migration light-theme values
+ * (resurrected from git history, commit 4df269c^), not new colors: warm
+ * off-white canvas, white cards, forest-green primary, the same brand lime.
+ */
+[data-theme="light"] {
+  /* #F5F6F0 */
+  --background: oklch(0.9702 0.0117 108.66);
+  /* #14251C */
+  --foreground: oklch(0.2417 0.0245 158.03);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.2417 0.0245 158.03);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.2417 0.0245 158.03);
+  /* #1F7A4D forest green */
+  --primary: oklch(0.4956 0.1044 158.15);
+  --primary-foreground: oklch(0.9838 0.006 108);
+  /* #EEF1E8 ivory */
+  --secondary: oklch(0.9494 0.0143 118.3);
+  --secondary-foreground: oklch(0.2417 0.0245 158.03);
+  --surface: oklch(0.9494 0.0143 118.3);
+  --muted: oklch(0.9494 0.0143 118.3);
+  --muted-foreground: oklch(0.5303 0.0201 152.4);
+  --accent: oklch(0.9494 0.0143 118.3);
+  --accent-foreground: oklch(0.4956 0.1044 158.15);
+  /* #C8F135 — same brand lime as the dark theme */
+  --brand: oklch(0.9059 0.2018 121.5);
+  --brand-foreground: oklch(0.2417 0.0245 158.03);
+  --destructive: oklch(0.6135 0.1584 25.6);
+  --destructive-foreground: oklch(0.9838 0.006 108);
+  --negative: oklch(0.6135 0.1584 25.6);
+  --negative-foreground: oklch(0.9838 0.006 108);
+  --positive: oklch(0.5417 0.1206 160.1);
+  --positive-foreground: oklch(0.9838 0.006 108);
+  --warning: oklch(0.7359 0.1281 78.5);
+  --warning-foreground: oklch(0.2417 0.0245 158.03);
+  --border: oklch(0.9111 0.0138 128.3);
+  --input: oklch(0.9111 0.0138 128.3);
+  --ring: oklch(0.4956 0.1044 158.15);
+  --shadow-card: 0 1px 2px oklch(0.25 0.03 150 / 6%), 0 8px 24px oklch(0.25 0.03 150 / 5%);
+  --shadow-lift: 0 2px 4px oklch(0.25 0.03 150 / 7%), 0 16px 40px oklch(0.25 0.03 150 / 8%);
+
+  /* CSS custom properties containing var() are substituted where they're
+     DECLARED, not re-evaluated live per descendant — @theme inline's
+     --color-X: var(--X) mappings only exist once, at :root, so they'd
+     otherwise keep resolving to :root's dark values even here, no matter
+     what --X is overridden to above. Re-declaring the same mappings in
+     this same rule (where --X above already resolves light) is what
+     actually makes every bg-card/text-foreground/etc. utility theme-aware. */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-surface: var(--surface);
+  --color-positive: var(--positive);
+  --color-positive-foreground: var(--positive-foreground);
+  --color-negative: var(--negative);
+  --color-negative-foreground: var(--negative-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
@@ -215,6 +298,56 @@
 @utility ecg-pulse-group {
   transform-origin: center;
   animation: ecg-pulse var(--ecg-duration, 2.1s) linear infinite forwards;
+}
+
+/* Landing page decorative motion (src/features/landing/**) — ambient only,
+   never attached to real numbers/labels. Gentle drift for hero particles,
+   a slow pulse for decorative candlestick bars, and a scroll-reveal fade
+   driven by useInView (IntersectionObserver) toggling this class. */
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+@utility animate-drift {
+  animation: drift 7s ease-in-out infinite;
+}
+
+@keyframes candle-pulse {
+  0%,
+  100% {
+    transform: scaleY(1);
+    opacity: 0.75;
+  }
+  50% {
+    transform: scaleY(1.12);
+    opacity: 1;
+  }
+}
+
+@utility animate-candle {
+  animation: candle-pulse 3.4s ease-in-out infinite;
+  transform-origin: bottom;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility fade-up-in {
+  animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {

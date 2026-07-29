@@ -22,7 +22,7 @@ export function RiskAlertCard({ message }: { message: AgentMessage }) {
           </div>
           <div className="mt-1 flex flex-wrap items-center gap-2">
             <Link
-              to="/token/$chainId/$address"
+              to="/app/token/$chainId/$address"
               params={{ chainId: message.token.chainId, address: message.token.address }}
               className="text-xs font-semibold text-foreground hover:underline"
             >

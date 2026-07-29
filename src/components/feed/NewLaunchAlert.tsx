@@ -33,7 +33,7 @@ export function NewLaunchAlert({ launch }: { launch: NewLaunchInfo }) {
 
       <div className="mt-2 flex flex-wrap items-center gap-2">
         <Link
-          to="/token/$chainId/$address"
+          to="/app/token/$chainId/$address"
           params={{ chainId: launch.chainId, address: launch.address }}
           className="text-sm font-semibold text-foreground hover:underline"
         >

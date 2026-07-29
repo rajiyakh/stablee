@@ -34,7 +34,7 @@ export function NewLaunchTicker() {
 function TickerItem({ launch }: { launch: NewLaunchInfo }) {
   return (
     <Link
-      to="/token/$chainId/$address"
+      to="/app/token/$chainId/$address"
       params={{ chainId: launch.chainId, address: launch.address }}
       className="flex shrink-0 items-center gap-2 text-xs whitespace-nowrap hover:opacity-80"
     >

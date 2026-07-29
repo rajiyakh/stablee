@@ -10,27 +10,21 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AgentsRouteImport } from './routes/agents'
-import { Route as AiFeedRouteImport } from './routes/ai-feed'
-import { Route as DataRouteImport } from './routes/data'
-import { Route as DisclaimerRouteImport } from './routes/disclaimer'
-import { Route as LeaderboardRouteImport } from './routes/leaderboard'
-import { Route as MarketsRouteImport } from './routes/markets'
-import { Route as MethodologyRouteImport } from './routes/methodology'
-import { Route as PortfolioRouteImport } from './routes/portfolio'
-import { Route as SwapRouteImport } from './routes/swap'
-import { Route as TokenRouteImport } from './routes/token'
-import { Route as TrendingRouteImport } from './routes/trending'
-import { Route as WatchlistRouteImport } from './routes/watchlist'
-import { Route as XstocksRouteImport } from './routes/xstocks'
-import { Route as AgentsSlugRouteImport } from './routes/agents.$slug'
-import { Route as CoinCoinIdRouteImport } from './routes/coin.$coinId'
-import { Route as MarketsIndexRouteImport } from './routes/markets.index'
-import { Route as MarketsGlobalRouteImport } from './routes/markets.global'
-import { Route as MarketsHotSearchesRouteImport } from './routes/markets.hot-searches'
-import { Route as MarketsTrendingRouteImport } from './routes/markets.trending'
-import { Route as SwapIndexRouteImport } from './routes/swap.index'
-import { Route as TokenIndexRouteImport } from './routes/token.index'
+import { Route as AppRouteImport } from './routes/app'
+import { Route as AppIndexRouteImport } from './routes/app/index'
+import { Route as AppAgentsRouteImport } from './routes/app/agents'
+import { Route as AppAiFeedRouteImport } from './routes/app/ai-feed'
+import { Route as AppDataRouteImport } from './routes/app/data'
+import { Route as AppDisclaimerRouteImport } from './routes/app/disclaimer'
+import { Route as AppLeaderboardRouteImport } from './routes/app/leaderboard'
+import { Route as AppMarketsRouteImport } from './routes/app/markets'
+import { Route as AppMethodologyRouteImport } from './routes/app/methodology'
+import { Route as AppPortfolioRouteImport } from './routes/app/portfolio'
+import { Route as AppSwapRouteImport } from './routes/app/swap'
+import { Route as AppTokenRouteImport } from './routes/app/token'
+import { Route as AppTrendingRouteImport } from './routes/app/trending'
+import { Route as AppWatchlistRouteImport } from './routes/app/watchlist'
+import { Route as AppXstocksRouteImport } from './routes/app/xstocks'
 import { Route as ApiAnalyticsSwapEventRouteImport } from './routes/api/analytics/swap-event'
 import { Route as ApiFeedNewLaunchesRouteImport } from './routes/api/feed/new-launches'
 import { Route as ApiFeedSnapshotRouteImport } from './routes/api/feed/snapshot'
@@ -40,8 +34,14 @@ import { Route as ApiSwapPriceRouteImport } from './routes/api/swap/price'
 import { Route as ApiSwapQuoteRouteImport } from './routes/api/swap/quote'
 import { Route as ApiSwapResolveTokenRouteImport } from './routes/api/swap/resolve-token'
 import { Route as ApiSwapTokensRouteImport } from './routes/api/swap/tokens'
-import { Route as MarketsRobinhoodTokenAddressRouteImport } from './routes/markets.robinhood.$tokenAddress'
-import { Route as TokenChainIdAddressRouteImport } from './routes/token.$chainId.$address'
+import { Route as AppAgentsSlugRouteImport } from './routes/app/agents.$slug'
+import { Route as AppCoinCoinIdRouteImport } from './routes/app/coin.$coinId'
+import { Route as AppMarketsIndexRouteImport } from './routes/app/markets.index'
+import { Route as AppMarketsGlobalRouteImport } from './routes/app/markets.global'
+import { Route as AppMarketsHotSearchesRouteImport } from './routes/app/markets.hot-searches'
+import { Route as AppMarketsTrendingRouteImport } from './routes/app/markets.trending'
+import { Route as AppSwapIndexRouteImport } from './routes/app/swap.index'
+import { Route as AppTokenIndexRouteImport } from './routes/app/token.index'
 import { Route as ApiMarketCoingeckoCoinsRouteImport } from './routes/api/market/coingecko/coins'
 import { Route as ApiMarketCoingeckoSearchRouteImport } from './routes/api/market/coingecko/search'
 import { Route as ApiMarketCoingeckoTrendingRouteImport } from './routes/api/market/coingecko/trending'
@@ -50,6 +50,8 @@ import { Route as ApiMarketDexscreenerSearchRouteImport } from './routes/api/mar
 import { Route as ApiMarketGeckoterminalNetworksRouteImport } from './routes/api/market/geckoterminal/networks'
 import { Route as ApiMarketGmgnHotSearchesRouteImport } from './routes/api/market/gmgn/hot-searches'
 import { Route as ApiMarketGmgnTrendingRouteImport } from './routes/api/market/gmgn/trending'
+import { Route as AppMarketsRobinhoodTokenAddressRouteImport } from './routes/app/markets.robinhood.$tokenAddress'
+import { Route as AppTokenChainIdAddressRouteImport } from './routes/app/token.$chainId.$address'
 import { Route as ApiMarketCoingeckoChartIdRouteImport } from './routes/api/market/coingecko/chart.$id'
 import { Route as ApiMarketCoingeckoCoinIdRouteImport } from './routes/api/market/coingecko/coin.$id'
 import { Route as ApiMarketDexscreenerTrendingChainIdRouteImport } from './routes/api/market/dexscreener/trending.$chainId'
@@ -64,110 +66,80 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AgentsRoute = AgentsRouteImport.update({
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAgentsRoute = AppAgentsRouteImport.update({
   id: '/agents',
   path: '/agents',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
-const AiFeedRoute = AiFeedRouteImport.update({
+const AppAiFeedRoute = AppAiFeedRouteImport.update({
   id: '/ai-feed',
   path: '/ai-feed',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
-const DataRoute = DataRouteImport.update({
+const AppDataRoute = AppDataRouteImport.update({
   id: '/data',
   path: '/data',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
-const DisclaimerRoute = DisclaimerRouteImport.update({
+const AppDisclaimerRoute = AppDisclaimerRouteImport.update({
   id: '/disclaimer',
   path: '/disclaimer',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
-const LeaderboardRoute = LeaderboardRouteImport.update({
+const AppLeaderboardRoute = AppLeaderboardRouteImport.update({
   id: '/leaderboard',
   path: '/leaderboard',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
-const MarketsRoute = MarketsRouteImport.update({
+const AppMarketsRoute = AppMarketsRouteImport.update({
   id: '/markets',
   path: '/markets',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
-const MethodologyRoute = MethodologyRouteImport.update({
+const AppMethodologyRoute = AppMethodologyRouteImport.update({
   id: '/methodology',
   path: '/methodology',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
-const PortfolioRoute = PortfolioRouteImport.update({
+const AppPortfolioRoute = AppPortfolioRouteImport.update({
   id: '/portfolio',
   path: '/portfolio',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
-const SwapRoute = SwapRouteImport.update({
+const AppSwapRoute = AppSwapRouteImport.update({
   id: '/swap',
   path: '/swap',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
-const TokenRoute = TokenRouteImport.update({
+const AppTokenRoute = AppTokenRouteImport.update({
   id: '/token',
   path: '/token',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
-const TrendingRoute = TrendingRouteImport.update({
+const AppTrendingRoute = AppTrendingRouteImport.update({
   id: '/trending',
   path: '/trending',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
-const WatchlistRoute = WatchlistRouteImport.update({
+const AppWatchlistRoute = AppWatchlistRouteImport.update({
   id: '/watchlist',
   path: '/watchlist',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
-const XstocksRoute = XstocksRouteImport.update({
+const AppXstocksRoute = AppXstocksRouteImport.update({
   id: '/xstocks',
   path: '/xstocks',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AgentsSlugRoute = AgentsSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => AgentsRoute,
-} as any)
-const CoinCoinIdRoute = CoinCoinIdRouteImport.update({
-  id: '/coin/$coinId',
-  path: '/coin/$coinId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MarketsIndexRoute = MarketsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => MarketsRoute,
-} as any)
-const MarketsGlobalRoute = MarketsGlobalRouteImport.update({
-  id: '/global',
-  path: '/global',
-  getParentRoute: () => MarketsRoute,
-} as any)
-const MarketsHotSearchesRoute = MarketsHotSearchesRouteImport.update({
-  id: '/hot-searches',
-  path: '/hot-searches',
-  getParentRoute: () => MarketsRoute,
-} as any)
-const MarketsTrendingRoute = MarketsTrendingRouteImport.update({
-  id: '/trending',
-  path: '/trending',
-  getParentRoute: () => MarketsRoute,
-} as any)
-const SwapIndexRoute = SwapIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => SwapRoute,
-} as any)
-const TokenIndexRoute = TokenIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => TokenRoute,
+  getParentRoute: () => AppRoute,
 } as any)
 const ApiAnalyticsSwapEventRoute = ApiAnalyticsSwapEventRouteImport.update({
   id: '/api/analytics/swap-event',
@@ -214,16 +186,45 @@ const ApiSwapTokensRoute = ApiSwapTokensRouteImport.update({
   path: '/api/swap/tokens',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MarketsRobinhoodTokenAddressRoute =
-  MarketsRobinhoodTokenAddressRouteImport.update({
-    id: '/robinhood/$tokenAddress',
-    path: '/robinhood/$tokenAddress',
-    getParentRoute: () => MarketsRoute,
-  } as any)
-const TokenChainIdAddressRoute = TokenChainIdAddressRouteImport.update({
-  id: '/$chainId/$address',
-  path: '/$chainId/$address',
-  getParentRoute: () => TokenRoute,
+const AppAgentsSlugRoute = AppAgentsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => AppAgentsRoute,
+} as any)
+const AppCoinCoinIdRoute = AppCoinCoinIdRouteImport.update({
+  id: '/coin/$coinId',
+  path: '/coin/$coinId',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMarketsIndexRoute = AppMarketsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppMarketsRoute,
+} as any)
+const AppMarketsGlobalRoute = AppMarketsGlobalRouteImport.update({
+  id: '/global',
+  path: '/global',
+  getParentRoute: () => AppMarketsRoute,
+} as any)
+const AppMarketsHotSearchesRoute = AppMarketsHotSearchesRouteImport.update({
+  id: '/hot-searches',
+  path: '/hot-searches',
+  getParentRoute: () => AppMarketsRoute,
+} as any)
+const AppMarketsTrendingRoute = AppMarketsTrendingRouteImport.update({
+  id: '/trending',
+  path: '/trending',
+  getParentRoute: () => AppMarketsRoute,
+} as any)
+const AppSwapIndexRoute = AppSwapIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppSwapRoute,
+} as any)
+const AppTokenIndexRoute = AppTokenIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppTokenRoute,
 } as any)
 const ApiMarketCoingeckoCoinsRoute = ApiMarketCoingeckoCoinsRouteImport.update({
   id: '/api/market/coingecko/coins',
@@ -270,6 +271,17 @@ const ApiMarketGmgnTrendingRoute = ApiMarketGmgnTrendingRouteImport.update({
   id: '/api/market/gmgn/trending',
   path: '/api/market/gmgn/trending',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppMarketsRobinhoodTokenAddressRoute =
+  AppMarketsRobinhoodTokenAddressRouteImport.update({
+    id: '/robinhood/$tokenAddress',
+    path: '/robinhood/$tokenAddress',
+    getParentRoute: () => AppMarketsRoute,
+  } as any)
+const AppTokenChainIdAddressRoute = AppTokenChainIdAddressRouteImport.update({
+  id: '/$chainId/$address',
+  path: '/$chainId/$address',
+  getParentRoute: () => AppTokenRoute,
 } as any)
 const ApiMarketCoingeckoChartIdRoute =
   ApiMarketCoingeckoChartIdRouteImport.update({
@@ -322,27 +334,21 @@ const ApiMarketGeckoterminalTokenNetworkIdAddressRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/agents': typeof AgentsRouteWithChildren
-  '/ai-feed': typeof AiFeedRoute
-  '/data': typeof DataRoute
-  '/disclaimer': typeof DisclaimerRoute
-  '/leaderboard': typeof LeaderboardRoute
-  '/markets': typeof MarketsRouteWithChildren
-  '/methodology': typeof MethodologyRoute
-  '/portfolio': typeof PortfolioRoute
-  '/swap': typeof SwapRouteWithChildren
-  '/token': typeof TokenRouteWithChildren
-  '/trending': typeof TrendingRoute
-  '/watchlist': typeof WatchlistRoute
-  '/xstocks': typeof XstocksRoute
-  '/agents/$slug': typeof AgentsSlugRoute
-  '/coin/$coinId': typeof CoinCoinIdRoute
-  '/markets/global': typeof MarketsGlobalRoute
-  '/markets/hot-searches': typeof MarketsHotSearchesRoute
-  '/markets/trending': typeof MarketsTrendingRoute
-  '/markets/': typeof MarketsIndexRoute
-  '/swap/': typeof SwapIndexRoute
-  '/token/': typeof TokenIndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/app/agents': typeof AppAgentsRouteWithChildren
+  '/app/ai-feed': typeof AppAiFeedRoute
+  '/app/data': typeof AppDataRoute
+  '/app/disclaimer': typeof AppDisclaimerRoute
+  '/app/leaderboard': typeof AppLeaderboardRoute
+  '/app/markets': typeof AppMarketsRouteWithChildren
+  '/app/methodology': typeof AppMethodologyRoute
+  '/app/portfolio': typeof AppPortfolioRoute
+  '/app/swap': typeof AppSwapRouteWithChildren
+  '/app/token': typeof AppTokenRouteWithChildren
+  '/app/trending': typeof AppTrendingRoute
+  '/app/watchlist': typeof AppWatchlistRoute
+  '/app/xstocks': typeof AppXstocksRoute
+  '/app/': typeof AppIndexRoute
   '/api/analytics/swap-event': typeof ApiAnalyticsSwapEventRoute
   '/api/feed/new-launches': typeof ApiFeedNewLaunchesRoute
   '/api/feed/snapshot': typeof ApiFeedSnapshotRoute
@@ -352,8 +358,14 @@ export interface FileRoutesByFullPath {
   '/api/swap/quote': typeof ApiSwapQuoteRoute
   '/api/swap/resolve-token': typeof ApiSwapResolveTokenRoute
   '/api/swap/tokens': typeof ApiSwapTokensRoute
-  '/markets/robinhood/$tokenAddress': typeof MarketsRobinhoodTokenAddressRoute
-  '/token/$chainId/$address': typeof TokenChainIdAddressRoute
+  '/app/agents/$slug': typeof AppAgentsSlugRoute
+  '/app/coin/$coinId': typeof AppCoinCoinIdRoute
+  '/app/markets/global': typeof AppMarketsGlobalRoute
+  '/app/markets/hot-searches': typeof AppMarketsHotSearchesRoute
+  '/app/markets/trending': typeof AppMarketsTrendingRoute
+  '/app/markets/': typeof AppMarketsIndexRoute
+  '/app/swap/': typeof AppSwapIndexRoute
+  '/app/token/': typeof AppTokenIndexRoute
   '/api/market/coingecko/coins': typeof ApiMarketCoingeckoCoinsRoute
   '/api/market/coingecko/search': typeof ApiMarketCoingeckoSearchRoute
   '/api/market/coingecko/trending': typeof ApiMarketCoingeckoTrendingRoute
@@ -362,6 +374,8 @@ export interface FileRoutesByFullPath {
   '/api/market/geckoterminal/networks': typeof ApiMarketGeckoterminalNetworksRoute
   '/api/market/gmgn/hot-searches': typeof ApiMarketGmgnHotSearchesRoute
   '/api/market/gmgn/trending': typeof ApiMarketGmgnTrendingRoute
+  '/app/markets/robinhood/$tokenAddress': typeof AppMarketsRobinhoodTokenAddressRoute
+  '/app/token/$chainId/$address': typeof AppTokenChainIdAddressRoute
   '/api/market/coingecko/chart/$id': typeof ApiMarketCoingeckoChartIdRoute
   '/api/market/coingecko/coin/$id': typeof ApiMarketCoingeckoCoinIdRoute
   '/api/market/dexscreener/trending/$chainId': typeof ApiMarketDexscreenerTrendingChainIdRoute
@@ -373,24 +387,17 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/agents': typeof AgentsRouteWithChildren
-  '/ai-feed': typeof AiFeedRoute
-  '/data': typeof DataRoute
-  '/disclaimer': typeof DisclaimerRoute
-  '/leaderboard': typeof LeaderboardRoute
-  '/methodology': typeof MethodologyRoute
-  '/portfolio': typeof PortfolioRoute
-  '/trending': typeof TrendingRoute
-  '/watchlist': typeof WatchlistRoute
-  '/xstocks': typeof XstocksRoute
-  '/agents/$slug': typeof AgentsSlugRoute
-  '/coin/$coinId': typeof CoinCoinIdRoute
-  '/markets/global': typeof MarketsGlobalRoute
-  '/markets/hot-searches': typeof MarketsHotSearchesRoute
-  '/markets/trending': typeof MarketsTrendingRoute
-  '/markets': typeof MarketsIndexRoute
-  '/swap': typeof SwapIndexRoute
-  '/token': typeof TokenIndexRoute
+  '/app/agents': typeof AppAgentsRouteWithChildren
+  '/app/ai-feed': typeof AppAiFeedRoute
+  '/app/data': typeof AppDataRoute
+  '/app/disclaimer': typeof AppDisclaimerRoute
+  '/app/leaderboard': typeof AppLeaderboardRoute
+  '/app/methodology': typeof AppMethodologyRoute
+  '/app/portfolio': typeof AppPortfolioRoute
+  '/app/trending': typeof AppTrendingRoute
+  '/app/watchlist': typeof AppWatchlistRoute
+  '/app/xstocks': typeof AppXstocksRoute
+  '/app': typeof AppIndexRoute
   '/api/analytics/swap-event': typeof ApiAnalyticsSwapEventRoute
   '/api/feed/new-launches': typeof ApiFeedNewLaunchesRoute
   '/api/feed/snapshot': typeof ApiFeedSnapshotRoute
@@ -400,8 +407,14 @@ export interface FileRoutesByTo {
   '/api/swap/quote': typeof ApiSwapQuoteRoute
   '/api/swap/resolve-token': typeof ApiSwapResolveTokenRoute
   '/api/swap/tokens': typeof ApiSwapTokensRoute
-  '/markets/robinhood/$tokenAddress': typeof MarketsRobinhoodTokenAddressRoute
-  '/token/$chainId/$address': typeof TokenChainIdAddressRoute
+  '/app/agents/$slug': typeof AppAgentsSlugRoute
+  '/app/coin/$coinId': typeof AppCoinCoinIdRoute
+  '/app/markets/global': typeof AppMarketsGlobalRoute
+  '/app/markets/hot-searches': typeof AppMarketsHotSearchesRoute
+  '/app/markets/trending': typeof AppMarketsTrendingRoute
+  '/app/markets': typeof AppMarketsIndexRoute
+  '/app/swap': typeof AppSwapIndexRoute
+  '/app/token': typeof AppTokenIndexRoute
   '/api/market/coingecko/coins': typeof ApiMarketCoingeckoCoinsRoute
   '/api/market/coingecko/search': typeof ApiMarketCoingeckoSearchRoute
   '/api/market/coingecko/trending': typeof ApiMarketCoingeckoTrendingRoute
@@ -410,6 +423,8 @@ export interface FileRoutesByTo {
   '/api/market/geckoterminal/networks': typeof ApiMarketGeckoterminalNetworksRoute
   '/api/market/gmgn/hot-searches': typeof ApiMarketGmgnHotSearchesRoute
   '/api/market/gmgn/trending': typeof ApiMarketGmgnTrendingRoute
+  '/app/markets/robinhood/$tokenAddress': typeof AppMarketsRobinhoodTokenAddressRoute
+  '/app/token/$chainId/$address': typeof AppTokenChainIdAddressRoute
   '/api/market/coingecko/chart/$id': typeof ApiMarketCoingeckoChartIdRoute
   '/api/market/coingecko/coin/$id': typeof ApiMarketCoingeckoCoinIdRoute
   '/api/market/dexscreener/trending/$chainId': typeof ApiMarketDexscreenerTrendingChainIdRoute
@@ -422,27 +437,21 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/agents': typeof AgentsRouteWithChildren
-  '/ai-feed': typeof AiFeedRoute
-  '/data': typeof DataRoute
-  '/disclaimer': typeof DisclaimerRoute
-  '/leaderboard': typeof LeaderboardRoute
-  '/markets': typeof MarketsRouteWithChildren
-  '/methodology': typeof MethodologyRoute
-  '/portfolio': typeof PortfolioRoute
-  '/swap': typeof SwapRouteWithChildren
-  '/token': typeof TokenRouteWithChildren
-  '/trending': typeof TrendingRoute
-  '/watchlist': typeof WatchlistRoute
-  '/xstocks': typeof XstocksRoute
-  '/agents/$slug': typeof AgentsSlugRoute
-  '/coin/$coinId': typeof CoinCoinIdRoute
-  '/markets/global': typeof MarketsGlobalRoute
-  '/markets/hot-searches': typeof MarketsHotSearchesRoute
-  '/markets/trending': typeof MarketsTrendingRoute
-  '/markets/': typeof MarketsIndexRoute
-  '/swap/': typeof SwapIndexRoute
-  '/token/': typeof TokenIndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/app/agents': typeof AppAgentsRouteWithChildren
+  '/app/ai-feed': typeof AppAiFeedRoute
+  '/app/data': typeof AppDataRoute
+  '/app/disclaimer': typeof AppDisclaimerRoute
+  '/app/leaderboard': typeof AppLeaderboardRoute
+  '/app/markets': typeof AppMarketsRouteWithChildren
+  '/app/methodology': typeof AppMethodologyRoute
+  '/app/portfolio': typeof AppPortfolioRoute
+  '/app/swap': typeof AppSwapRouteWithChildren
+  '/app/token': typeof AppTokenRouteWithChildren
+  '/app/trending': typeof AppTrendingRoute
+  '/app/watchlist': typeof AppWatchlistRoute
+  '/app/xstocks': typeof AppXstocksRoute
+  '/app/': typeof AppIndexRoute
   '/api/analytics/swap-event': typeof ApiAnalyticsSwapEventRoute
   '/api/feed/new-launches': typeof ApiFeedNewLaunchesRoute
   '/api/feed/snapshot': typeof ApiFeedSnapshotRoute
@@ -452,8 +461,14 @@ export interface FileRoutesById {
   '/api/swap/quote': typeof ApiSwapQuoteRoute
   '/api/swap/resolve-token': typeof ApiSwapResolveTokenRoute
   '/api/swap/tokens': typeof ApiSwapTokensRoute
-  '/markets/robinhood/$tokenAddress': typeof MarketsRobinhoodTokenAddressRoute
-  '/token/$chainId/$address': typeof TokenChainIdAddressRoute
+  '/app/agents/$slug': typeof AppAgentsSlugRoute
+  '/app/coin/$coinId': typeof AppCoinCoinIdRoute
+  '/app/markets/global': typeof AppMarketsGlobalRoute
+  '/app/markets/hot-searches': typeof AppMarketsHotSearchesRoute
+  '/app/markets/trending': typeof AppMarketsTrendingRoute
+  '/app/markets/': typeof AppMarketsIndexRoute
+  '/app/swap/': typeof AppSwapIndexRoute
+  '/app/token/': typeof AppTokenIndexRoute
   '/api/market/coingecko/coins': typeof ApiMarketCoingeckoCoinsRoute
   '/api/market/coingecko/search': typeof ApiMarketCoingeckoSearchRoute
   '/api/market/coingecko/trending': typeof ApiMarketCoingeckoTrendingRoute
@@ -462,6 +477,8 @@ export interface FileRoutesById {
   '/api/market/geckoterminal/networks': typeof ApiMarketGeckoterminalNetworksRoute
   '/api/market/gmgn/hot-searches': typeof ApiMarketGmgnHotSearchesRoute
   '/api/market/gmgn/trending': typeof ApiMarketGmgnTrendingRoute
+  '/app/markets/robinhood/$tokenAddress': typeof AppMarketsRobinhoodTokenAddressRoute
+  '/app/token/$chainId/$address': typeof AppTokenChainIdAddressRoute
   '/api/market/coingecko/chart/$id': typeof ApiMarketCoingeckoChartIdRoute
   '/api/market/coingecko/coin/$id': typeof ApiMarketCoingeckoCoinIdRoute
   '/api/market/dexscreener/trending/$chainId': typeof ApiMarketDexscreenerTrendingChainIdRoute
@@ -475,27 +492,21 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/agents'
-    | '/ai-feed'
-    | '/data'
-    | '/disclaimer'
-    | '/leaderboard'
-    | '/markets'
-    | '/methodology'
-    | '/portfolio'
-    | '/swap'
-    | '/token'
-    | '/trending'
-    | '/watchlist'
-    | '/xstocks'
-    | '/agents/$slug'
-    | '/coin/$coinId'
-    | '/markets/global'
-    | '/markets/hot-searches'
-    | '/markets/trending'
-    | '/markets/'
-    | '/swap/'
-    | '/token/'
+    | '/app'
+    | '/app/agents'
+    | '/app/ai-feed'
+    | '/app/data'
+    | '/app/disclaimer'
+    | '/app/leaderboard'
+    | '/app/markets'
+    | '/app/methodology'
+    | '/app/portfolio'
+    | '/app/swap'
+    | '/app/token'
+    | '/app/trending'
+    | '/app/watchlist'
+    | '/app/xstocks'
+    | '/app/'
     | '/api/analytics/swap-event'
     | '/api/feed/new-launches'
     | '/api/feed/snapshot'
@@ -505,8 +516,14 @@ export interface FileRouteTypes {
     | '/api/swap/quote'
     | '/api/swap/resolve-token'
     | '/api/swap/tokens'
-    | '/markets/robinhood/$tokenAddress'
-    | '/token/$chainId/$address'
+    | '/app/agents/$slug'
+    | '/app/coin/$coinId'
+    | '/app/markets/global'
+    | '/app/markets/hot-searches'
+    | '/app/markets/trending'
+    | '/app/markets/'
+    | '/app/swap/'
+    | '/app/token/'
     | '/api/market/coingecko/coins'
     | '/api/market/coingecko/search'
     | '/api/market/coingecko/trending'
@@ -515,6 +532,8 @@ export interface FileRouteTypes {
     | '/api/market/geckoterminal/networks'
     | '/api/market/gmgn/hot-searches'
     | '/api/market/gmgn/trending'
+    | '/app/markets/robinhood/$tokenAddress'
+    | '/app/token/$chainId/$address'
     | '/api/market/coingecko/chart/$id'
     | '/api/market/coingecko/coin/$id'
     | '/api/market/dexscreener/trending/$chainId'
@@ -526,24 +545,17 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/agents'
-    | '/ai-feed'
-    | '/data'
-    | '/disclaimer'
-    | '/leaderboard'
-    | '/methodology'
-    | '/portfolio'
-    | '/trending'
-    | '/watchlist'
-    | '/xstocks'
-    | '/agents/$slug'
-    | '/coin/$coinId'
-    | '/markets/global'
-    | '/markets/hot-searches'
-    | '/markets/trending'
-    | '/markets'
-    | '/swap'
-    | '/token'
+    | '/app/agents'
+    | '/app/ai-feed'
+    | '/app/data'
+    | '/app/disclaimer'
+    | '/app/leaderboard'
+    | '/app/methodology'
+    | '/app/portfolio'
+    | '/app/trending'
+    | '/app/watchlist'
+    | '/app/xstocks'
+    | '/app'
     | '/api/analytics/swap-event'
     | '/api/feed/new-launches'
     | '/api/feed/snapshot'
@@ -553,8 +565,14 @@ export interface FileRouteTypes {
     | '/api/swap/quote'
     | '/api/swap/resolve-token'
     | '/api/swap/tokens'
-    | '/markets/robinhood/$tokenAddress'
-    | '/token/$chainId/$address'
+    | '/app/agents/$slug'
+    | '/app/coin/$coinId'
+    | '/app/markets/global'
+    | '/app/markets/hot-searches'
+    | '/app/markets/trending'
+    | '/app/markets'
+    | '/app/swap'
+    | '/app/token'
     | '/api/market/coingecko/coins'
     | '/api/market/coingecko/search'
     | '/api/market/coingecko/trending'
@@ -563,6 +581,8 @@ export interface FileRouteTypes {
     | '/api/market/geckoterminal/networks'
     | '/api/market/gmgn/hot-searches'
     | '/api/market/gmgn/trending'
+    | '/app/markets/robinhood/$tokenAddress'
+    | '/app/token/$chainId/$address'
     | '/api/market/coingecko/chart/$id'
     | '/api/market/coingecko/coin/$id'
     | '/api/market/dexscreener/trending/$chainId'
@@ -574,27 +594,21 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/agents'
-    | '/ai-feed'
-    | '/data'
-    | '/disclaimer'
-    | '/leaderboard'
-    | '/markets'
-    | '/methodology'
-    | '/portfolio'
-    | '/swap'
-    | '/token'
-    | '/trending'
-    | '/watchlist'
-    | '/xstocks'
-    | '/agents/$slug'
-    | '/coin/$coinId'
-    | '/markets/global'
-    | '/markets/hot-searches'
-    | '/markets/trending'
-    | '/markets/'
-    | '/swap/'
-    | '/token/'
+    | '/app'
+    | '/app/agents'
+    | '/app/ai-feed'
+    | '/app/data'
+    | '/app/disclaimer'
+    | '/app/leaderboard'
+    | '/app/markets'
+    | '/app/methodology'
+    | '/app/portfolio'
+    | '/app/swap'
+    | '/app/token'
+    | '/app/trending'
+    | '/app/watchlist'
+    | '/app/xstocks'
+    | '/app/'
     | '/api/analytics/swap-event'
     | '/api/feed/new-launches'
     | '/api/feed/snapshot'
@@ -604,8 +618,14 @@ export interface FileRouteTypes {
     | '/api/swap/quote'
     | '/api/swap/resolve-token'
     | '/api/swap/tokens'
-    | '/markets/robinhood/$tokenAddress'
-    | '/token/$chainId/$address'
+    | '/app/agents/$slug'
+    | '/app/coin/$coinId'
+    | '/app/markets/global'
+    | '/app/markets/hot-searches'
+    | '/app/markets/trending'
+    | '/app/markets/'
+    | '/app/swap/'
+    | '/app/token/'
     | '/api/market/coingecko/coins'
     | '/api/market/coingecko/search'
     | '/api/market/coingecko/trending'
@@ -614,6 +634,8 @@ export interface FileRouteTypes {
     | '/api/market/geckoterminal/networks'
     | '/api/market/gmgn/hot-searches'
     | '/api/market/gmgn/trending'
+    | '/app/markets/robinhood/$tokenAddress'
+    | '/app/token/$chainId/$address'
     | '/api/market/coingecko/chart/$id'
     | '/api/market/coingecko/coin/$id'
     | '/api/market/dexscreener/trending/$chainId'
@@ -626,20 +648,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AgentsRoute: typeof AgentsRouteWithChildren
-  AiFeedRoute: typeof AiFeedRoute
-  DataRoute: typeof DataRoute
-  DisclaimerRoute: typeof DisclaimerRoute
-  LeaderboardRoute: typeof LeaderboardRoute
-  MarketsRoute: typeof MarketsRouteWithChildren
-  MethodologyRoute: typeof MethodologyRoute
-  PortfolioRoute: typeof PortfolioRoute
-  SwapRoute: typeof SwapRouteWithChildren
-  TokenRoute: typeof TokenRouteWithChildren
-  TrendingRoute: typeof TrendingRoute
-  WatchlistRoute: typeof WatchlistRoute
-  XstocksRoute: typeof XstocksRoute
-  CoinCoinIdRoute: typeof CoinCoinIdRoute
+  AppRoute: typeof AppRouteWithChildren
   ApiAnalyticsSwapEventRoute: typeof ApiAnalyticsSwapEventRoute
   ApiFeedNewLaunchesRoute: typeof ApiFeedNewLaunchesRoute
   ApiFeedSnapshotRoute: typeof ApiFeedSnapshotRoute
@@ -676,152 +685,110 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/agents': {
-      id: '/agents'
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/agents': {
+      id: '/app/agents'
       path: '/agents'
-      fullPath: '/agents'
-      preLoaderRoute: typeof AgentsRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/app/agents'
+      preLoaderRoute: typeof AppAgentsRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/ai-feed': {
-      id: '/ai-feed'
+    '/app/ai-feed': {
+      id: '/app/ai-feed'
       path: '/ai-feed'
-      fullPath: '/ai-feed'
-      preLoaderRoute: typeof AiFeedRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/app/ai-feed'
+      preLoaderRoute: typeof AppAiFeedRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/data': {
-      id: '/data'
+    '/app/data': {
+      id: '/app/data'
       path: '/data'
-      fullPath: '/data'
-      preLoaderRoute: typeof DataRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/app/data'
+      preLoaderRoute: typeof AppDataRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/disclaimer': {
-      id: '/disclaimer'
+    '/app/disclaimer': {
+      id: '/app/disclaimer'
       path: '/disclaimer'
-      fullPath: '/disclaimer'
-      preLoaderRoute: typeof DisclaimerRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/app/disclaimer'
+      preLoaderRoute: typeof AppDisclaimerRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/leaderboard': {
-      id: '/leaderboard'
+    '/app/leaderboard': {
+      id: '/app/leaderboard'
       path: '/leaderboard'
-      fullPath: '/leaderboard'
-      preLoaderRoute: typeof LeaderboardRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/app/leaderboard'
+      preLoaderRoute: typeof AppLeaderboardRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/markets': {
-      id: '/markets'
+    '/app/markets': {
+      id: '/app/markets'
       path: '/markets'
-      fullPath: '/markets'
-      preLoaderRoute: typeof MarketsRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/app/markets'
+      preLoaderRoute: typeof AppMarketsRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/methodology': {
-      id: '/methodology'
+    '/app/methodology': {
+      id: '/app/methodology'
       path: '/methodology'
-      fullPath: '/methodology'
-      preLoaderRoute: typeof MethodologyRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/app/methodology'
+      preLoaderRoute: typeof AppMethodologyRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/portfolio': {
-      id: '/portfolio'
+    '/app/portfolio': {
+      id: '/app/portfolio'
       path: '/portfolio'
-      fullPath: '/portfolio'
-      preLoaderRoute: typeof PortfolioRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/app/portfolio'
+      preLoaderRoute: typeof AppPortfolioRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/swap': {
-      id: '/swap'
+    '/app/swap': {
+      id: '/app/swap'
       path: '/swap'
-      fullPath: '/swap'
-      preLoaderRoute: typeof SwapRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/app/swap'
+      preLoaderRoute: typeof AppSwapRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/token': {
-      id: '/token'
+    '/app/token': {
+      id: '/app/token'
       path: '/token'
-      fullPath: '/token'
-      preLoaderRoute: typeof TokenRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/app/token'
+      preLoaderRoute: typeof AppTokenRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/trending': {
-      id: '/trending'
+    '/app/trending': {
+      id: '/app/trending'
       path: '/trending'
-      fullPath: '/trending'
-      preLoaderRoute: typeof TrendingRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/app/trending'
+      preLoaderRoute: typeof AppTrendingRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/watchlist': {
-      id: '/watchlist'
+    '/app/watchlist': {
+      id: '/app/watchlist'
       path: '/watchlist'
-      fullPath: '/watchlist'
-      preLoaderRoute: typeof WatchlistRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/app/watchlist'
+      preLoaderRoute: typeof AppWatchlistRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/xstocks': {
-      id: '/xstocks'
+    '/app/xstocks': {
+      id: '/app/xstocks'
       path: '/xstocks'
-      fullPath: '/xstocks'
-      preLoaderRoute: typeof XstocksRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/agents/$slug': {
-      id: '/agents/$slug'
-      path: '/$slug'
-      fullPath: '/agents/$slug'
-      preLoaderRoute: typeof AgentsSlugRouteImport
-      parentRoute: typeof AgentsRoute
-    }
-    '/coin/$coinId': {
-      id: '/coin/$coinId'
-      path: '/coin/$coinId'
-      fullPath: '/coin/$coinId'
-      preLoaderRoute: typeof CoinCoinIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/markets/': {
-      id: '/markets/'
-      path: '/'
-      fullPath: '/markets/'
-      preLoaderRoute: typeof MarketsIndexRouteImport
-      parentRoute: typeof MarketsRoute
-    }
-    '/markets/global': {
-      id: '/markets/global'
-      path: '/global'
-      fullPath: '/markets/global'
-      preLoaderRoute: typeof MarketsGlobalRouteImport
-      parentRoute: typeof MarketsRoute
-    }
-    '/markets/hot-searches': {
-      id: '/markets/hot-searches'
-      path: '/hot-searches'
-      fullPath: '/markets/hot-searches'
-      preLoaderRoute: typeof MarketsHotSearchesRouteImport
-      parentRoute: typeof MarketsRoute
-    }
-    '/markets/trending': {
-      id: '/markets/trending'
-      path: '/trending'
-      fullPath: '/markets/trending'
-      preLoaderRoute: typeof MarketsTrendingRouteImport
-      parentRoute: typeof MarketsRoute
-    }
-    '/swap/': {
-      id: '/swap/'
-      path: '/'
-      fullPath: '/swap/'
-      preLoaderRoute: typeof SwapIndexRouteImport
-      parentRoute: typeof SwapRoute
-    }
-    '/token/': {
-      id: '/token/'
-      path: '/'
-      fullPath: '/token/'
-      preLoaderRoute: typeof TokenIndexRouteImport
-      parentRoute: typeof TokenRoute
+      fullPath: '/app/xstocks'
+      preLoaderRoute: typeof AppXstocksRouteImport
+      parentRoute: typeof AppRoute
     }
     '/api/analytics/swap-event': {
       id: '/api/analytics/swap-event'
@@ -886,19 +853,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSwapTokensRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/markets/robinhood/$tokenAddress': {
-      id: '/markets/robinhood/$tokenAddress'
-      path: '/robinhood/$tokenAddress'
-      fullPath: '/markets/robinhood/$tokenAddress'
-      preLoaderRoute: typeof MarketsRobinhoodTokenAddressRouteImport
-      parentRoute: typeof MarketsRoute
+    '/app/agents/$slug': {
+      id: '/app/agents/$slug'
+      path: '/$slug'
+      fullPath: '/app/agents/$slug'
+      preLoaderRoute: typeof AppAgentsSlugRouteImport
+      parentRoute: typeof AppAgentsRoute
     }
-    '/token/$chainId/$address': {
-      id: '/token/$chainId/$address'
-      path: '/$chainId/$address'
-      fullPath: '/token/$chainId/$address'
-      preLoaderRoute: typeof TokenChainIdAddressRouteImport
-      parentRoute: typeof TokenRoute
+    '/app/coin/$coinId': {
+      id: '/app/coin/$coinId'
+      path: '/coin/$coinId'
+      fullPath: '/app/coin/$coinId'
+      preLoaderRoute: typeof AppCoinCoinIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/markets/': {
+      id: '/app/markets/'
+      path: '/'
+      fullPath: '/app/markets/'
+      preLoaderRoute: typeof AppMarketsIndexRouteImport
+      parentRoute: typeof AppMarketsRoute
+    }
+    '/app/markets/global': {
+      id: '/app/markets/global'
+      path: '/global'
+      fullPath: '/app/markets/global'
+      preLoaderRoute: typeof AppMarketsGlobalRouteImport
+      parentRoute: typeof AppMarketsRoute
+    }
+    '/app/markets/hot-searches': {
+      id: '/app/markets/hot-searches'
+      path: '/hot-searches'
+      fullPath: '/app/markets/hot-searches'
+      preLoaderRoute: typeof AppMarketsHotSearchesRouteImport
+      parentRoute: typeof AppMarketsRoute
+    }
+    '/app/markets/trending': {
+      id: '/app/markets/trending'
+      path: '/trending'
+      fullPath: '/app/markets/trending'
+      preLoaderRoute: typeof AppMarketsTrendingRouteImport
+      parentRoute: typeof AppMarketsRoute
+    }
+    '/app/swap/': {
+      id: '/app/swap/'
+      path: '/'
+      fullPath: '/app/swap/'
+      preLoaderRoute: typeof AppSwapIndexRouteImport
+      parentRoute: typeof AppSwapRoute
+    }
+    '/app/token/': {
+      id: '/app/token/'
+      path: '/'
+      fullPath: '/app/token/'
+      preLoaderRoute: typeof AppTokenIndexRouteImport
+      parentRoute: typeof AppTokenRoute
     }
     '/api/market/coingecko/coins': {
       id: '/api/market/coingecko/coins'
@@ -955,6 +964,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/market/gmgn/trending'
       preLoaderRoute: typeof ApiMarketGmgnTrendingRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/app/markets/robinhood/$tokenAddress': {
+      id: '/app/markets/robinhood/$tokenAddress'
+      path: '/robinhood/$tokenAddress'
+      fullPath: '/app/markets/robinhood/$tokenAddress'
+      preLoaderRoute: typeof AppMarketsRobinhoodTokenAddressRouteImport
+      parentRoute: typeof AppMarketsRoute
+    }
+    '/app/token/$chainId/$address': {
+      id: '/app/token/$chainId/$address'
+      path: '/$chainId/$address'
+      fullPath: '/app/token/$chainId/$address'
+      preLoaderRoute: typeof AppTokenChainIdAddressRouteImport
+      parentRoute: typeof AppTokenRoute
     }
     '/api/market/coingecko/chart/$id': {
       id: '/api/market/coingecko/chart/$id'
@@ -1015,74 +1038,104 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AgentsRouteChildren {
-  AgentsSlugRoute: typeof AgentsSlugRoute
+interface AppAgentsRouteChildren {
+  AppAgentsSlugRoute: typeof AppAgentsSlugRoute
 }
 
-const AgentsRouteChildren: AgentsRouteChildren = {
-  AgentsSlugRoute: AgentsSlugRoute,
+const AppAgentsRouteChildren: AppAgentsRouteChildren = {
+  AppAgentsSlugRoute: AppAgentsSlugRoute,
 }
 
-const AgentsRouteWithChildren =
-  AgentsRoute._addFileChildren(AgentsRouteChildren)
+const AppAgentsRouteWithChildren = AppAgentsRoute._addFileChildren(
+  AppAgentsRouteChildren,
+)
 
-interface MarketsRouteChildren {
-  MarketsGlobalRoute: typeof MarketsGlobalRoute
-  MarketsHotSearchesRoute: typeof MarketsHotSearchesRoute
-  MarketsTrendingRoute: typeof MarketsTrendingRoute
-  MarketsIndexRoute: typeof MarketsIndexRoute
-  MarketsRobinhoodTokenAddressRoute: typeof MarketsRobinhoodTokenAddressRoute
+interface AppMarketsRouteChildren {
+  AppMarketsGlobalRoute: typeof AppMarketsGlobalRoute
+  AppMarketsHotSearchesRoute: typeof AppMarketsHotSearchesRoute
+  AppMarketsTrendingRoute: typeof AppMarketsTrendingRoute
+  AppMarketsIndexRoute: typeof AppMarketsIndexRoute
+  AppMarketsRobinhoodTokenAddressRoute: typeof AppMarketsRobinhoodTokenAddressRoute
 }
 
-const MarketsRouteChildren: MarketsRouteChildren = {
-  MarketsGlobalRoute: MarketsGlobalRoute,
-  MarketsHotSearchesRoute: MarketsHotSearchesRoute,
-  MarketsTrendingRoute: MarketsTrendingRoute,
-  MarketsIndexRoute: MarketsIndexRoute,
-  MarketsRobinhoodTokenAddressRoute: MarketsRobinhoodTokenAddressRoute,
+const AppMarketsRouteChildren: AppMarketsRouteChildren = {
+  AppMarketsGlobalRoute: AppMarketsGlobalRoute,
+  AppMarketsHotSearchesRoute: AppMarketsHotSearchesRoute,
+  AppMarketsTrendingRoute: AppMarketsTrendingRoute,
+  AppMarketsIndexRoute: AppMarketsIndexRoute,
+  AppMarketsRobinhoodTokenAddressRoute: AppMarketsRobinhoodTokenAddressRoute,
 }
 
-const MarketsRouteWithChildren =
-  MarketsRoute._addFileChildren(MarketsRouteChildren)
+const AppMarketsRouteWithChildren = AppMarketsRoute._addFileChildren(
+  AppMarketsRouteChildren,
+)
 
-interface SwapRouteChildren {
-  SwapIndexRoute: typeof SwapIndexRoute
+interface AppSwapRouteChildren {
+  AppSwapIndexRoute: typeof AppSwapIndexRoute
 }
 
-const SwapRouteChildren: SwapRouteChildren = {
-  SwapIndexRoute: SwapIndexRoute,
+const AppSwapRouteChildren: AppSwapRouteChildren = {
+  AppSwapIndexRoute: AppSwapIndexRoute,
 }
 
-const SwapRouteWithChildren = SwapRoute._addFileChildren(SwapRouteChildren)
+const AppSwapRouteWithChildren =
+  AppSwapRoute._addFileChildren(AppSwapRouteChildren)
 
-interface TokenRouteChildren {
-  TokenIndexRoute: typeof TokenIndexRoute
-  TokenChainIdAddressRoute: typeof TokenChainIdAddressRoute
+interface AppTokenRouteChildren {
+  AppTokenIndexRoute: typeof AppTokenIndexRoute
+  AppTokenChainIdAddressRoute: typeof AppTokenChainIdAddressRoute
 }
 
-const TokenRouteChildren: TokenRouteChildren = {
-  TokenIndexRoute: TokenIndexRoute,
-  TokenChainIdAddressRoute: TokenChainIdAddressRoute,
+const AppTokenRouteChildren: AppTokenRouteChildren = {
+  AppTokenIndexRoute: AppTokenIndexRoute,
+  AppTokenChainIdAddressRoute: AppTokenChainIdAddressRoute,
 }
 
-const TokenRouteWithChildren = TokenRoute._addFileChildren(TokenRouteChildren)
+const AppTokenRouteWithChildren = AppTokenRoute._addFileChildren(
+  AppTokenRouteChildren,
+)
+
+interface AppRouteChildren {
+  AppAgentsRoute: typeof AppAgentsRouteWithChildren
+  AppAiFeedRoute: typeof AppAiFeedRoute
+  AppDataRoute: typeof AppDataRoute
+  AppDisclaimerRoute: typeof AppDisclaimerRoute
+  AppLeaderboardRoute: typeof AppLeaderboardRoute
+  AppMarketsRoute: typeof AppMarketsRouteWithChildren
+  AppMethodologyRoute: typeof AppMethodologyRoute
+  AppPortfolioRoute: typeof AppPortfolioRoute
+  AppSwapRoute: typeof AppSwapRouteWithChildren
+  AppTokenRoute: typeof AppTokenRouteWithChildren
+  AppTrendingRoute: typeof AppTrendingRoute
+  AppWatchlistRoute: typeof AppWatchlistRoute
+  AppXstocksRoute: typeof AppXstocksRoute
+  AppIndexRoute: typeof AppIndexRoute
+  AppCoinCoinIdRoute: typeof AppCoinCoinIdRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAgentsRoute: AppAgentsRouteWithChildren,
+  AppAiFeedRoute: AppAiFeedRoute,
+  AppDataRoute: AppDataRoute,
+  AppDisclaimerRoute: AppDisclaimerRoute,
+  AppLeaderboardRoute: AppLeaderboardRoute,
+  AppMarketsRoute: AppMarketsRouteWithChildren,
+  AppMethodologyRoute: AppMethodologyRoute,
+  AppPortfolioRoute: AppPortfolioRoute,
+  AppSwapRoute: AppSwapRouteWithChildren,
+  AppTokenRoute: AppTokenRouteWithChildren,
+  AppTrendingRoute: AppTrendingRoute,
+  AppWatchlistRoute: AppWatchlistRoute,
+  AppXstocksRoute: AppXstocksRoute,
+  AppIndexRoute: AppIndexRoute,
+  AppCoinCoinIdRoute: AppCoinCoinIdRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AgentsRoute: AgentsRouteWithChildren,
-  AiFeedRoute: AiFeedRoute,
-  DataRoute: DataRoute,
-  DisclaimerRoute: DisclaimerRoute,
-  LeaderboardRoute: LeaderboardRoute,
-  MarketsRoute: MarketsRouteWithChildren,
-  MethodologyRoute: MethodologyRoute,
-  PortfolioRoute: PortfolioRoute,
-  SwapRoute: SwapRouteWithChildren,
-  TokenRoute: TokenRouteWithChildren,
-  TrendingRoute: TrendingRoute,
-  WatchlistRoute: WatchlistRoute,
-  XstocksRoute: XstocksRoute,
-  CoinCoinIdRoute: CoinCoinIdRoute,
+  AppRoute: AppRouteWithChildren,
   ApiAnalyticsSwapEventRoute: ApiAnalyticsSwapEventRoute,
   ApiFeedNewLaunchesRoute: ApiFeedNewLaunchesRoute,
   ApiFeedSnapshotRoute: ApiFeedSnapshotRoute,

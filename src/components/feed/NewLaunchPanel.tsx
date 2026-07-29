@@ -15,7 +15,7 @@ export function NewLaunchPanel({ launches }: { launches: NewLaunchInfo[] }) {
         <li key={`${l.chainId}:${l.address}`} className="rounded-lg border border-border/70 p-2">
           <div className="flex items-center justify-between gap-2">
             <Link
-              to="/token/$chainId/$address"
+              to="/app/token/$chainId/$address"
               params={{ chainId: l.chainId, address: l.address }}
               className="min-w-0 truncate text-xs font-semibold text-foreground hover:underline"
             >

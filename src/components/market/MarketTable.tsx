@@ -127,7 +127,7 @@ export function MarketTable({
               <TableRow key={`${m.chainId}-${m.pairAddress}`}>
                 <TableCell>
                   <Link
-                    to="/token/$chainId/$address"
+                    to="/app/token/$chainId/$address"
                     params={{ chainId: m.chainId, address: m.baseToken.address }}
                     className="group block"
                   >

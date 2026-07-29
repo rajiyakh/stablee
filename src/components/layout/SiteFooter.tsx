@@ -5,7 +5,7 @@ export function SiteFooter() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const socials = configuredSocialLinks();
 
-  if (pathname !== "/ai-feed") return null;
+  if (pathname !== "/app/ai-feed") return null;
 
   return (
     <footer className="mt-20 border-t border-border/70 bg-card/40">
@@ -29,22 +29,22 @@ export function SiteFooter() {
             </p>
             <ul className="mt-3 space-y-2 text-sm">
               <li>
-                <Link to="/markets" className="text-muted-foreground hover:text-foreground">
+                <Link to="/app/markets" className="text-muted-foreground hover:text-foreground">
                   Markets
                 </Link>
               </li>
               <li>
-                <Link to="/xstocks" className="text-muted-foreground hover:text-foreground">
+                <Link to="/app/xstocks" className="text-muted-foreground hover:text-foreground">
                   xStocks
                 </Link>
               </li>
               <li>
-                <Link to="/agents" className="text-muted-foreground hover:text-foreground">
+                <Link to="/app/agents" className="text-muted-foreground hover:text-foreground">
                   AI agents
                 </Link>
               </li>
               <li>
-                <Link to="/methodology" className="text-muted-foreground hover:text-foreground">
+                <Link to="/app/methodology" className="text-muted-foreground hover:text-foreground">
                   Methodology
                 </Link>
               </li>
@@ -57,12 +57,12 @@ export function SiteFooter() {
             </p>
             <ul className="mt-3 space-y-2 text-sm">
               <li>
-                <Link to="/data" className="text-muted-foreground hover:text-foreground">
+                <Link to="/app/data" className="text-muted-foreground hover:text-foreground">
                   Data sources
                 </Link>
               </li>
               <li>
-                <Link to="/disclaimer" className="text-muted-foreground hover:text-foreground">
+                <Link to="/app/disclaimer" className="text-muted-foreground hover:text-foreground">
                   Risk disclaimer
                 </Link>
               </li>

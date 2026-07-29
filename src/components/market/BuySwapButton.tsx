@@ -25,7 +25,7 @@ export function BuySwapButton({
 
   return (
     <Button asChild size={size} className={className} onClick={(e) => e.stopPropagation()}>
-      <Link to="/swap" search={{ buy: address }}>
+      <Link to="/app/swap" search={{ buy: address }}>
         Buy
       </Link>
     </Button>

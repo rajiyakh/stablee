@@ -28,7 +28,7 @@ export function TrendingTokenPanel({
             <span className="w-5 shrink-0 text-[11px] text-muted-foreground">{t.rank}</span>
             <span className="min-w-0 flex-1">
               <Link
-                to="/token/$chainId/$address"
+                to="/app/token/$chainId/$address"
                 params={{ chainId: t.chainId, address: t.address }}
                 onClick={(e) => e.stopPropagation()}
                 className="block truncate text-xs font-semibold text-foreground hover:underline"

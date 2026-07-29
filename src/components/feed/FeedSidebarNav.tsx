@@ -16,10 +16,10 @@ const navItems: Array<{ value: FeedFilterValue; label: string }> = [
 // Leaderboard is intentionally left out (still reachable directly at
 // /leaderboard) — hidden from nav, not deleted.
 const quickLinks = [
-  { to: "/markets" as const, label: "Markets" },
-  { to: "/agents" as const, label: "Agents" },
-  { to: "/watchlist" as const, label: "Watchlist" },
-  { to: "/token" as const, label: "Token", badge: "Soon" },
+  { to: "/app/markets" as const, label: "Markets" },
+  { to: "/app/agents" as const, label: "Agents" },
+  { to: "/app/watchlist" as const, label: "Watchlist" },
+  { to: "/app/token" as const, label: "Token", badge: "Soon" },
 ];
 
 const stateLabel: Record<string, string> = {

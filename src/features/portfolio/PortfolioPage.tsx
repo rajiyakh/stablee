@@ -171,7 +171,7 @@ function HoldingRow({ holding }: { holding: PortfolioHolding }) {
       <div className="flex shrink-0 items-center gap-1.5">
         <BuySwapButton chainId="robinhood" address={holding.address} size="sm" />
         <Button asChild variant="outline" size="sm">
-          <Link to="/swap" search={{ sell: holding.address }}>
+          <Link to="/app/swap" search={{ sell: holding.address }}>
             Sell
           </Link>
         </Button>

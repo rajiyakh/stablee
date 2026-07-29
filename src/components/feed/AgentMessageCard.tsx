@@ -59,7 +59,7 @@ export function AgentMessageCard({
 
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <Link
-          to="/token/$chainId/$address"
+          to="/app/token/$chainId/$address"
           params={{ chainId: message.token.chainId, address: message.token.address }}
           className="inline-flex items-center rounded-md bg-secondary px-2 py-0.5 text-xs font-semibold text-foreground hover:underline"
         >

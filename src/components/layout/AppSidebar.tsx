@@ -26,11 +26,11 @@ import { SidebarToggle } from "./SiteHeader";
 // Leaderboard and Data Sources are intentionally left out (still reachable
 // directly at /leaderboard and /data) — hidden from nav, not deleted.
 const secondaryItems = [
-  { to: "/markets", label: "Markets", icon: ChartLine },
-  { to: "/trending", label: "Robinhood Trends", icon: TrendingUp },
-  { to: "/agents", label: "Agents", icon: Users },
-  { to: "/watchlist", label: "Watchlist", icon: Star },
-  { to: "/token", label: "Token", icon: Coins, badge: "Soon" },
+  { to: "/app/markets", label: "Markets", icon: ChartLine },
+  { to: "/app/trending", label: "Robinhood Trends", icon: TrendingUp },
+  { to: "/app/agents", label: "Agents", icon: Users },
+  { to: "/app/watchlist", label: "Watchlist", icon: Star },
+  { to: "/app/token", label: "Token", icon: Coins, badge: "Soon" },
 ] as const;
 
 const stateLabel: Record<string, string> = {
@@ -72,7 +72,7 @@ function OverviewFeedTabs() {
               <SidebarMenuItem key={f.value}>
                 <SidebarMenuButton
                   isActive={activeFilter === f.value}
-                  onClick={() => navigate({ to: "/", search: { filter: f.value } })}
+                  onClick={() => navigate({ to: "/app", search: { filter: f.value } })}
                 >
                   <span>{f.label}</span>
                 </SidebarMenuButton>
@@ -153,7 +153,7 @@ function SidebarStatusSummary() {
  */
 export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const isHome = pathname === "/";
+  const isHome = pathname === "/app";
 
   return (
     <Sidebar collapsible="icon" className="top-16 h-[calc(100svh-4rem)]">

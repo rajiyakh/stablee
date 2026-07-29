@@ -85,7 +85,7 @@ export function GlobalSearch() {
                   value={`coin-${coin.id}-${coin.name}`}
                   onSelect={() => {
                     setOpen(false);
-                    navigate({ to: "/coin/$coinId", params: { coinId: coin.id } });
+                    navigate({ to: "/app/coin/$coinId", params: { coinId: coin.id } });
                   }}
                 >
                   <span className="font-medium">{coin.name}</span>
@@ -111,7 +111,7 @@ export function GlobalSearch() {
                   onSelect={() => {
                     setOpen(false);
                     navigate({
-                      to: "/token/$chainId/$address",
+                      to: "/app/token/$chainId/$address",
                       params: { chainId: pair.chainId, address: pair.baseToken.address },
                     });
                   }}
