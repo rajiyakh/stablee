@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import { RefreshCw } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { SwapTokenConfig } from "@/config/swapTokens";
 
@@ -15,9 +14,9 @@ export function SwapAmountInput({
   balanceLoading,
   balanceError,
   onRetryBalance,
-  onMax,
   readOnly,
   tokenSelect,
+  footer,
 }: {
   label: string;
   token: SwapTokenConfig | null;
@@ -29,10 +28,11 @@ export function SwapAmountInput({
   /** The balance read failed after wagmi's own retries were exhausted. */
   balanceError?: boolean;
   onRetryBalance?: () => void;
-  onMax?: () => void;
   readOnly?: boolean;
   /** Token picker rendered inline next to the amount, on this same row. */
   tokenSelect?: ReactNode;
+  /** Extra content rendered below the input/token row, inside the same card (e.g. percentage quick-select). */
+  footer?: ReactNode;
 }) {
   return (
     <div className="rounded-xl border border-border bg-muted/30 p-3">
@@ -41,17 +41,6 @@ export function SwapAmountInput({
         {balanceFormatted !== undefined && balanceFormatted !== null ? (
           <span className="flex items-center gap-1.5">
             Balance: {balanceFormatted} {token?.symbol}
-            {onMax ? (
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="h-5 px-1.5 text-[10px] font-semibold text-brand"
-                onClick={onMax}
-              >
-                MAX
-              </Button>
-            ) : null}
           </span>
         ) : balanceLoading ? (
           <span className="text-muted-foreground/70">Loading balance…</span>
@@ -85,6 +74,7 @@ export function SwapAmountInput({
         />
         {tokenSelect ? <div className="shrink-0">{tokenSelect}</div> : null}
       </div>
+      {footer}
     </div>
   );
 }

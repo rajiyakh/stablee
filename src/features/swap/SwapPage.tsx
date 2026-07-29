@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { parseUnits } from "viem";
+import { formatUnits, parseUnits } from "viem";
 import { useAccount, useSwitchChain } from "wagmi";
 import { ArrowDownUp, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
@@ -28,6 +28,7 @@ import { trackSwapEvent } from "@/lib/swap/analytics";
 import { ApiError } from "@/lib/market/client";
 import { TokenSelect } from "./TokenSelect";
 import { SwapAmountInput } from "./SwapAmountInput";
+import { SwapPercentageButtons } from "./SwapPercentageButtons";
 import { SwapQuoteDetails } from "./SwapQuoteDetails";
 import { SwapConfirmDialog } from "./SwapConfirmDialog";
 import { SlippageControl } from "./SlippageControl";
@@ -270,6 +271,12 @@ export function SwapPage({
     }
   }
 
+  function handlePercentageSelect(percentage: number) {
+    if (!sellToken || balance.maxSellValue === null) return;
+    const amount = (balance.maxSellValue * BigInt(percentage)) / 100n;
+    setSellAmountInput(formatUnits(amount, sellToken.decimals));
+  }
+
   function handleSwapClick() {
     void requestFirmQuote();
   }
@@ -395,11 +402,6 @@ export function SwapPage({
                 balanceLoading={isConnected && balance.isLoading}
                 balanceError={isConnected && balance.isError}
                 onRetryBalance={balance.refetch}
-                onMax={
-                  balance.maxSellFormatted
-                    ? () => setSellAmountInput(balance.maxSellFormatted!)
-                    : undefined
-                }
                 tokenSelect={
                   <TokenSelect
                     tokens={availableTokens}
@@ -408,6 +410,12 @@ export function SwapPage({
                     onCustomTokenResolved={rememberCustomToken}
                     excludeAddress={buyToken?.address}
                     label="Sell token"
+                  />
+                }
+                footer={
+                  <SwapPercentageButtons
+                    onSelect={handlePercentageSelect}
+                    disabled={balance.maxSellValue === null}
                   />
                 }
               />

@@ -9,18 +9,24 @@ export function isNativeSwapToken(token: SwapTokenConfig | null): boolean {
 }
 
 /**
- * The "Max" amount for a sell. Native-ETH sells must reserve gas (see
- * NATIVE_GAS_RESERVE_WEI) — the ERC-20 path pays gas separately from the
- * token being sold, so its max is the true full balance.
+ * The spendable balance for a sell, in base units. Native-ETH sells must
+ * reserve gas (see NATIVE_GAS_RESERVE_WEI) — the ERC-20 path pays gas
+ * separately from the token being sold, so its max is the true full balance.
  */
+export function computeSpendableValue(value: bigint | undefined, native: boolean): bigint | null {
+  if (value === undefined) return null;
+  if (!native) return value;
+  return value > NATIVE_GAS_RESERVE_WEI ? value - NATIVE_GAS_RESERVE_WEI : 0n;
+}
+
+/** The "Max" amount for a sell, formatted for display/input. */
 export function computeMaxSellFormatted(
   value: bigint | undefined,
   decimals: number,
   native: boolean,
 ): string | null {
-  if (value === undefined) return null;
-  if (!native) return formatUnits(value, decimals);
-  const spendable = value > NATIVE_GAS_RESERVE_WEI ? value - NATIVE_GAS_RESERVE_WEI : 0n;
+  const spendable = computeSpendableValue(value, native);
+  if (spendable === null) return null;
   return formatUnits(spendable, decimals);
 }
 
@@ -51,12 +57,14 @@ export function useSwapTokenBalance(token: SwapTokenConfig | null) {
 
   const value = native ? nativeQuery.data?.value : erc20Query.data;
   const formatted = value !== undefined && token ? formatUnits(value, token.decimals) : null;
+  const maxSellValue = token ? computeSpendableValue(value, native) : null;
   const maxSellFormatted = token ? computeMaxSellFormatted(value, token.decimals, native) : null;
   const activeQuery = native ? nativeQuery : erc20Query;
 
   return {
     balance: value ?? null,
     formatted,
+    maxSellValue,
     maxSellFormatted,
     // Loading/error are surfaced explicitly (not just "no value yet") so the
     // UI can distinguish "still fetching" and "the read failed, retry" from

@@ -71,6 +71,16 @@ function Home() {
     [snapshot],
   );
 
+  const topProfitable = useMemo(
+    () =>
+      (snapshot?.trendingTokens ?? [])
+        .filter((t) => t.priceChange1h !== null && t.priceChange1h > 0)
+        .sort((a, b) => (b.priceChange1h ?? 0) - (a.priceChange1h ?? 0))
+        .slice(0, 5)
+        .map((t, index) => ({ ...t, rank: index + 1 })),
+    [snapshot],
+  );
+
   const onFilterChange = (v: FeedFilterValue) => {
     navigate({ search: { filter: v } });
   };
@@ -135,6 +145,18 @@ function Home() {
             </h2>
             <div className="mt-2 rounded-xl border border-border bg-card p-3">
               <TrendingTokenPanel tokens={snapshot?.trendingTokens ?? []} />
+            </div>
+          </section>
+
+          <section>
+            <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+              Top Profitable Tokens
+            </h2>
+            <div className="mt-2 rounded-xl border border-border bg-card p-3">
+              <TrendingTokenPanel
+                tokens={topProfitable}
+                emptyMessage="No profitable tokens right now."
+              />
             </div>
           </section>
 

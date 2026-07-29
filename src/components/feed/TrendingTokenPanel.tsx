@@ -6,12 +6,14 @@ import type { TrendingTokenInfo } from "@/lib/feed/types";
 export function TrendingTokenPanel({
   tokens,
   onSelect,
+  emptyMessage = "No trending tokens right now.",
 }: {
   tokens: TrendingTokenInfo[];
   onSelect?: (token: TrendingTokenInfo) => void;
+  emptyMessage?: string;
 }) {
   if (tokens.length === 0) {
-    return <p className="text-xs text-muted-foreground">No trending tokens right now.</p>;
+    return <p className="text-xs text-muted-foreground">{emptyMessage}</p>;
   }
 
   return (
