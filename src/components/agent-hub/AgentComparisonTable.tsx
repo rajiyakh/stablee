@@ -12,12 +12,13 @@ import { Button } from "@/components/ui/button";
 import { SectionHeading } from "@/components/common/SectionHeading";
 import { RarityBadge } from "./RarityBadge";
 import { sortGenesisAgents, type AgentSortKey } from "@/lib/agent-hub/sort";
+import { AGENT_HUB_WALLET_LIMIT_LABEL } from "@/config/agentHub";
 import type { GenesisAgentConfig } from "@/config/genesisAgents";
 
 const SORT_OPTIONS: { key: AgentSortKey; label: string }[] = [
   { key: "price", label: "Price" },
   { key: "rarity", label: "Rarity" },
-  { key: "farming-rate", label: "Farming rate" },
+  { key: "farming-rate", label: "Daily Farming" },
   { key: "supply", label: "Max supply" },
 ];
 
@@ -69,8 +70,7 @@ export function AgentComparisonTable({ agents }: { agents: GenesisAgentConfig[] 
               <TableHead>Role</TableHead>
               <TableHead>Rarity</TableHead>
               <TableHead className="text-right">Price</TableHead>
-              <TableHead className="text-right">Farming rate</TableHead>
-              <TableHead className="text-right">Multiplier</TableHead>
+              <TableHead className="text-right">Daily Farming</TableHead>
               <TableHead className="text-right">Max supply</TableHead>
               <TableHead className="text-right">Wallet limit</TableHead>
               <TableHead className="text-right">Status</TableHead>
@@ -88,15 +88,12 @@ export function AgentComparisonTable({ agents }: { agents: GenesisAgentConfig[] 
                   {agent.price} {agent.paymentTokenSymbol}
                 </TableCell>
                 <TableCell className="text-right tabular-nums">
-                  {agent.pulsePerHour} $PULSE/hr
-                </TableCell>
-                <TableCell className="text-right tabular-nums">
-                  {agent.farmingMultiplier}x
+                  {agent.pulsePerDay} $PULSE/day
                 </TableCell>
                 <TableCell className="text-right tabular-nums">
                   {agent.maxSupply.toLocaleString()}
                 </TableCell>
-                <TableCell className="text-right tabular-nums">{agent.walletLimit}</TableCell>
+                <TableCell className="text-right">{AGENT_HUB_WALLET_LIMIT_LABEL}</TableCell>
                 <TableCell className="text-right text-xs text-muted-foreground">
                   Coming Soon
                 </TableCell>
@@ -120,20 +117,16 @@ export function AgentComparisonTable({ agents }: { agents: GenesisAgentConfig[] 
               <dd className="text-right tabular-nums text-foreground">
                 {agent.price} {agent.paymentTokenSymbol}
               </dd>
-              <dt className="text-muted-foreground">Farming rate</dt>
+              <dt className="text-muted-foreground">Daily Farming</dt>
               <dd className="text-right tabular-nums text-foreground">
-                {agent.pulsePerHour} $PULSE/hr
-              </dd>
-              <dt className="text-muted-foreground">Multiplier</dt>
-              <dd className="text-right tabular-nums text-foreground">
-                {agent.farmingMultiplier}x
+                {agent.pulsePerDay} $PULSE/day
               </dd>
               <dt className="text-muted-foreground">Max supply</dt>
               <dd className="text-right tabular-nums text-foreground">
                 {agent.maxSupply.toLocaleString()}
               </dd>
               <dt className="text-muted-foreground">Wallet limit</dt>
-              <dd className="text-right tabular-nums text-foreground">{agent.walletLimit}</dd>
+              <dd className="text-right text-foreground">{AGENT_HUB_WALLET_LIMIT_LABEL}</dd>
             </dl>
           </div>
         ))}

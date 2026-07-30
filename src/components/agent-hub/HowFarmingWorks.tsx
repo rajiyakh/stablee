@@ -16,7 +16,7 @@ const STEPS = [
   {
     icon: Coins,
     title: "Allocation Grows",
-    description: "Each Agent accumulates according to its configured hourly farming rate.",
+    description: "Each Agent accumulates according to its configured daily farming rate.",
   },
   {
     icon: Wallet,

@@ -21,7 +21,7 @@ const comparators: Record<AgentSortKey, (a: GenesisAgentConfig, b: GenesisAgentC
   {
     price: (a, b) => toNumber(a.price) - toNumber(b.price),
     rarity: (a, b) => RARITY_ORDER[a.rarity] - RARITY_ORDER[b.rarity],
-    "farming-rate": (a, b) => toNumber(a.pulsePerHour) - toNumber(b.pulsePerHour),
+    "farming-rate": (a, b) => toNumber(a.pulsePerDay) - toNumber(b.pulsePerDay),
     supply: (a, b) => a.maxSupply - b.maxSupply,
   };
 

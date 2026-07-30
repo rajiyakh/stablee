@@ -8,10 +8,15 @@
  * this array into, or read it from, getAgent() — that function is relied on
  * by live feed rendering and src/lib/feed/consensus.ts's SPECIALTY_WEIGHT.
  *
- * Every value below (price, supply, wallet limit, farming rate) is an
- * editable starter/pre-launch configuration, not final on-chain truth. See
- * docs/AGENT_ECONOMY_CONFIG.md — prices, supplies, limits, and farming rates
- * must be reviewed before contract deployment.
+ * Every value below (price, supply, farming rate) is an editable
+ * starter/pre-launch configuration, not final on-chain truth. See
+ * docs/AGENT_ECONOMY_CONFIG.md — prices, supplies, and farming rates must be
+ * reviewed before contract deployment. The wallet limit is a single global
+ * cap across all six Agents, not a per-agent value — see
+ * AGENT_HUB_WALLET_LIMIT in src/config/agentHub.ts.
+ *
+ * Farming is displayed to users exclusively as a daily rate ($PULSE/day,
+ * `pulsePerDay`) — never hourly. See docs/AGENT_FARMING_CALCULATION.md.
  */
 
 export type AgentRarity = "Common" | "Uncommon" | "Rare" | "Epic" | "Legendary" | "Mythic";
@@ -31,10 +36,8 @@ export interface GenesisAgentConfig {
   paymentTokenSymbol: string;
 
   maxSupply: number;
-  walletLimit: number;
 
-  pulsePerHour: string;
-  farmingMultiplier: number;
+  pulsePerDay: string;
 
   accent: string;
   secondaryAccent: string;
@@ -59,12 +62,10 @@ export const genesisAgentRegistry: GenesisAgentConfig[] = [
     role: "Momentum Analyst",
     shortDescription: "Reads acceleration, breakouts, and short-term market structure.",
     lore: "Vector reads acceleration, breakouts, and short-term market structure. It is the fastest entry-level Agent in the RobinPulse network.",
-    price: "25",
-    paymentTokenSymbol: "USDG",
+    price: "0.015",
+    paymentTokenSymbol: "ETH",
     maxSupply: 2500,
-    walletLimit: 10,
-    pulsePerHour: "1",
-    farmingMultiplier: 1,
+    pulsePerDay: "75",
     accent: "brand",
     secondaryAccent: "positive",
     avatarPath: "/agents/vector.webp",
@@ -81,12 +82,10 @@ export const genesisAgentRegistry: GenesisAgentConfig[] = [
     role: "Market Attention Analyst",
     shortDescription: "Monitors market attention, search velocity, and narrative shifts.",
     lore: "Echo monitors market attention, search velocity, narrative shifts, and rapidly emerging token activity.",
-    price: "45",
-    paymentTokenSymbol: "USDG",
-    maxSupply: 1800,
-    walletLimit: 8,
-    pulsePerHour: "2",
-    farmingMultiplier: 2,
+    price: "0.05",
+    paymentTokenSymbol: "ETH",
+    maxSupply: 1500,
+    pulsePerDay: "300",
     accent: "agent-cyan",
     secondaryAccent: "positive",
     avatarPath: "/agents/echo.webp",
@@ -103,12 +102,10 @@ export const genesisAgentRegistry: GenesisAgentConfig[] = [
     role: "Risk Intelligence Agent",
     shortDescription: "Evaluates liquidity, volatility, slippage, and downside conditions.",
     lore: "Ledger evaluates liquidity, volatility, slippage, and downside conditions before an opportunity becomes dangerous.",
-    price: "90",
-    paymentTokenSymbol: "USDG",
-    maxSupply: 1000,
-    walletLimit: 5,
-    pulsePerHour: "4",
-    farmingMultiplier: 4,
+    price: "0.10",
+    paymentTokenSymbol: "ETH",
+    maxSupply: 750,
+    pulsePerDay: "900",
     accent: "warning",
     secondaryAccent: "negative",
     avatarPath: "/agents/ledger.webp",
@@ -125,12 +122,10 @@ export const genesisAgentRegistry: GenesisAgentConfig[] = [
     role: "Whale and Liquidity Analyst",
     shortDescription: "Tracks large trades, unusual capital movements, and liquidity migration.",
     lore: "Atlas tracks large trades, unusual capital movements, liquidity migration, and major market participants.",
-    price: "175",
-    paymentTokenSymbol: "USDG",
-    maxSupply: 500,
-    walletLimit: 3,
-    pulsePerHour: "7",
-    farmingMultiplier: 7,
+    price: "0.15",
+    paymentTokenSymbol: "ETH",
+    maxSupply: 300,
+    pulsePerDay: "1500",
     accent: "primary",
     secondaryAccent: "muted-foreground",
     avatarPath: "/agents/atlas.webp",
@@ -147,12 +142,10 @@ export const genesisAgentRegistry: GenesisAgentConfig[] = [
     role: "New Launch Hunter",
     shortDescription: "Scans newly created markets and identifies early meaningful activity.",
     lore: "Nova scans newly created Robinhood Mainnet markets and identifies tokens gaining meaningful activity shortly after launch.",
-    price: "350",
-    paymentTokenSymbol: "USDG",
-    maxSupply: 150,
-    walletLimit: 2,
-    pulsePerHour: "12",
-    farmingMultiplier: 12,
+    price: "0.20",
+    paymentTokenSymbol: "ETH",
+    maxSupply: 100,
+    pulsePerDay: "2100",
     accent: "agent-purple",
     secondaryAccent: "brand",
     avatarPath: "/agents/nova.webp",
@@ -170,12 +163,10 @@ export const genesisAgentRegistry: GenesisAgentConfig[] = [
     shortDescription:
       "Combines momentum, liquidity, risk, attention, and whale activity into one view.",
     lore: "Oracle combines momentum, liquidity, risk, market attention, and whale activity into a high-level intelligence view.",
-    price: "700",
-    paymentTokenSymbol: "USDG",
-    maxSupply: 50,
-    walletLimit: 1,
-    pulsePerHour: "20",
-    farmingMultiplier: 20,
+    price: "0.25",
+    paymentTokenSymbol: "ETH",
+    maxSupply: 25,
+    pulsePerDay: "4000",
     accent: "agent-mythic",
     secondaryAccent: "brand",
     avatarPath: "/agents/oracle.webp",

@@ -1,5 +1,10 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { agentHubConfig, isAgentHubPreviewEnabled } from "./agentHub";
+import {
+  agentHubConfig,
+  AGENT_HUB_WALLET_LIMIT,
+  AGENT_HUB_WALLET_LIMIT_LABEL,
+  isAgentHubPreviewEnabled,
+} from "./agentHub";
 
 describe("agentHubConfig", () => {
   it("defaults to preview mode", () => {
@@ -23,6 +28,16 @@ describe("agentHubConfig", () => {
       "nova",
       "oracle",
     ]);
+  });
+});
+
+describe("AGENT_HUB_WALLET_LIMIT", () => {
+  it("is a single global cap of 5 across all Genesis Agents", () => {
+    expect(AGENT_HUB_WALLET_LIMIT).toBe(5);
+  });
+
+  it("has a label that matches the numeric constant", () => {
+    expect(AGENT_HUB_WALLET_LIMIT_LABEL).toBe("5 Total Genesis Agents");
   });
 });
 

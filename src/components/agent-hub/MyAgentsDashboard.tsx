@@ -32,18 +32,15 @@ export function MyAgentsDashboard({
 
   const activeFarmers = knownPositions.filter((p) => p.position.status === "farming").length;
 
-  const hourlyRateTotal = knownPositions.reduce(
+  const dailyRateTotal = knownPositions.reduce(
     (total, { position, agent }) =>
-      position.status === "farming" ? total + Number(agent.pulsePerHour) : total,
+      position.status === "farming" ? total + Number(agent.pulsePerDay) : total,
     0,
   );
 
   const pendingBaseUnits = sumPendingAllocationBaseUnits(
     knownPositions.map(({ position, agent }) =>
-      calculatePendingAllocationBaseUnits(
-        computeElapsedActiveSeconds(position),
-        agent.pulsePerHour,
-      ),
+      calculatePendingAllocationBaseUnits(computeElapsedActiveSeconds(position), agent.pulsePerDay),
     ),
   );
   const pendingTotal = formatUnits(pendingBaseUnits, pulseTokenDecimals);
@@ -56,7 +53,7 @@ export function MyAgentsDashboard({
   const stats = [
     { label: "My Agents", value: knownPositions.length.toString() },
     { label: "Active Farmers", value: activeFarmers.toString() },
-    { label: "Hourly Farming Rate", value: `${hourlyRateTotal} $PULSE/hr` },
+    { label: "Daily Farming Rate", value: `${dailyRateTotal} $PULSE/day` },
     {
       label: "Pending $PULSE",
       value: `${Number(pendingTotal).toLocaleString(undefined, { maximumFractionDigits: 4 })}`,
@@ -102,7 +99,7 @@ export function MyAgentsDashboard({
                 isWrongNetwork={isWrongNetwork}
                 pendingAmount={calculatePendingAllocation(
                   computeElapsedActiveSeconds(position),
-                  agent.pulsePerHour,
+                  agent.pulsePerDay,
                 )}
               />
             ))}

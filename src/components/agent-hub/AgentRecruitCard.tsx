@@ -3,6 +3,7 @@ import { Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AgentPortraitStage } from "./AgentPortraitStage";
 import { RarityBadge } from "./RarityBadge";
+import { AGENT_HUB_WALLET_LIMIT_LABEL } from "@/config/agentHub";
 import type { GenesisAgentConfig } from "@/config/genesisAgents";
 
 export function AgentRecruitCard({
@@ -42,11 +43,11 @@ export function AgentRecruitCard({
         <div className="rounded-lg bg-secondary/60 px-3 py-2 text-center">
           <p className="flex items-center justify-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
             <Zap className="size-2.5" aria-hidden="true" />
-            Farming rate
+            Daily Farming
           </p>
           <p className="mt-0.5 text-sm font-bold tabular-nums text-foreground">
-            {agent.pulsePerHour}
-            <span className="text-xs font-medium"> $PULSE/hr</span>
+            {agent.pulsePerDay}
+            <span className="text-xs font-medium"> $PULSE/day</span>
           </p>
         </div>
       </div>
@@ -57,7 +58,7 @@ export function AgentRecruitCard({
           {agent.maxSupply.toLocaleString()}
         </dd>
         <dt className="text-muted-foreground">Wallet limit</dt>
-        <dd className="text-right font-medium tabular-nums text-foreground">{agent.walletLimit}</dd>
+        <dd className="text-right font-medium text-foreground">{AGENT_HUB_WALLET_LIMIT_LABEL}</dd>
       </dl>
 
       <div className="mt-4 flex-1" />

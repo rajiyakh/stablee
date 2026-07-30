@@ -37,6 +37,15 @@ export const agentHubConfig = {
 
 export type AgentHubConfig = typeof agentHubConfig;
 
+/**
+ * Single account-wide cap across all six Genesis Agents combined — not a
+ * per-agent limit. No enforcement logic exists yet (see
+ * unconfiguredMintAdapter.ts); this is a display-layer constant only until a
+ * real AgentMintAdapter is wired in.
+ */
+export const AGENT_HUB_WALLET_LIMIT = 5;
+export const AGENT_HUB_WALLET_LIMIT_LABEL = `${AGENT_HUB_WALLET_LIMIT} Total Genesis Agents`;
+
 /** Hard kill-switch — false means the route/nav entry should not exist at all. */
 export function isAgentHubEnabled(): boolean {
   return read("VITE_AGENT_HUB_ENABLED") === "true";

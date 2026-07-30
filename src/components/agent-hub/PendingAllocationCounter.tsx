@@ -7,14 +7,14 @@ import type { OwnedAgentPosition } from "@/lib/agent-hub/types";
 
 export function PendingAllocationCounter({
   position,
-  hourlyRate,
+  dailyRate,
 }: {
   position: Pick<OwnedAgentPosition, "activatedAt" | "lastClaimedAt" | "status">;
-  hourlyRate: string;
+  dailyRate: string;
 }) {
   const now = usePendingAllocationTicker();
   const elapsedSeconds = computeElapsedActiveSeconds(position, now);
-  const pending = calculatePendingAllocation(elapsedSeconds, hourlyRate);
+  const pending = calculatePendingAllocation(elapsedSeconds, dailyRate);
 
   return (
     <div className="flex items-center gap-1.5" aria-live="polite">

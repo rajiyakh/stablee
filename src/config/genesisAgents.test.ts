@@ -18,21 +18,20 @@ describe("genesisAgentRegistry", () => {
     expect(names).toEqual(["Atlas", "Echo", "Ledger", "Nova", "Oracle", "Vector"].sort());
   });
 
-  it("every agent has a non-empty price, positive supply and wallet limit", () => {
+  it("every agent has a non-empty price and positive supply and daily farming rate", () => {
     for (const agent of genesisAgentRegistry) {
       expect(Number(agent.price)).toBeGreaterThan(0);
       expect(agent.maxSupply).toBeGreaterThan(0);
-      expect(agent.walletLimit).toBeGreaterThan(0);
-      expect(Number(agent.pulsePerHour)).toBeGreaterThan(0);
+      expect(Number(agent.pulsePerDay)).toBeGreaterThan(0);
       expect(agent.avatarPath).toMatch(/^\/agents\/.+\.webp$/);
     }
   });
 
-  it("higher rarity tiers farm at a higher hourly rate (economics stay internally consistent)", () => {
+  it("higher rarity tiers farm at a higher daily rate (economics stay internally consistent)", () => {
     const bySupply = [...genesisAgentRegistry].sort((a, b) => b.maxSupply - a.maxSupply);
     for (let i = 1; i < bySupply.length; i++) {
-      expect(Number(bySupply[i].pulsePerHour)).toBeGreaterThanOrEqual(
-        Number(bySupply[i - 1].pulsePerHour),
+      expect(Number(bySupply[i].pulsePerDay)).toBeGreaterThanOrEqual(
+        Number(bySupply[i - 1].pulsePerDay),
       );
     }
   });

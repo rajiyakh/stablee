@@ -14,7 +14,7 @@ export function AgentGrid({
       <SectionHeading
         eyebrow="Genesis Collection"
         title="Six Genesis Agents"
-        description="Each Agent has a fixed maximum supply, a wallet limit, and a configured hourly $PULSE farming rate."
+        description="Each Agent has a fixed maximum supply, a shared wallet limit, and a configured daily $PULSE farming rate."
       />
       <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {agents.map((agent) => (

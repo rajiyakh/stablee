@@ -11,6 +11,7 @@ import { AgentPortrait } from "./AgentPortrait";
 import { RarityBadge } from "./RarityBadge";
 import { ContractStatusBadge } from "./ContractStatusBadge";
 import { isAgentHubContractsConfigured } from "@/config/contracts";
+import { AGENT_HUB_WALLET_LIMIT_LABEL } from "@/config/agentHub";
 import type { GenesisAgentConfig } from "@/config/genesisAgents";
 
 export function RecruitmentConfirmationModal({
@@ -59,14 +60,12 @@ export function RecruitmentConfirmationModal({
           <dd className="text-right font-semibold tabular-nums text-foreground">
             {totalPrice} {agent.paymentTokenSymbol}
           </dd>
-          <dt className="text-muted-foreground">Hourly $PULSE rate</dt>
-          <dd className="text-right tabular-nums text-foreground">{agent.pulsePerHour}</dd>
-          <dt className="text-muted-foreground">Combined farming rate</dt>
+          <dt className="text-muted-foreground">Daily Farming</dt>
           <dd className="text-right tabular-nums text-foreground">
-            {(Number(agent.pulsePerHour) * quantity).toString()} $PULSE/hr
+            {agent.pulsePerDay} $PULSE/day
           </dd>
           <dt className="text-muted-foreground">Wallet limit</dt>
-          <dd className="text-right tabular-nums text-foreground">{agent.walletLimit}</dd>
+          <dd className="text-right text-foreground">{AGENT_HUB_WALLET_LIMIT_LABEL}</dd>
           <dt className="text-muted-foreground">Maximum supply</dt>
           <dd className="text-right tabular-nums text-foreground">
             {agent.maxSupply.toLocaleString()}

@@ -53,8 +53,8 @@ export function OwnedAgentCard({
             <dd className="text-foreground">{relativeTime(position.activatedAt)}</dd>
           </div>
           <div>
-            <dt className="uppercase tracking-wide">Hourly rate</dt>
-            <dd className="text-foreground">{agent.pulsePerHour} $PULSE/hr</dd>
+            <dt className="uppercase tracking-wide">Daily rate</dt>
+            <dd className="text-foreground">{agent.pulsePerDay} $PULSE/day</dd>
           </div>
           <div>
             <dt className="uppercase tracking-wide">Claimed</dt>
@@ -63,7 +63,7 @@ export function OwnedAgentCard({
         </dl>
 
         <div className="mt-2">
-          <PendingAllocationCounter position={position} hourlyRate={agent.pulsePerHour} />
+          <PendingAllocationCounter position={position} dailyRate={agent.pulsePerDay} />
         </div>
       </div>
 

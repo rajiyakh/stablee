@@ -23,7 +23,7 @@ describe("sortGenesisAgents", () => {
 
   it("sorts by farming rate", () => {
     const sorted = sortGenesisAgents(genesisAgentRegistry, "farming-rate", "asc");
-    const rates = sorted.map((a) => Number(a.pulsePerHour));
+    const rates = sorted.map((a) => Number(a.pulsePerDay));
     expect(rates).toEqual([...rates].sort((a, b) => a - b));
   });
 

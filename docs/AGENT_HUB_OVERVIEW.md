@@ -1,6 +1,6 @@
 # Agent Hub Overview
 
-Agent Hub (`/app/agents-hub`) is a pre-TGE (Token Generation Event) preview of RobinPulse's collectible AI-agent / $PULSE-farming product. Six Genesis Agents can eventually be recruited for a fixed price; once recruited, each continuously accumulates future $PULSE allocation at its configured hourly rate. Nothing on this page is live yet — no wallet-gated purchases, no real farming, no real $PULSE exist today.
+Agent Hub (`/app/agents-hub`) is a pre-TGE (Token Generation Event) preview of RobinPulse's collectible AI-agent / $PULSE-farming product. Six Genesis Agents can eventually be recruited for a fixed price; once recruited, each continuously accumulates future $PULSE allocation at its configured daily rate. Nothing on this page is live yet — no wallet-gated purchases, no real farming, no real $PULSE exist today. Every wallet is capped at 5 Genesis Agents total (not per-agent) — see `AGENT_HUB_WALLET_LIMIT` in `src/config/agentHub.ts`.
 
 ## Where everything lives
 

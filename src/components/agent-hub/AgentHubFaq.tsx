@@ -28,7 +28,7 @@ const FAQ_ITEMS = [
   {
     question: "How is allocation calculated?",
     answer:
-      "Allocation is based on active farming duration and the Agent's configured hourly farming rate, subject to the final deployed system.",
+      "Allocation is based on active farming duration and the Agent's configured daily farming rate, subject to the final deployed system.",
   },
   {
     question: "Will distribution use a smart contract?",

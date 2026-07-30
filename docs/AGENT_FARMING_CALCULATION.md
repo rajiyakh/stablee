@@ -5,14 +5,16 @@ The farming math lives at `src/lib/agent-hub/calculatePendingAllocation.ts` and 
 ## The formula
 
 ```
-pending = elapsedActiveSeconds × hourlyRate ÷ 3600
+pending = elapsedActiveSeconds × dailyRate ÷ 86400
 ```
+
+Farming is displayed to users **exclusively as a daily rate** — never "Hourly Farming," "PULSE/hour," or "Hourly Rate." The formula itself still operates on elapsed seconds internally (accruing continuously, not in daily lump sums), so a position's pending balance still ticks up smoothly second-by-second — only the configured _rate_ and its label are daily now.
 
 ## Decimal safety
 
 Every calculation happens in BigInt base units via viem's `parseUnits`/`formatUnits` against `pulseTokenDecimals` (`src/config/genesisAgents.ts`, currently `18`, editable once the real $PULSE token's decimals are known) — this app never uses JavaScript floating-point arithmetic for a final token amount, matching the existing convention in `src/lib/swap/decimals.test.ts`.
 
-- `calculatePendingAllocationBaseUnits(elapsedActiveSeconds, hourlyRate, decimals)` → `bigint`
+- `calculatePendingAllocationBaseUnits(elapsedActiveSeconds, dailyRate, decimals)` → `bigint`
 - `calculatePendingAllocation(...)` → formatted decimal string, for display
 - `sumPendingAllocationBaseUnits(amounts: bigint[])` → sums multiple positions in base-unit space. **Always sum before formatting** — never sum already-formatted decimal strings, which reintroduces float rounding.
 

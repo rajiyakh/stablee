@@ -8,6 +8,7 @@ import { AgentPortraitStage } from "@/components/agent-hub/AgentPortraitStage";
 import { RarityBadge } from "@/components/agent-hub/RarityBadge";
 import { RecruitmentConfirmationModal } from "@/components/agent-hub/RecruitmentConfirmationModal";
 import { enabledGenesisAgents, getGenesisAgent } from "@/config/genesisAgents";
+import { AGENT_HUB_WALLET_LIMIT_LABEL } from "@/config/agentHub";
 
 export const Route = createFileRoute("/app/agents-hub/$slug")({
   head: ({ params }) => {
@@ -73,10 +74,10 @@ function GenesisAgentDetailPage() {
             </div>
             <div>
               <dt className="text-xs uppercase tracking-wide text-muted-foreground">
-                Farming rate
+                Daily Farming
               </dt>
               <dd className="mt-1 font-semibold tabular-nums text-foreground">
-                {agent.pulsePerHour} $PULSE/hr
+                {agent.pulsePerDay} $PULSE/day
               </dd>
             </div>
             <div>
@@ -91,9 +92,7 @@ function GenesisAgentDetailPage() {
               <dt className="text-xs uppercase tracking-wide text-muted-foreground">
                 Wallet limit
               </dt>
-              <dd className="mt-1 font-semibold tabular-nums text-foreground">
-                {agent.walletLimit}
-              </dd>
+              <dd className="mt-1 font-semibold text-foreground">{AGENT_HUB_WALLET_LIMIT_LABEL}</dd>
             </div>
           </dl>
 
@@ -120,10 +119,9 @@ function GenesisAgentDetailPage() {
             <h2 className="text-sm font-semibold text-foreground">Farming overview</h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               Once recruited, {agent.name} continuously accumulates future $PULSE allocation at{" "}
-              {agent.pulsePerHour} $PULSE per hour ({agent.farmingMultiplier}x multiplier), starting
-              from its activation timestamp. Accumulated allocation remains locked until the
-              official Token Generation Event and claim activation — recruitment is not currently
-              live.
+              {agent.pulsePerDay} $PULSE per day, starting from its activation timestamp.
+              Accumulated allocation remains locked until the official Token Generation Event and
+              claim activation — recruitment is not currently live.
             </p>
           </section>
 

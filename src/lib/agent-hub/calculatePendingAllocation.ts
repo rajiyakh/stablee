@@ -1,8 +1,10 @@
 import { formatUnits, parseUnits } from "viem";
 import { pulseTokenDecimals } from "@/config/genesisAgents";
 
+const SECONDS_PER_DAY = 86400n;
+
 /**
- * pending = elapsedActiveSeconds × hourlyRate ÷ 3600, computed entirely in
+ * pending = elapsedActiveSeconds × dailyRate ÷ 86400, computed entirely in
  * BigInt base units — never JavaScript floating point — matching this
  * codebase's existing convention for token amounts (see src/lib/swap/decimals.test.ts).
  * Returns base units so multiple positions can be summed exactly before a
@@ -10,23 +12,23 @@ import { pulseTokenDecimals } from "@/config/genesisAgents";
  */
 export function calculatePendingAllocationBaseUnits(
   elapsedActiveSeconds: number,
-  hourlyRate: string,
+  dailyRate: string,
   decimals: number = pulseTokenDecimals,
 ): bigint {
   if (elapsedActiveSeconds <= 0) return 0n;
-  const hourlyRateBaseUnits = parseUnits(hourlyRate, decimals);
+  const dailyRateBaseUnits = parseUnits(dailyRate, decimals);
   const elapsedSecondsBigint = BigInt(Math.floor(elapsedActiveSeconds));
-  return (hourlyRateBaseUnits * elapsedSecondsBigint) / 3600n;
+  return (dailyRateBaseUnits * elapsedSecondsBigint) / SECONDS_PER_DAY;
 }
 
 /** Display-formatted convenience wrapper around calculatePendingAllocationBaseUnits. */
 export function calculatePendingAllocation(
   elapsedActiveSeconds: number,
-  hourlyRate: string,
+  dailyRate: string,
   decimals: number = pulseTokenDecimals,
 ): string {
   return formatUnits(
-    calculatePendingAllocationBaseUnits(elapsedActiveSeconds, hourlyRate, decimals),
+    calculatePendingAllocationBaseUnits(elapsedActiveSeconds, dailyRate, decimals),
     decimals,
   );
 }
