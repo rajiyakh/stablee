@@ -4,7 +4,7 @@ import { PageContainer } from "@/components/layout/AppShell";
 import { EmptyState } from "@/components/common/EmptyState";
 import { Button } from "@/components/ui/button";
 import { AgentPortrait } from "@/components/agent-hub/AgentPortrait";
-import { RarityFrame } from "@/components/agent-hub/RarityFrame";
+import { AgentPortraitStage } from "@/components/agent-hub/AgentPortraitStage";
 import { RarityBadge } from "@/components/agent-hub/RarityBadge";
 import { RecruitmentConfirmationModal } from "@/components/agent-hub/RecruitmentConfirmationModal";
 import { enabledGenesisAgents, getGenesisAgent } from "@/config/genesisAgents";
@@ -51,9 +51,7 @@ function GenesisAgentDetailPage() {
     <PageContainer>
       <div className="grid gap-8 lg:grid-cols-[280px_1fr]">
         <div className="mx-auto lg:mx-0">
-          <RarityFrame rarity={agent.rarity}>
-            <AgentPortrait src={agent.avatarPath} name={agent.name} size="xl" />
-          </RarityFrame>
+          <AgentPortraitStage agent={agent} size="xl" />
         </div>
 
         <div>

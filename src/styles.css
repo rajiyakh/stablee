@@ -380,6 +380,74 @@
   animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* Agent Hub portrait motion layer — see AgentPortraitStage.tsx. All of these
+   are automatically collapsed by the prefers-reduced-motion block below. */
+@keyframes agent-glow-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.04);
+  }
+}
+
+@utility animate-agent-glow {
+  animation: agent-glow-pulse 4s ease-in-out infinite;
+}
+
+@keyframes agent-ken-burns {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@utility animate-agent-zoom {
+  animation: agent-ken-burns 10s ease-in-out infinite;
+}
+
+@keyframes agent-rim-sweep {
+  0%,
+  60%,
+  100% {
+    transform: translateX(-120%) skewX(-20deg);
+    opacity: 0;
+  }
+  70% {
+    opacity: 0.55;
+  }
+  85% {
+    transform: translateX(120%) skewX(-20deg);
+    opacity: 0;
+  }
+}
+
+@utility animate-agent-sweep {
+  animation: agent-rim-sweep 5s ease-in-out infinite;
+}
+
+@keyframes agent-particle-float {
+  0%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(var(--particle-x, 6px), var(--particle-y, -10px));
+    opacity: 1;
+  }
+}
+
+@utility animate-agent-particle {
+  animation: agent-particle-float 3.6s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

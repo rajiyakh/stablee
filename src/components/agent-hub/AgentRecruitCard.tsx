@@ -1,24 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AgentPortrait } from "./AgentPortrait";
-import { RarityFrame } from "./RarityFrame";
+import { AgentPortraitStage } from "./AgentPortraitStage";
 import { RarityBadge } from "./RarityBadge";
 import type { GenesisAgentConfig } from "@/config/genesisAgents";
-
-/** Maps each agent's bespoke accent token to a real CSS color for the portrait glow — same token names used by RarityBadge/RarityFrame's rarity map, just applied per-agent instead of per-tier. */
-const ACCENT_COLOR: Record<string, string> = {
-  primary: "var(--color-primary)",
-  brand: "var(--color-brand)",
-  positive: "var(--color-positive)",
-  warning: "var(--color-warning)",
-  negative: "var(--color-negative)",
-  "muted-foreground": "var(--color-muted-foreground)",
-  "agent-cyan": "var(--color-agent-cyan)",
-  "agent-purple": "var(--color-agent-purple)",
-  "agent-gold": "var(--color-agent-gold)",
-  "agent-mythic": "var(--color-agent-mythic)",
-};
 
 export function AgentRecruitCard({
   agent,
@@ -27,22 +12,10 @@ export function AgentRecruitCard({
   agent: GenesisAgentConfig;
   onRecruitClick: (agent: GenesisAgentConfig) => void;
 }) {
-  const glow = ACCENT_COLOR[agent.accent] ?? ACCENT_COLOR.primary;
-
   return (
     <article className="group flex h-full flex-col rounded-2xl border border-border bg-card p-5 transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-xl">
-      <div className="relative flex items-start justify-center">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -z-10 opacity-60 transition-opacity duration-300 group-hover:opacity-100"
-          style={{
-            background: `radial-gradient(circle at 50% 40%, ${glow} 0%, transparent 65%)`,
-            filter: "blur(6px)",
-          }}
-        />
-        <RarityFrame rarity={agent.rarity}>
-          <AgentPortrait src={agent.avatarPath} name={agent.name} size="md" />
-        </RarityFrame>
+      <div className="flex items-start justify-center">
+        <AgentPortraitStage agent={agent} size="md" />
       </div>
 
       <div className="mt-4 text-center">
