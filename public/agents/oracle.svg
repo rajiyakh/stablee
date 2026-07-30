@@ -1,9 +1,9 @@
-<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="oracle-title">
+<svg viewBox="0 0 512 768" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="oracle-title">
   <title id="oracle-title">Oracle — Genesis Agent portrait</title>
   <style>
-    .oracle-eye { animation: oracle-blink 5s ease-in-out infinite; transform-origin: 256px 268px; }
-    .oracle-ring-a { animation: oracle-spin-a 9s linear infinite; transform-origin: 256px 268px; }
-    .oracle-ring-b { animation: oracle-spin-b 12s linear infinite; transform-origin: 256px 268px; }
+    .oracle-eye { animation: oracle-blink 5s ease-in-out infinite; transform-origin: 256px 360px; }
+    .oracle-ring-a { animation: oracle-spin-a 9s linear infinite; transform-origin: 256px 360px; }
+    .oracle-ring-b { animation: oracle-spin-b 12s linear infinite; transform-origin: 256px 360px; }
     @keyframes oracle-blink {
       0%, 90%, 100% { transform: scaleY(1); }
       94% { transform: scaleY(0.1); }
@@ -15,33 +15,74 @@
     }
   </style>
 
-  <!-- collar -->
-  <path d="M186 384 L326 384 L300 434 L212 434 Z" fill="#B9A23A" />
+  <defs>
+    <linearGradient id="o-metal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F7E7A8" />
+      <stop offset="50%" stop-color="#DCB35F" />
+      <stop offset="100%" stop-color="#9C7A28" />
+    </linearGradient>
+    <linearGradient id="o-shade" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#14251C" stop-opacity="0" />
+      <stop offset="100%" stop-color="#14251C" stop-opacity="0.28" />
+    </linearGradient>
+    <radialGradient id="o-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFDF0" />
+      <stop offset="50%" stop-color="#EBDB6B" />
+      <stop offset="100%" stop-color="#C8F135" />
+    </radialGradient>
+    <linearGradient id="o-cloak" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFDF7" />
+      <stop offset="100%" stop-color="#E9E0C6" />
+    </linearGradient>
+    <filter id="o-shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="20" stdDeviation="20" flood-color="#14251C" flood-opacity="0.22" />
+    </filter>
+  </defs>
 
-  <!-- crown points -->
-  <g fill="#DCB35F">
-    <path d="M256 62 L272 118 L240 118 Z" />
-    <path d="M186 82 L212 132 L178 140 Z" />
-    <path d="M326 82 L300 132 L334 140 Z" />
+  <g filter="url(#o-shadow)">
+    <!-- ceremonial cloaked shoulders -->
+    <path
+      d="M70 768 L86 566 C 94 500, 156 456, 224 444 L 288 444 C 356 456, 418 500, 426 566 L 442 768 Z"
+      fill="url(#o-cloak)"
+    />
+    <path d="M70 768 L86 566 C 94 500, 156 456, 224 444 L 256 444 L 256 768 Z" fill="#DCB35F" opacity="0.16" />
+    <path d="M112 560 L400 560 L392 768 L120 768 Z" fill="#B9A23A" opacity="0.12" />
+
+    <!-- gold collar -->
+    <path d="M198 448 L314 448 L292 496 L220 496 Z" fill="#B9A23A" />
+    <path d="M198 448 L314 448 L292 496 L220 496 Z" fill="none" stroke="#F7E7A8" stroke-width="1.5" opacity="0.5" />
+
+    <!-- crown points -->
+    <g fill="url(#o-metal)">
+      <path d="M256 118 L276 190 L236 190 Z" />
+      <path d="M172 146 L204 210 L162 220 Z" />
+      <path d="M340 146 L308 210 L350 220 Z" />
+    </g>
+    <g stroke="#9C7A28" stroke-width="1.5" opacity="0.5" fill="none">
+      <path d="M256 118 L276 190 L236 190 Z" />
+      <path d="M172 146 L204 210 L162 220 Z" />
+      <path d="M340 146 L308 210 L350 220 Z" />
+    </g>
+
+    <!-- rounded head -->
+    <circle cx="256" cy="360" r="128" fill="url(#o-metal)" />
+    <circle cx="256" cy="360" r="128" fill="url(#o-shade)" />
+    <circle cx="256" cy="360" r="128" fill="none" stroke="#FFFDF0" stroke-width="3" opacity="0.55" />
+
+    <!-- holographic multi-layer rings -->
+    <circle class="oracle-ring-a" cx="256" cy="360" r="96" fill="none" stroke="#C8F135" stroke-width="3" stroke-dasharray="6 10" opacity="0.65" />
+    <circle class="oracle-ring-b" cx="256" cy="360" r="76" fill="none" stroke="#FFFDF0" stroke-width="3" stroke-dasharray="4 8" opacity="0.7" />
+
+    <!-- central holographic eye -->
+    <circle cx="256" cy="360" r="56" fill="#14251C" opacity="0.5" />
+    <g class="oracle-eye">
+      <circle cx="256" cy="360" r="50" fill="#14251C" opacity="0.92" />
+      <circle cx="256" cy="360" r="30" fill="url(#o-glow)" />
+      <circle cx="256" cy="360" r="14" fill="#FFFDF0" />
+    </g>
+
+    <!-- side facets -->
+    <path d="M126 360 L108 340 L108 380 Z" fill="url(#o-metal)" />
+    <path d="M386 360 L404 340 L404 380 Z" fill="url(#o-metal)" />
   </g>
-
-  <!-- rounded head -->
-  <circle cx="256" cy="268" r="128" fill="#DCB35F" />
-  <circle cx="256" cy="268" r="128" fill="#B9A23A" opacity="0.14" />
-  <circle cx="256" cy="268" r="128" fill="none" stroke="#EEF1E8" stroke-width="4" opacity="0.5" />
-
-  <!-- holographic multi-layer rings -->
-  <circle class="oracle-ring-a" cx="256" cy="268" r="96" fill="none" stroke="#C8F135" stroke-width="3" stroke-dasharray="6 10" opacity="0.6" />
-  <circle class="oracle-ring-b" cx="256" cy="268" r="76" fill="none" stroke="#EEF1E8" stroke-width="3" stroke-dasharray="4 8" opacity="0.7" />
-
-  <!-- central holographic eye -->
-  <g class="oracle-eye">
-    <circle cx="256" cy="268" r="50" fill="#14251C" opacity="0.88" />
-    <circle cx="256" cy="268" r="30" fill="#C8F135" opacity="0.5" />
-    <circle cx="256" cy="268" r="14" fill="#EEF1E8" />
-  </g>
-
-  <!-- side facets -->
-  <path d="M128 268 L112 250 L112 286 Z" fill="#DCB35F" />
-  <path d="M384 268 L400 250 L400 286 Z" fill="#DCB35F" />
 </svg>

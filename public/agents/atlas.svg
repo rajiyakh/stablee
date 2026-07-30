@@ -1,60 +1,100 @@
-<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="atlas-title">
+<svg viewBox="0 0 512 768" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="atlas-title">
   <title id="atlas-title">Atlas — Genesis Agent portrait</title>
   <style>
-    .atlas-eye { animation: atlas-blink 6.4s ease-in-out infinite; transform-origin: 256px 252px; }
-    .atlas-scan { animation: atlas-scan 3.6s ease-in-out infinite; transform-origin: 256px 252px; }
+    .atlas-eye { animation: atlas-blink 6.4s ease-in-out infinite; transform-origin: 256px 330px; }
+    .atlas-scan { animation: atlas-scan 3.6s ease-in-out infinite; transform-origin: 256px 330px; }
     @keyframes atlas-blink {
       0%, 92%, 100% { transform: scaleY(1); }
       96% { transform: scaleY(0.12); }
     }
     @keyframes atlas-scan {
       0%, 100% { opacity: 0.5; }
-      50% { opacity: 0.9; }
+      50% { opacity: 0.95; }
     }
     @media (prefers-reduced-motion: reduce) {
       .atlas-eye, .atlas-scan { animation: none; }
     }
   </style>
 
-  <!-- broad collar -->
-  <path d="M170 372 L342 372 L318 424 L194 424 Z" fill="#1B5E3C" />
+  <defs>
+    <linearGradient id="a-metal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#82C79E" />
+      <stop offset="50%" stop-color="#3E8A63" />
+      <stop offset="100%" stop-color="#12432B" />
+    </linearGradient>
+    <linearGradient id="a-shade" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#14251C" stop-opacity="0" />
+      <stop offset="100%" stop-color="#14251C" stop-opacity="0.34" />
+    </linearGradient>
+    <radialGradient id="a-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F5FFCF" />
+      <stop offset="55%" stop-color="#8FBF9F" />
+      <stop offset="100%" stop-color="#3E8A63" />
+    </radialGradient>
+    <filter id="a-shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="20" stdDeviation="20" flood-color="#14251C" flood-opacity="0.24" />
+    </filter>
+  </defs>
 
-  <!-- heavy hexagonal head -->
-  <path
-    d="M256 90
-       L370 148
-       L392 262
-       L326 366
-       L186 366
-       L120 262
-       L142 148
-       Z"
-    fill="#3E8A63"
-  />
-  <path
-    d="M256 90 L370 148 L392 262 L326 366 L256 366 Z"
-    fill="#1B5E3C"
-    opacity="0.18"
-  />
-  <path
-    d="M256 90 L370 148 L392 262 L326 366 L186 366 L120 262 L142 148 Z"
-    fill="none"
-    stroke="#1B5E3C"
-    stroke-width="6"
-    opacity="0.3"
-  />
+  <g filter="url(#a-shadow)">
+    <!-- broad heavy shoulders / torso -->
+    <path
+      d="M70 768 L84 548 C 92 486, 148 444, 214 432 L 298 432 C 364 444, 420 486, 428 548 L 442 768 Z"
+      fill="url(#a-metal)"
+    />
+    <path d="M70 768 L84 548 C 92 486, 148 444, 214 432 L 256 432 L 256 768 Z" fill="url(#a-shade)" />
+    <path d="M196 434 L316 434 L300 540 L212 540 Z" fill="#12432B" opacity="0.35" />
+    <path d="M196 434 L316 434 L300 540 L212 540 Z" fill="none" stroke="#82C79E" stroke-width="2" opacity="0.4" />
 
-  <!-- plating seams -->
-  <g stroke="#1B5E3C" stroke-width="4" opacity="0.35">
-    <line x1="142" y1="148" x2="186" y2="366" />
-    <line x1="370" y1="148" x2="326" y2="366" />
-  </g>
+    <!-- broad collar -->
+    <path d="M180 400 L332 400 L308 442 L204 442 Z" fill="#1B5E3C" />
 
-  <!-- large scanning lens -->
-  <circle class="atlas-scan" cx="256" cy="252" r="86" fill="none" stroke="#C8F135" stroke-width="6" opacity="0.6" />
-  <g class="atlas-eye">
-    <circle cx="256" cy="252" r="66" fill="#14251C" opacity="0.88" />
-    <circle cx="256" cy="252" r="30" fill="#8FBF9F" opacity="0.9" />
-    <circle cx="256" cy="252" r="12" fill="#EEF1E8" />
+    <!-- heavy hexagonal head -->
+    <path
+      d="M256 96
+         L378 158
+         L402 284
+         L330 400
+         L182 400
+         L110 284
+         L134 158
+         Z"
+      fill="url(#a-metal)"
+    />
+    <path
+      d="M256 96 L378 158 L402 284 L330 400 L256 400 Z"
+      fill="url(#a-shade)"
+    />
+    <path
+      d="M256 96 L378 158 L402 284 L330 400 L182 400 L110 284 L134 158 Z"
+      fill="none"
+      stroke="#12432B"
+      stroke-width="6"
+      opacity="0.32"
+    />
+    <path
+      d="M256 96 L378 158 L402 284 L330 400 L182 400 L110 284 L134 158 Z"
+      fill="none"
+      stroke="#C9F0D8"
+      stroke-width="2"
+      opacity="0.4"
+    />
+
+    <!-- plating seams -->
+    <g stroke="#12432B" stroke-width="4" opacity="0.4">
+      <line x1="134" y1="158" x2="182" y2="400" />
+      <line x1="378" y1="158" x2="330" y2="400" />
+    </g>
+
+    <!-- lens housing -->
+    <circle cx="256" cy="330" r="98" fill="#12432B" opacity="0.5" />
+
+    <!-- large scanning lens -->
+    <circle class="atlas-scan" cx="256" cy="330" r="86" fill="none" stroke="#C8F135" stroke-width="6" opacity="0.65" />
+    <g class="atlas-eye">
+      <circle cx="256" cy="330" r="66" fill="#14251C" opacity="0.9" />
+      <circle cx="256" cy="330" r="30" fill="url(#a-glow)" />
+      <circle cx="256" cy="330" r="12" fill="#F5FFCF" />
+    </g>
   </g>
 </svg>

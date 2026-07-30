@@ -1,9 +1,9 @@
-<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ledger-title">
+<svg viewBox="0 0 512 768" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ledger-title">
   <title id="ledger-title">Ledger — Genesis Agent portrait</title>
   <style>
     .ledger-eye { animation: ledger-blink 5.8s ease-in-out infinite; transform-origin: center; }
-    .ledger-eye-l { transform-origin: 210px 244px; }
-    .ledger-eye-r { transform-origin: 302px 244px; animation-delay: 0.05s; }
+    .ledger-eye-l { transform-origin: 210px 316px; }
+    .ledger-eye-r { transform-origin: 302px 316px; animation-delay: 0.05s; }
     @keyframes ledger-blink {
       0%, 91%, 100% { transform: scaleY(1); }
       95% { transform: scaleY(0.1); }
@@ -13,47 +13,88 @@
     }
   </style>
 
-  <!-- collar -->
-  <path d="M192 366 L320 366 L296 412 L216 412 Z" fill="#B97F2E" />
+  <defs>
+    <linearGradient id="l-metal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F0D492" />
+      <stop offset="50%" stop-color="#D9AF5C" />
+      <stop offset="100%" stop-color="#9C6F26" />
+    </linearGradient>
+    <linearGradient id="l-shade" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#14251C" stop-opacity="0" />
+      <stop offset="100%" stop-color="#14251C" stop-opacity="0.3" />
+    </linearGradient>
+    <filter id="l-shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#14251C" flood-opacity="0.22" />
+    </filter>
+  </defs>
 
-  <!-- shield head -->
-  <path
-    d="M256 92
-       L364 130
-       L364 244
-       C 364 316, 316 358, 256 388
-       C 196 358, 148 316, 148 244
-       L 148 130
-       Z"
-    fill="#D9AF5C"
-  />
-  <path
-    d="M256 92 L364 130 L364 244 C 364 316, 316 358, 256 388 Z"
-    fill="#B97F2E"
-    opacity="0.15"
-  />
-  <path
-    d="M256 92 L364 130 L364 244 C 364 316, 316 358, 256 388 C 196 358, 148 316, 148 244 L 148 130 Z"
-    fill="none"
-    stroke="#B97F2E"
-    stroke-width="6"
-    opacity="0.35"
-  />
+  <g filter="url(#l-shadow)">
+    <!-- shoulders / torso -->
+    <path
+      d="M90 768 L102 562 C 108 506, 156 468, 212 456 L 300 456 C 356 468, 404 506, 410 562 L 422 768 Z"
+      fill="url(#l-metal)"
+    />
+    <path d="M90 768 L102 562 C 108 506, 156 468, 212 456 L 256 456 L 256 768 Z" fill="url(#l-shade)" />
+    <path d="M226 458 L286 458 L280 540 L232 540 Z" fill="#14251C" opacity="0.22" />
 
-  <!-- analytical diamond eyes -->
-  <g class="ledger-eye ledger-eye-l">
-    <path d="M210 214 L232 244 L210 274 L188 244 Z" fill="#14251C" opacity="0.85" />
+    <!-- collar -->
+    <path d="M198 438 L314 438 L292 484 L220 484 Z" fill="#B97F2E" />
+
+    <!-- shield head -->
+    <path
+      d="M256 100
+         L378 142
+         L378 268
+         C 378 344, 326 390, 256 422
+         C 186 390, 134 344, 134 268
+         L 134 142
+         Z"
+      fill="url(#l-metal)"
+    />
+    <path
+      d="M256 100 L378 142 L378 268 C 378 344, 326 390, 256 422 Z"
+      fill="url(#l-shade)"
+    />
+    <path
+      d="M256 100 L378 142 L378 268 C 378 344, 326 390, 256 422 C 186 390, 134 344, 134 268 L 134 142 Z"
+      fill="none"
+      stroke="#F0D492"
+      stroke-width="2.5"
+      opacity="0.55"
+    />
+    <path
+      d="M256 100 L378 142 L378 268 C 378 344, 326 390, 256 422 C 186 390, 134 344, 134 268 L 134 142 Z"
+      fill="none"
+      stroke="#7A5518"
+      stroke-width="6"
+      opacity="0.3"
+    />
+
+    <!-- rivets -->
+    <g fill="#7A5518" opacity="0.5">
+      <circle cx="164" cy="168" r="4" />
+      <circle cx="348" cy="168" r="4" />
+      <circle cx="152" cy="260" r="4" />
+      <circle cx="360" cy="260" r="4" />
+    </g>
+
+    <!-- analytical diamond eyes -->
+    <g class="ledger-eye ledger-eye-l">
+      <path d="M210 282 L236 316 L210 350 L184 316 Z" fill="#14251C" opacity="0.88" />
+      <path d="M210 282 L236 316 L210 350 L184 316 Z" fill="none" stroke="#D9AF5C" stroke-width="1.5" opacity="0.4" />
+    </g>
+    <g class="ledger-eye ledger-eye-r">
+      <path d="M302 282 L328 316 L302 350 L276 316 Z" fill="#14251C" opacity="0.88" />
+      <path d="M302 282 L328 316 L302 350 L276 316 Z" fill="none" stroke="#D9AF5C" stroke-width="1.5" opacity="0.4" />
+    </g>
+
+    <!-- risk indicator ticks -->
+    <g fill="#D35C52">
+      <path d="M184 188 L200 188 L192 172 Z" />
+      <path d="M312 188 L328 188 L320 172 Z" />
+    </g>
+
+    <!-- bridge -->
+    <rect x="246" y="310" width="20" height="9" rx="4" fill="#14251C" opacity="0.5" />
   </g>
-  <g class="ledger-eye ledger-eye-r">
-    <path d="M302 214 L324 244 L302 274 L280 244 Z" fill="#14251C" opacity="0.85" />
-  </g>
-
-  <!-- risk indicator ticks -->
-  <g fill="#D35C52">
-    <path d="M186 152 L200 152 L193 138 Z" />
-    <path d="M312 152 L326 152 L319 138 Z" />
-  </g>
-
-  <!-- bridge -->
-  <rect x="246" y="240" width="20" height="8" rx="4" fill="#14251C" opacity="0.5" />
 </svg>
