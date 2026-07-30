@@ -48,17 +48,12 @@ function AgentsHubPage() {
       <div className="space-y-16">
         <AgentHubHero />
 
-        <section className="mx-auto max-w-3xl text-center">
-          <p className="text-sm leading-relaxed text-muted-foreground">
-            Agent Hub is currently in a pre-TGE preview. Genesis Agents will eventually be
-            recruitable in exchange for a fixed price, after which they begin continuously
-            accumulating future $PULSE allocation at their configured hourly rate. No wallet
-            connection, payment, or on-chain transaction happens anywhere on this page today —
-            everything below reflects the platform's current, honest status.
-          </p>
-        </section>
-
         <AgentGrid agents={agents} onRecruitClick={setRecruitTarget} />
+
+        <p className="mx-auto -mt-10 max-w-2xl text-center text-xs leading-relaxed text-muted-foreground">
+          Agent Hub is in a pre-TGE preview — recruitment isn't live yet, so no wallet connection,
+          payment, or on-chain transaction happens anywhere on this page today.
+        </p>
 
         <AgentComparisonTable agents={agents} />
 

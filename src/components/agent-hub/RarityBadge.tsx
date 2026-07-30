@@ -15,15 +15,25 @@ const RARITY_CLASSES: Record<AgentRarity, string> = {
   Mythic: "bg-agent-mythic/20 text-agent-mythic-foreground",
 };
 
+const RARITY_DOT: Record<AgentRarity, string> = {
+  Common: "bg-muted-foreground",
+  Uncommon: "bg-positive",
+  Rare: "bg-agent-cyan",
+  Epic: "bg-agent-purple",
+  Legendary: "bg-agent-gold",
+  Mythic: "bg-agent-mythic",
+};
+
 export function RarityBadge({ rarity, className }: { rarity: AgentRarity; className?: string }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide",
+        "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider",
         RARITY_CLASSES[rarity],
         className,
       )}
     >
+      <span className={cn("size-1.5 rounded-full", RARITY_DOT[rarity])} aria-hidden="true" />
       {rarity}
     </span>
   );

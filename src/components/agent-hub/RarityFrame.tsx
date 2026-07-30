@@ -23,7 +23,7 @@ export function RarityFrame({
 }) {
   return (
     <div
-      className={cn("rounded-2xl bg-card p-1.5 ring-1 ring-inset", RARITY_RING[rarity], className)}
+      className={cn("rounded-2xl bg-card p-1.5 ring-2 ring-inset", RARITY_RING[rarity], className)}
     >
       {children}
     </div>
