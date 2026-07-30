@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 const PLACEHOLDER_PATH = "/agents/agent-placeholder.svg";
 
 /**
- * Portrait-oriented (2:3) to match the client-supplied character art — see
- * docs/AGENT_ARTWORK.md. Widths only; height is derived from aspect-[2/3].
- * The current placeholder SVGs are square, so they'll appear center-cropped
- * until the real portrait files are dropped in.
+ * Square (1:1) to match the client-supplied character art — see
+ * docs/AGENT_ARTWORK.md. Widths only; height is derived from aspect-square.
+ * Square keeps side elements (Echo's drone orbs, Nova's shards, Oracle's
+ * halo orbs) intact — a portrait crop would clip them.
  */
 const SIZE_CLASSES = {
   sm: "w-14",
@@ -31,17 +31,30 @@ export function AgentPortrait({
   className?: string;
 }) {
   const [failed, setFailed] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  // The server-rendered <img> can start (and fail) its request before React
+  // finishes hydrating and attaches the onError listener below, so a fast
+  // failure is otherwise missed. This mount-time check catches that case;
+  // onError still covers failures that happen after hydration.
+  useEffect(() => {
+    const el = imgRef.current;
+    if (el?.complete && el.naturalWidth === 0) {
+      setFailed(true);
+    }
+  }, []);
 
   return (
     <img
+      ref={imgRef}
       src={failed ? PLACEHOLDER_PATH : src}
       alt={`${name} — Genesis Agent portrait`}
-      width={512}
-      height={768}
+      width={1200}
+      height={1200}
       loading="lazy"
       onError={() => setFailed(true)}
       className={cn(
-        "aspect-[2/3] rounded-xl object-cover",
+        "aspect-square rounded-xl object-cover",
         SIZE_CLASSES[size],
         animated && "animate-agent-zoom",
         className,

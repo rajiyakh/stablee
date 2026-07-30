@@ -24,7 +24,7 @@ describe("genesisAgentRegistry", () => {
       expect(agent.maxSupply).toBeGreaterThan(0);
       expect(agent.walletLimit).toBeGreaterThan(0);
       expect(Number(agent.pulsePerHour)).toBeGreaterThan(0);
-      expect(agent.avatarPath).toMatch(/^\/agents\/.+\.svg$/);
+      expect(agent.avatarPath).toMatch(/^\/agents\/.+\.webp$/);
     }
   });
 

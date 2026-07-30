@@ -15,7 +15,7 @@ export function AgentRecruitCard({
   return (
     <article className="group flex h-full flex-col rounded-2xl border border-border bg-card p-5 transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-xl">
       <div className="flex items-start justify-center">
-        <AgentPortraitStage agent={agent} size="md" />
+        <AgentPortraitStage agent={agent} size="lg" />
       </div>
 
       <div className="mt-4 text-center">
