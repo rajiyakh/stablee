@@ -72,7 +72,7 @@ This lives in `src/config/agentHub.ts`, not `genesisAgents.ts`. It is not shown 
 
 ```ts
 export const AGENT_HUB_WALLET_LIMIT = 5;
-export const AGENT_HUB_WALLET_LIMIT_LABEL = "5 Total Genesis Agents";
+export const AGENT_HUB_WALLET_LIMIT_LABEL = "5";
 ```
 
 This lives in `src/config/agentHub.ts`, not `genesisAgents.ts` — it caps total Genesis Agents (any mix of the six) held per wallet, not agents-of-one-kind. No enforcement logic exists yet (`unconfiguredMintAdapter.getWalletMintedCount` always returns `0`); this is a display-only constant until a real `AgentMintAdapter` is wired in.

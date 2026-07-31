@@ -37,7 +37,7 @@ describe("AGENT_HUB_WALLET_LIMIT", () => {
   });
 
   it("has a label that matches the numeric constant", () => {
-    expect(AGENT_HUB_WALLET_LIMIT_LABEL).toBe("5 Total Genesis Agents");
+    expect(AGENT_HUB_WALLET_LIMIT_LABEL).toBe("5");
   });
 });
 

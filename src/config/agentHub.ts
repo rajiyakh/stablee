@@ -44,7 +44,7 @@ export type AgentHubConfig = typeof agentHubConfig;
  * real AgentMintAdapter is wired in.
  */
 export const AGENT_HUB_WALLET_LIMIT = 5;
-export const AGENT_HUB_WALLET_LIMIT_LABEL = `${AGENT_HUB_WALLET_LIMIT} Total Genesis Agents`;
+export const AGENT_HUB_WALLET_LIMIT_LABEL = `${AGENT_HUB_WALLET_LIMIT}`;
 
 /** Hard kill-switch — false means the route/nav entry should not exist at all. */
 export function isAgentHubEnabled(): boolean {

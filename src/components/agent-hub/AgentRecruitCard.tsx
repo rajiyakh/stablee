@@ -37,10 +37,6 @@ export function AgentRecruitCard({
         <p className="mt-0.5 text-xs uppercase tracking-wide text-muted-foreground">{agent.role}</p>
       </div>
 
-      <p className="mt-3 text-center text-sm leading-relaxed text-muted-foreground">
-        {agent.shortDescription}
-      </p>
-
       <div className="mt-4 text-center">
         <p className="text-3xl font-bold leading-none tabular-nums" style={{ color: accent }}>
           {agent.pulsePerDay}
