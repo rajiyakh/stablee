@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, ArrowLeftRight, Wallet, Bot } from "lucide-react";
+import { Home, ChartLine, ArrowLeftRight, Wallet, Bot } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
  */
 const TABS = [
   { to: "/app", label: "Overview", icon: Home },
+  { to: "/app/markets", label: "Markets", icon: ChartLine },
   { to: "/app/swap", label: "Swap", icon: ArrowLeftRight },
   { to: "/app/portfolio", label: "Portfolio", icon: Wallet },
   { to: "/app/agents-hub", label: "Agent Hub", icon: Bot },
@@ -23,7 +24,7 @@ export function MobileTabBar() {
       className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 backdrop-blur-lg md:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      <div className="grid h-16 grid-cols-4">
+      <div className="grid h-16 grid-cols-5">
         {TABS.map((tab) => {
           const isActive = tab.to === "/app" ? pathname === "/app" : pathname.startsWith(tab.to);
           return (
