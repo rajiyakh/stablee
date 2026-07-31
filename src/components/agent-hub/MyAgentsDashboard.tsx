@@ -86,7 +86,7 @@ export function MyAgentsDashboard({
           <EmptyState
             icon={<Users className="size-6" />}
             title="Your research team is empty."
-            description="Recruitment has not opened yet. Explore the Genesis Agents and prepare your future team."
+            description="Minting has not opened yet. Explore the Genesis Agents and prepare your future team."
           />
         ) : (
           <div className="space-y-3">

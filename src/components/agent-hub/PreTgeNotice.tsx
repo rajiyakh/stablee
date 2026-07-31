@@ -1,7 +1,7 @@
 import { ShieldAlert } from "lucide-react";
 
 const SAFETY_POINTS = [
-  "Recruitment is not currently live.",
+  "Minting is not currently live.",
   "Farming parameters are subject to final deployment configuration.",
   "Never trust unofficial contract addresses.",
   "Verify all future links through official RobinPulse channels.",

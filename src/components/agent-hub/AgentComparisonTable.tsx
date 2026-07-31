@@ -134,7 +134,7 @@ export function AgentComparisonTable({ agents }: { agents: GenesisAgentConfig[] 
 
       <p className="mt-4 text-xs text-muted-foreground">
         Farming rates and collection parameters are pre-launch configurations and may be finalized
-        before recruitment opens.
+        before minting opens.
       </p>
     </section>
   );

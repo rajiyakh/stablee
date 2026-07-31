@@ -30,9 +30,9 @@ export function RecruitmentConfirmationModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md gap-3 p-5">
         <DialogHeader>
-          <DialogTitle>Preview Recruitment</DialogTitle>
+          <DialogTitle>Preview Minting</DialogTitle>
           <DialogDescription>
             This is a preview only. No wallet will be contacted and no purchase will occur.
           </DialogDescription>
@@ -49,7 +49,7 @@ export function RecruitmentConfirmationModal({
           </div>
         </div>
 
-        <dl className="grid grid-cols-2 gap-y-2 rounded-lg border border-border bg-secondary/40 p-4 text-sm">
+        <dl className="grid grid-cols-2 gap-y-1.5 rounded-lg border border-border bg-secondary/40 p-3 text-sm">
           <dt className="text-muted-foreground">Quantity</dt>
           <dd className="text-right tabular-nums text-foreground">{quantity}</dd>
           <dt className="text-muted-foreground">Price per Agent</dt>
@@ -77,7 +77,7 @@ export function RecruitmentConfirmationModal({
         </dl>
 
         <p className="text-xs leading-relaxed text-muted-foreground">
-          Farmed $PULSE remains locked until TGE and official claim activation. Recruitment is not
+          Farmed $PULSE remains locked until TGE and official claim activation. Minting is not
           currently live — this preview does not reserve an Agent or guarantee availability.
         </p>
 

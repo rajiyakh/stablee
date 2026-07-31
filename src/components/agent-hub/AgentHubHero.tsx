@@ -5,8 +5,8 @@ import { agentHubConfig } from "@/config/agentHub";
 import { isAgentHubContractsConfigured } from "@/config/contracts";
 
 const STATUS_ROWS = [
-  { label: "Recruitment", value: "Coming Soon" },
-  { label: "Farming", value: "Begins after recruitment" },
+  { label: "Minting", value: "Coming Soon" },
+  { label: "Farming", value: "Begins after minting" },
   { label: "$PULSE Claim", value: "Locked until TGE" },
 ];
 
@@ -31,7 +31,7 @@ export function AgentHubHero() {
         </span>
 
         <h1 className="mt-3 font-display text-3xl tracking-tight text-foreground sm:text-4xl">
-          Recruit AI Agents. Farm Future $PULSE.
+          Mint AI Agents. Farm Future $PULSE.
         </h1>
 
         <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">

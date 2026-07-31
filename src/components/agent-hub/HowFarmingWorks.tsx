@@ -4,8 +4,8 @@ import { SectionHeading } from "@/components/common/SectionHeading";
 const STEPS = [
   {
     icon: Rocket,
-    title: "Recruit an Agent",
-    description: "Acquire a Genesis Agent after recruitment opens.",
+    title: "Mint an Agent",
+    description: "Acquire a Genesis Agent after minting opens.",
   },
   {
     icon: Sprout,

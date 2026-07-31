@@ -24,7 +24,7 @@ export const Route = createFileRoute("/app/agents-hub/")({
       {
         name: "description",
         content:
-          "Recruit Genesis Agents and farm future $PULSE allocation before TGE. Recruitment is not currently live — no wallet-gated purchases exist yet.",
+          "Mint Genesis Agents and farm future $PULSE allocation before TGE. Minting is not currently live — no wallet-gated purchases exist yet.",
       },
     ],
   }),
@@ -51,7 +51,7 @@ function AgentsHubPage() {
         <AgentGrid agents={agents} onRecruitClick={setRecruitTarget} />
 
         <p className="mx-auto -mt-10 max-w-2xl text-center text-xs leading-relaxed text-muted-foreground">
-          Agent Hub is in a pre-TGE preview — recruitment isn't live yet, so no wallet connection,
+          Agent Hub is in a pre-TGE preview — minting isn't live yet, so no wallet connection,
           payment, or on-chain transaction happens anywhere on this page today.
         </p>
 
@@ -95,7 +95,7 @@ function AgentsHubPage() {
             Ready to build your research team?
           </h2>
           <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-            Explore the six Genesis Agents and prepare for recruitment.
+            Explore the six Genesis Agents and prepare for minting.
           </p>
           <Button asChild size="lg" className="mt-5 rounded-full">
             <a href="#agents">Explore Agents</a>

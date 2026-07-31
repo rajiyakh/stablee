@@ -15,15 +15,15 @@ const FAQ_ITEMS = [
   {
     question: "When does farming begin?",
     answer:
-      "Farming begins from the activation time defined by the final recruitment and farming system.",
+      "Farming begins from the activation time defined by the final minting and farming system.",
   },
   {
     question: "Can I claim $PULSE now?",
     answer: "No. $PULSE claims remain locked until TGE and official claim activation.",
   },
   {
-    question: "Is recruitment live?",
-    answer: "No, unless the Agent Hub status explicitly shows Public Recruitment.",
+    question: "Is minting live?",
+    answer: "No, unless the Agent Hub status explicitly shows Public Minting.",
   },
   {
     question: "How is allocation calculated?",
@@ -43,7 +43,7 @@ const FAQ_ITEMS = [
   {
     question: "Are the farming rates final?",
     answer:
-      "They are pre-launch configuration values and should be treated as subject to final deployment review until recruitment opens.",
+      "They are pre-launch configuration values and should be treated as subject to final deployment review until minting opens.",
   },
 ];
 

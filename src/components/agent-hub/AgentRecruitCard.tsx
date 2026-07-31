@@ -54,7 +54,7 @@ export function AgentRecruitCard({
             style={{ background: `linear-gradient(90deg, transparent, ${accent}66, transparent)` }}
           />
         </div>
-        <p className="mt-1.5 text-center text-[11px] text-muted-foreground">0 recruited</p>
+        <p className="mt-1.5 text-center text-[11px] text-muted-foreground">0 Minted</p>
       </div>
 
       <p className="mt-2 text-center text-sm text-muted-foreground">
@@ -90,7 +90,7 @@ export function AgentRecruitCard({
           disabled={!agent.enabled}
           onClick={() => onRecruitClick(agent)}
         >
-          Recruitment Coming Soon
+          Minting Coming Soon
         </Button>
         <Button asChild variant="outline" className="w-full">
           <Link to="/app/agents-hub/$slug" params={{ slug: agent.slug }}>
