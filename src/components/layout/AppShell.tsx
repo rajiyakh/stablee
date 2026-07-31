@@ -3,6 +3,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
 import { AppSidebar } from "./AppSidebar";
+import { MobileTabBar } from "./MobileTabBar";
 
 export function AppShell({ children }: { children: ReactNode }) {
   return (
@@ -17,12 +18,13 @@ export function AppShell({ children }: { children: ReactNode }) {
         <SiteHeader />
         <div className="flex flex-1">
           <AppSidebar />
-          <SidebarInset id="main-content" className="min-w-0 flex-1 bg-background">
+          <SidebarInset id="main-content" className="min-w-0 flex-1 bg-background pb-16 md:pb-0">
             {children}
             <SiteFooter />
           </SidebarInset>
         </div>
       </div>
+      <MobileTabBar />
     </SidebarProvider>
   );
 }

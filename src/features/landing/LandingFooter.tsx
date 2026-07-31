@@ -21,8 +21,8 @@ export function LandingFooter() {
   return (
     <footer className="border-t border-border/70 bg-card/40">
       <div className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="grid gap-10 md:grid-cols-4">
-          <div className="md:col-span-2">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="min-w-0 sm:col-span-2">
             <div className="flex items-center gap-2">
               <AnimatedPulseLogo size={22} />
               <span className="text-sm font-semibold text-foreground">RobinPulse</span>
@@ -33,7 +33,7 @@ export function LandingFooter() {
             </p>
           </div>
 
-          <div>
+          <div className="min-w-0">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               Platform
             </p>
@@ -48,7 +48,7 @@ export function LandingFooter() {
             </ul>
           </div>
 
-          <div>
+          <div className="min-w-0">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               Transparency
             </p>

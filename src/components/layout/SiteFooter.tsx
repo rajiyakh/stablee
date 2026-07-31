@@ -10,8 +10,8 @@ export function SiteFooter() {
   return (
     <footer className="mt-20 border-t border-border/70 bg-card/40">
       <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid gap-10 md:grid-cols-4">
-          <div className="md:col-span-2">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="min-w-0 sm:col-span-2">
             <p className="text-sm font-semibold text-foreground">{projectConfig.name}</p>
             <p className="mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">
               {projectConfig.tagline}
@@ -23,7 +23,7 @@ export function SiteFooter() {
             </p>
           </div>
 
-          <div>
+          <div className="min-w-0">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               Platform
             </p>
@@ -51,7 +51,7 @@ export function SiteFooter() {
             </ul>
           </div>
 
-          <div>
+          <div className="min-w-0">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               Transparency
             </p>
