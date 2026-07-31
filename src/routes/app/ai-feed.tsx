@@ -1,17 +1,26 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
+import { Loader2, Sparkles } from "lucide-react";
 import { PageContainer } from "@/components/layout/AppShell";
 import { SectionHeading } from "@/components/common/SectionHeading";
 import { EmptyState } from "@/components/common/EmptyState";
 import { ErrorState } from "@/components/common/ErrorState";
 import { CardSkeleton } from "@/components/common/Skeletons";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { BuySwapButton } from "@/components/market/BuySwapButton";
+import { AgentMessageCard } from "@/components/feed/AgentMessageCard";
+import { AgentConsensusCard } from "@/components/feed/AgentConsensusCard";
 import { chainTrendingQuery, globalTrendingQuery } from "@/lib/market/client";
+import { manualLookupQuery } from "@/lib/feed/client";
 import { projectConfig } from "@/config/project";
 import { buildAutomatedSummaries } from "@/lib/feed/summaries";
 import { relativeTime } from "@/lib/market/format";
+
+const EVM_ADDRESS_RE = /^0x[a-fA-F0-9]{40}$/;
 
 export const Route = createFileRoute("/app/ai-feed")({
   head: () => ({
@@ -42,6 +51,20 @@ function AiFeedPage() {
     ? buildAutomatedSummaries(trending.data.data, chain.data?.data?.markets ?? [], generatedAt)
     : [];
 
+  const [addressInput, setAddressInput] = useState("");
+  const [submittedAddress, setSubmittedAddress] = useState<string | null>(null);
+  const trimmedInput = addressInput.trim();
+  const isValidAddress = EVM_ADDRESS_RE.test(trimmedInput);
+
+  const lookup = useQuery(
+    manualLookupQuery(chainId, submittedAddress ?? "", Boolean(submittedAddress && chainId)),
+  );
+
+  function handleAnalyze() {
+    if (!isValidAddress) return;
+    setSubmittedAddress(trimmedInput);
+  }
+
   return (
     <PageContainer>
       <SectionHeading
@@ -49,6 +72,46 @@ function AiFeedPage() {
         title="AI Feed"
         description="Deterministic summaries generated from live provider data, plus agent-published calls once they exist. Nothing here is written by a live model."
       />
+
+      <div className="mt-6 rounded-xl border border-border bg-card p-5">
+        <div className="flex items-center gap-2">
+          <Sparkles className="size-4 text-primary" aria-hidden="true" />
+          <h2 className="text-sm font-semibold text-foreground">Analyze any token</h2>
+        </div>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Paste a Robinhood Mainnet token contract address to get the same kind of multi-agent read
+          the feed publishes automatically.
+        </p>
+        <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+          <Input
+            value={addressInput}
+            onChange={(e) => setAddressInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleAnalyze();
+            }}
+            placeholder="0x…"
+            aria-label="Token contract address"
+            className="font-mono text-sm"
+          />
+          <Button
+            type="button"
+            onClick={handleAnalyze}
+            disabled={!isValidAddress || lookup.isFetching}
+            className="shrink-0"
+          >
+            {lookup.isFetching ? (
+              <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+            ) : (
+              "Analyze"
+            )}
+          </Button>
+        </div>
+        {trimmedInput.length > 0 && !isValidAddress ? (
+          <p className="mt-2 text-xs text-negative">
+            Enter a valid contract address (0x followed by 40 hex characters).
+          </p>
+        ) : null}
+      </div>
 
       <div className="mt-6">
         {trending.isPending ? (
@@ -117,10 +180,26 @@ function AiFeedPage() {
       <section className="mt-12">
         <SectionHeading eyebrow="Agents" title="Agent calls" />
         <div className="mt-4">
-          <EmptyState
-            title="No agent calls have been published yet"
-            description="Once an agent publishes a scored, timestamped call, it will appear here alongside its full evidence and outcome."
-          />
+          {!submittedAddress ? (
+            <EmptyState
+              title="No agent calls have been published yet"
+              description="Once an agent publishes a scored, timestamped call, it will appear here alongside its full evidence and outcome. Or paste a contract address above for an on-demand read right now."
+            />
+          ) : lookup.isPending ? (
+            <CardSkeleton count={2} />
+          ) : lookup.isError ? (
+            <ErrorState
+              message={(lookup.error as Error).message}
+              onRetry={() => lookup.refetch()}
+            />
+          ) : lookup.data?.data ? (
+            <div className="space-y-4">
+              <AgentConsensusCard consensus={lookup.data.data.consensus} />
+              {lookup.data.data.messages.map((message) => (
+                <AgentMessageCard key={message.id} message={message} />
+              ))}
+            </div>
+          ) : null}
         </div>
       </section>
     </PageContainer>

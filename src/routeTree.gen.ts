@@ -55,6 +55,7 @@ import { Route as ApiMarketGmgnHotSearchesRouteImport } from './routes/api/marke
 import { Route as ApiMarketGmgnTrendingRouteImport } from './routes/api/market/gmgn/trending'
 import { Route as AppMarketsRobinhoodTokenAddressRouteImport } from './routes/app/markets.robinhood.$tokenAddress'
 import { Route as AppTokenChainIdAddressRouteImport } from './routes/app/token.$chainId.$address'
+import { Route as ApiFeedManualLookupChainIdAddressRouteImport } from './routes/api/feed/manual-lookup.$chainId.$address'
 import { Route as ApiMarketCoingeckoChartIdRouteImport } from './routes/api/market/coingecko/chart.$id'
 import { Route as ApiMarketCoingeckoCoinIdRouteImport } from './routes/api/market/coingecko/coin.$id'
 import { Route as ApiMarketDexscreenerTrendingChainIdRouteImport } from './routes/api/market/dexscreener/trending.$chainId'
@@ -301,6 +302,12 @@ const AppTokenChainIdAddressRoute = AppTokenChainIdAddressRouteImport.update({
   path: '/$chainId/$address',
   getParentRoute: () => AppTokenRoute,
 } as any)
+const ApiFeedManualLookupChainIdAddressRoute =
+  ApiFeedManualLookupChainIdAddressRouteImport.update({
+    id: '/api/feed/manual-lookup/$chainId/$address',
+    path: '/api/feed/manual-lookup/$chainId/$address',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiMarketCoingeckoChartIdRoute =
   ApiMarketCoingeckoChartIdRouteImport.update({
     id: '/api/market/coingecko/chart/$id',
@@ -397,6 +404,7 @@ export interface FileRoutesByFullPath {
   '/api/market/gmgn/trending': typeof ApiMarketGmgnTrendingRoute
   '/app/markets/robinhood/$tokenAddress': typeof AppMarketsRobinhoodTokenAddressRoute
   '/app/token/$chainId/$address': typeof AppTokenChainIdAddressRoute
+  '/api/feed/manual-lookup/$chainId/$address': typeof ApiFeedManualLookupChainIdAddressRoute
   '/api/market/coingecko/chart/$id': typeof ApiMarketCoingeckoChartIdRoute
   '/api/market/coingecko/coin/$id': typeof ApiMarketCoingeckoCoinIdRoute
   '/api/market/dexscreener/trending/$chainId': typeof ApiMarketDexscreenerTrendingChainIdRoute
@@ -448,6 +456,7 @@ export interface FileRoutesByTo {
   '/api/market/gmgn/trending': typeof ApiMarketGmgnTrendingRoute
   '/app/markets/robinhood/$tokenAddress': typeof AppMarketsRobinhoodTokenAddressRoute
   '/app/token/$chainId/$address': typeof AppTokenChainIdAddressRoute
+  '/api/feed/manual-lookup/$chainId/$address': typeof ApiFeedManualLookupChainIdAddressRoute
   '/api/market/coingecko/chart/$id': typeof ApiMarketCoingeckoChartIdRoute
   '/api/market/coingecko/coin/$id': typeof ApiMarketCoingeckoCoinIdRoute
   '/api/market/dexscreener/trending/$chainId': typeof ApiMarketDexscreenerTrendingChainIdRoute
@@ -505,6 +514,7 @@ export interface FileRoutesById {
   '/api/market/gmgn/trending': typeof ApiMarketGmgnTrendingRoute
   '/app/markets/robinhood/$tokenAddress': typeof AppMarketsRobinhoodTokenAddressRoute
   '/app/token/$chainId/$address': typeof AppTokenChainIdAddressRoute
+  '/api/feed/manual-lookup/$chainId/$address': typeof ApiFeedManualLookupChainIdAddressRoute
   '/api/market/coingecko/chart/$id': typeof ApiMarketCoingeckoChartIdRoute
   '/api/market/coingecko/coin/$id': typeof ApiMarketCoingeckoCoinIdRoute
   '/api/market/dexscreener/trending/$chainId': typeof ApiMarketDexscreenerTrendingChainIdRoute
@@ -563,6 +573,7 @@ export interface FileRouteTypes {
     | '/api/market/gmgn/trending'
     | '/app/markets/robinhood/$tokenAddress'
     | '/app/token/$chainId/$address'
+    | '/api/feed/manual-lookup/$chainId/$address'
     | '/api/market/coingecko/chart/$id'
     | '/api/market/coingecko/coin/$id'
     | '/api/market/dexscreener/trending/$chainId'
@@ -614,6 +625,7 @@ export interface FileRouteTypes {
     | '/api/market/gmgn/trending'
     | '/app/markets/robinhood/$tokenAddress'
     | '/app/token/$chainId/$address'
+    | '/api/feed/manual-lookup/$chainId/$address'
     | '/api/market/coingecko/chart/$id'
     | '/api/market/coingecko/coin/$id'
     | '/api/market/dexscreener/trending/$chainId'
@@ -670,6 +682,7 @@ export interface FileRouteTypes {
     | '/api/market/gmgn/trending'
     | '/app/markets/robinhood/$tokenAddress'
     | '/app/token/$chainId/$address'
+    | '/api/feed/manual-lookup/$chainId/$address'
     | '/api/market/coingecko/chart/$id'
     | '/api/market/coingecko/coin/$id'
     | '/api/market/dexscreener/trending/$chainId'
@@ -700,6 +713,7 @@ export interface RootRouteChildren {
   ApiMarketGeckoterminalNetworksRoute: typeof ApiMarketGeckoterminalNetworksRoute
   ApiMarketGmgnHotSearchesRoute: typeof ApiMarketGmgnHotSearchesRoute
   ApiMarketGmgnTrendingRoute: typeof ApiMarketGmgnTrendingRoute
+  ApiFeedManualLookupChainIdAddressRoute: typeof ApiFeedManualLookupChainIdAddressRoute
   ApiMarketCoingeckoChartIdRoute: typeof ApiMarketCoingeckoChartIdRoute
   ApiMarketCoingeckoCoinIdRoute: typeof ApiMarketCoingeckoCoinIdRoute
   ApiMarketDexscreenerTrendingChainIdRoute: typeof ApiMarketDexscreenerTrendingChainIdRoute
@@ -1034,6 +1048,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTokenChainIdAddressRouteImport
       parentRoute: typeof AppTokenRoute
     }
+    '/api/feed/manual-lookup/$chainId/$address': {
+      id: '/api/feed/manual-lookup/$chainId/$address'
+      path: '/api/feed/manual-lookup/$chainId/$address'
+      fullPath: '/api/feed/manual-lookup/$chainId/$address'
+      preLoaderRoute: typeof ApiFeedManualLookupChainIdAddressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/market/coingecko/chart/$id': {
       id: '/api/market/coingecko/chart/$id'
       path: '/api/market/coingecko/chart/$id'
@@ -1224,6 +1245,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiMarketGeckoterminalNetworksRoute: ApiMarketGeckoterminalNetworksRoute,
   ApiMarketGmgnHotSearchesRoute: ApiMarketGmgnHotSearchesRoute,
   ApiMarketGmgnTrendingRoute: ApiMarketGmgnTrendingRoute,
+  ApiFeedManualLookupChainIdAddressRoute:
+    ApiFeedManualLookupChainIdAddressRoute,
   ApiMarketCoingeckoChartIdRoute: ApiMarketCoingeckoChartIdRoute,
   ApiMarketCoingeckoCoinIdRoute: ApiMarketCoingeckoCoinIdRoute,
   ApiMarketDexscreenerTrendingChainIdRoute:

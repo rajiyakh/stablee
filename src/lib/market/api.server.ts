@@ -129,12 +129,17 @@ export function notConfigured(provider: ProviderId, message: string): Response {
   });
 }
 
-export function guard(request: Request, bucket: string): Response | null {
+export function guard(
+  request: Request,
+  bucket: string,
+  limit = 90,
+  windowMs = 60_000,
+): Response | null {
   const ip =
     request.headers.get("cf-connecting-ip") ??
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
     "anon";
-  if (!rateLimit(`${bucket}:${ip}`, 90, 60_000)) {
+  if (!rateLimit(`${bucket}:${ip}`, limit, windowMs)) {
     return new Response(
       JSON.stringify({
         data: null,

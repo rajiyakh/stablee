@@ -1,6 +1,14 @@
 import { queryOptions } from "@tanstack/react-query";
+import { getEnvelope } from "@/lib/market/client";
 import { feedConfig } from "@/config/feed";
-import type { FeedSnapshot, NewLaunchInfo } from "./types";
+import type {
+  AgentMessage,
+  ConsensusSummary,
+  FeedSnapshot,
+  MarketEvent,
+  NewLaunchInfo,
+  TokenRef,
+} from "./types";
 
 export class FeedApiError extends Error {}
 
@@ -43,4 +51,25 @@ export const newLaunchesQuery = () =>
     queryFn: fetchNewLaunches,
     staleTime: 60_000,
     refetchInterval: 60_000,
+  });
+
+export interface ManualLookupPayload {
+  token: TokenRef;
+  event: MarketEvent;
+  messages: AgentMessage[];
+  consensus: ConsensusSummary;
+  dataProvider: string;
+}
+
+/** On-demand — user pastes a contract address and asks for an agent read on it. See manualLookup.server.ts. */
+export const manualLookupQuery = (chainId: string, address: string, enabled: boolean) =>
+  queryOptions({
+    queryKey: ["feed", "manual-lookup", chainId, address] as const,
+    queryFn: () =>
+      getEnvelope<ManualLookupPayload>(
+        `/api/feed/manual-lookup/${encodeURIComponent(chainId)}/${encodeURIComponent(address)}`,
+      ),
+    enabled,
+    staleTime: 30_000,
+    retry: false,
   });
