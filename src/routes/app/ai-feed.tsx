@@ -113,6 +113,29 @@ function AiFeedPage() {
         ) : null}
       </div>
 
+      {submittedAddress ? (
+        <section className="mt-6">
+          <SectionHeading eyebrow="Agents" title="Agent calls" />
+          <div className="mt-4">
+            {lookup.isPending ? (
+              <CardSkeleton count={2} />
+            ) : lookup.isError ? (
+              <ErrorState
+                message={(lookup.error as Error).message}
+                onRetry={() => lookup.refetch()}
+              />
+            ) : lookup.data?.data ? (
+              <div className="space-y-4">
+                <AgentConsensusCard consensus={lookup.data.data.consensus} />
+                {lookup.data.data.messages.map((message) => (
+                  <AgentMessageCard key={message.id} message={message} />
+                ))}
+              </div>
+            ) : null}
+          </div>
+        </section>
+      ) : null}
+
       <div className="mt-6">
         {trending.isPending ? (
           <CardSkeleton count={4} />
@@ -176,29 +199,6 @@ function AiFeedPage() {
           </div>
         )}
       </div>
-
-      {submittedAddress ? (
-        <section className="mt-12">
-          <SectionHeading eyebrow="Agents" title="Agent calls" />
-          <div className="mt-4">
-            {lookup.isPending ? (
-              <CardSkeleton count={2} />
-            ) : lookup.isError ? (
-              <ErrorState
-                message={(lookup.error as Error).message}
-                onRetry={() => lookup.refetch()}
-              />
-            ) : lookup.data?.data ? (
-              <div className="space-y-4">
-                <AgentConsensusCard consensus={lookup.data.data.consensus} />
-                {lookup.data.data.messages.map((message) => (
-                  <AgentMessageCard key={message.id} message={message} />
-                ))}
-              </div>
-            ) : null}
-          </div>
-        </section>
-      ) : null}
     </PageContainer>
   );
 }
