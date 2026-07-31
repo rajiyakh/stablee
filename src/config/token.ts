@@ -1,10 +1,12 @@
 /**
- * RobinPulse protocol token configuration.
+ * RobinPulse protocol token ($ORCA) configuration.
  *
- * The token has not launched. Every identifying field below is intentionally
- * EMPTY until the owner supplies verified information. Never invent a token
- * name, ticker, contract address, launch date, or tokenomics link — the
- * token page hides or degrades any UI element backed by an empty field.
+ * $ORCA has not launched — no contract exists yet. `tokenName`/`tokenSymbol`/
+ * `chainId` are the owner-confirmed public identity of the token and are
+ * safe to display; `contractAddress`/`launchDate` stay EMPTY until the owner
+ * supplies verified information post-launch. Never invent a contract
+ * address, launch date, or tokenomics link — the token page hides or
+ * degrades any UI element backed by an empty field.
  *
  * See docs/TOKEN_PAGE_SETUP.md for exactly where to add each value.
  */
@@ -41,17 +43,16 @@ export const tokenConfig: TokenConfig = {
   enabled: true,
   status: "coming-soon",
 
-  tokenName: "",
-  tokenSymbol: "",
+  tokenName: "RobinPulse",
+  tokenSymbol: "ORCA",
 
-  headline: "The RobinPulse Protocol Token Is Coming",
+  headline: "$ORCA — The Native Utility Token of RobinPulse",
 
-  description:
-    "A future utility layer designed to connect AI market intelligence, community participation, platform access, and protocol incentives.",
+  description: "The native utility token of RobinPulse, powered by the Ocean Intelligence Network.",
 
   launchDate: "",
   contractAddress: "",
-  chainId: "",
+  chainId: "Robinhood Mainnet",
   explorerUrl: "",
 
   tokenomicsUrl: "",
@@ -59,14 +60,11 @@ export const tokenConfig: TokenConfig = {
   announcementUrl: "",
 
   utilities: [
-    "Premium AI market intelligence",
-    "Advanced market alerts",
-    "Agent access",
-    "Platform participation",
-    "Community rewards",
-    "Governance participation",
-    "API and data access",
-    "Future ecosystem incentives",
+    "Genesis Agent Farming",
+    "Premium AI Access",
+    "Reward Distribution",
+    "Future Governance",
+    "Community Incentives",
   ],
 
   socialLinks: {
@@ -75,24 +73,3 @@ export const tokenConfig: TokenConfig = {
     telegram: "",
   },
 };
-
-/** True once at least one official follow-up channel has been configured. */
-export function hasTokenUpdatesChannel(): boolean {
-  return Boolean(
-    tokenConfig.announcementUrl ||
-    tokenConfig.socialLinks.x ||
-    tokenConfig.socialLinks.discord ||
-    tokenConfig.socialLinks.telegram,
-  );
-}
-
-/** First configured follow-up URL, in priority order. */
-export function primaryTokenUpdatesUrl(): string | null {
-  return (
-    tokenConfig.announcementUrl ||
-    tokenConfig.socialLinks.x ||
-    tokenConfig.socialLinks.discord ||
-    tokenConfig.socialLinks.telegram ||
-    null
-  );
-}

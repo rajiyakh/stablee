@@ -464,6 +464,51 @@
   animation: agent-bar-shimmer 1.8s ease-in-out infinite;
 }
 
+/* $ORCA token page hero (token.index.tsx) — the mascot's float, the water
+   ripple beneath it, and the self-drawing background trend line. All fixed,
+   deterministic values, same idiom as the landing/agent-hub motion above. */
+@keyframes orca-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+@utility animate-orca-float {
+  animation: orca-float 6.5s ease-in-out infinite;
+}
+
+@keyframes ripple-expand {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+@utility animate-ripple {
+  animation: ripple-expand 3.2s ease-out infinite;
+}
+
+@keyframes trend-line-draw {
+  from {
+    stroke-dashoffset: 900;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@utility animate-trend-line {
+  animation: trend-line-draw 6s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
