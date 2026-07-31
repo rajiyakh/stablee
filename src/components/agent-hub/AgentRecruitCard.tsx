@@ -4,11 +4,7 @@ import { AgentPortraitStage } from "./AgentPortraitStage";
 import { RarityBadge } from "./RarityBadge";
 import { AGENT_HUB_WALLET_LIMIT_LABEL } from "@/config/agentHub";
 import { ACCENT_COLOR } from "@/lib/agent-hub/accentColor";
-import {
-  calculatePulsePerEth,
-  getRateBarFill,
-  getRateTierLabel,
-} from "@/lib/agent-hub/rateEfficiency";
+import { getRateTierLabel } from "@/lib/agent-hub/rateEfficiency";
 import type { GenesisAgentConfig } from "@/config/genesisAgents";
 
 export function AgentRecruitCard({
@@ -20,8 +16,6 @@ export function AgentRecruitCard({
 }) {
   const accent = ACCENT_COLOR[agent.accent] ?? ACCENT_COLOR.primary;
   const tierLabel = getRateTierLabel(agent);
-  const barFill = getRateBarFill(agent);
-  const pulsePerEth = calculatePulsePerEth(agent);
 
   return (
     <article className="group flex h-full flex-col rounded-2xl border border-border bg-card p-5 transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-xl">
@@ -57,15 +51,14 @@ export function AgentRecruitCard({
       </div>
 
       <div className="mt-3">
-        <div className="h-1.5 w-full overflow-hidden rounded-full bg-secondary">
+        <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-secondary">
           <div
-            className="h-full rounded-full"
-            style={{ width: `${barFill * 100}%`, backgroundColor: accent }}
+            aria-hidden="true"
+            className="animate-bar-shimmer absolute inset-y-0 w-1/3 rounded-full"
+            style={{ background: `linear-gradient(90deg, transparent, ${accent}66, transparent)` }}
           />
         </div>
-        <p className="mt-1.5 text-center text-[11px] text-muted-foreground">
-          {pulsePerEth.toLocaleString()} $PULSE per ETH
-        </p>
+        <p className="mt-1.5 text-center text-[11px] text-muted-foreground">0 recruited</p>
       </div>
 
       <p className="mt-4 text-center text-sm text-muted-foreground">

@@ -29,14 +29,3 @@ export function getRateTierLabel(agent: GenesisAgentConfig): string {
   const label = `+${percentAboveBase}% RATE`;
   return value >= max ? `★ ${label} · BEST RATE` : label;
 }
-
-/**
- * 0–1 fill ratio for the value bar, floored at 0.6 so the lowest tier still
- * reads as a substantial offer rather than an empty bar.
- */
-export function getRateBarFill(agent: GenesisAgentConfig): number {
-  const { min, max } = efficiencyRange();
-  const value = calculatePulsePerEth(agent);
-  if (max === min) return 1;
-  return 0.6 + 0.4 * ((value - min) / (max - min));
-}

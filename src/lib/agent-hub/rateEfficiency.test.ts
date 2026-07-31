@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getGenesisAgent } from "@/config/genesisAgents";
-import { calculatePulsePerEth, getRateBarFill, getRateTierLabel } from "./rateEfficiency";
+import { calculatePulsePerEth, getRateTierLabel } from "./rateEfficiency";
 
 describe("calculatePulsePerEth", () => {
   it("computes $PULSE per ETH for each agent from real config values", () => {
@@ -27,30 +27,5 @@ describe("getRateTierLabel", () => {
 
   it("gives the highest-efficiency agent the best-rate treatment", () => {
     expect(getRateTierLabel(getGenesisAgent("oracle")!)).toBe("★ +220% RATE · BEST RATE");
-  });
-});
-
-describe("getRateBarFill", () => {
-  it("floors the lowest tier's bar at 0.6 rather than showing it empty", () => {
-    expect(getRateBarFill(getGenesisAgent("vector")!)).toBe(0.6);
-  });
-
-  it("fills the highest tier's bar completely", () => {
-    expect(getRateBarFill(getGenesisAgent("oracle")!)).toBe(1);
-  });
-
-  it("scales mid-tier agents monotonically between the floor and full", () => {
-    const echo = getRateBarFill(getGenesisAgent("echo")!);
-    const ledger = getRateBarFill(getGenesisAgent("ledger")!);
-    const atlas = getRateBarFill(getGenesisAgent("atlas")!);
-    const nova = getRateBarFill(getGenesisAgent("nova")!);
-
-    expect(echo).toBeCloseTo(0.6364, 3);
-    expect(ledger).toBeCloseTo(0.7455, 3);
-    expect(atlas).toBeCloseTo(0.7818, 3);
-    expect(nova).toBeCloseTo(0.8, 3);
-    expect(echo).toBeLessThan(ledger);
-    expect(ledger).toBeLessThan(atlas);
-    expect(atlas).toBeLessThan(nova);
   });
 });
