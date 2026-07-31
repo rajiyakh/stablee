@@ -177,31 +177,28 @@ function AiFeedPage() {
         )}
       </div>
 
-      <section className="mt-12">
-        <SectionHeading eyebrow="Agents" title="Agent calls" />
-        <div className="mt-4">
-          {!submittedAddress ? (
-            <EmptyState
-              title="No agent calls have been published yet"
-              description="Once an agent publishes a scored, timestamped call, it will appear here alongside its full evidence and outcome. Or paste a contract address above for an on-demand read right now."
-            />
-          ) : lookup.isPending ? (
-            <CardSkeleton count={2} />
-          ) : lookup.isError ? (
-            <ErrorState
-              message={(lookup.error as Error).message}
-              onRetry={() => lookup.refetch()}
-            />
-          ) : lookup.data?.data ? (
-            <div className="space-y-4">
-              <AgentConsensusCard consensus={lookup.data.data.consensus} />
-              {lookup.data.data.messages.map((message) => (
-                <AgentMessageCard key={message.id} message={message} />
-              ))}
-            </div>
-          ) : null}
-        </div>
-      </section>
+      {submittedAddress ? (
+        <section className="mt-12">
+          <SectionHeading eyebrow="Agents" title="Agent calls" />
+          <div className="mt-4">
+            {lookup.isPending ? (
+              <CardSkeleton count={2} />
+            ) : lookup.isError ? (
+              <ErrorState
+                message={(lookup.error as Error).message}
+                onRetry={() => lookup.refetch()}
+              />
+            ) : lookup.data?.data ? (
+              <div className="space-y-4">
+                <AgentConsensusCard consensus={lookup.data.data.consensus} />
+                {lookup.data.data.messages.map((message) => (
+                  <AgentMessageCard key={message.id} message={message} />
+                ))}
+              </div>
+            ) : null}
+          </div>
+        </section>
+      ) : null}
     </PageContainer>
   );
 }
