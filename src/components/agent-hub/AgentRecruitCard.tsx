@@ -1,9 +1,14 @@
 import { Link } from "@tanstack/react-router";
-import { Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AgentPortraitStage } from "./AgentPortraitStage";
 import { RarityBadge } from "./RarityBadge";
 import { AGENT_HUB_WALLET_LIMIT_LABEL } from "@/config/agentHub";
+import { ACCENT_COLOR } from "@/lib/agent-hub/accentColor";
+import {
+  calculatePulsePerEth,
+  getRateBarFill,
+  getRateTierLabel,
+} from "@/lib/agent-hub/rateEfficiency";
 import type { GenesisAgentConfig } from "@/config/genesisAgents";
 
 export function AgentRecruitCard({
@@ -13,10 +18,21 @@ export function AgentRecruitCard({
   agent: GenesisAgentConfig;
   onRecruitClick: (agent: GenesisAgentConfig) => void;
 }) {
+  const accent = ACCENT_COLOR[agent.accent] ?? ACCENT_COLOR.primary;
+  const tierLabel = getRateTierLabel(agent);
+  const barFill = getRateBarFill(agent);
+  const pulsePerEth = calculatePulsePerEth(agent);
+
   return (
     <article className="group flex h-full flex-col rounded-2xl border border-border bg-card p-5 transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-xl">
-      <div className="flex items-start justify-center">
+      <div className="relative mx-auto w-fit">
         <AgentPortraitStage agent={agent} size="lg" />
+        <span
+          className="absolute left-1.5 top-1.5 rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide shadow-sm"
+          style={{ color: accent, borderColor: accent, backgroundColor: "var(--color-card)" }}
+        >
+          {tierLabel}
+        </span>
       </div>
 
       <div className="mt-4 text-center">
@@ -31,35 +47,50 @@ export function AgentRecruitCard({
         {agent.shortDescription}
       </p>
 
+      <div className="mt-4 text-center">
+        <p className="text-3xl font-bold leading-none tabular-nums" style={{ color: accent }}>
+          {agent.pulsePerDay}
+        </p>
+        <p className="mt-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+          $PULSE / day
+        </p>
+      </div>
+
+      <div className="mt-3">
+        <div className="h-1.5 w-full overflow-hidden rounded-full bg-secondary">
+          <div
+            className="h-full rounded-full"
+            style={{ width: `${barFill * 100}%`, backgroundColor: accent }}
+          />
+        </div>
+        <p className="mt-1.5 text-center text-[11px] text-muted-foreground">
+          {pulsePerEth.toLocaleString()} $PULSE per ETH
+        </p>
+      </div>
+
+      <p className="mt-4 text-center text-sm text-muted-foreground">
+        Price{" "}
+        <span className="font-semibold tabular-nums text-foreground">
+          {agent.price} {agent.paymentTokenSymbol}
+        </span>
+      </p>
+
       <div className="mt-4 grid grid-cols-2 gap-2 border-t border-border/70 pt-4">
         <div className="rounded-lg bg-secondary/60 px-3 py-2 text-center">
           <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-            Price
+            Max Supply
           </p>
           <p className="mt-0.5 text-sm font-bold tabular-nums text-foreground">
-            {agent.price} <span className="text-xs font-medium">{agent.paymentTokenSymbol}</span>
+            {agent.maxSupply.toLocaleString()}
           </p>
         </div>
         <div className="rounded-lg bg-secondary/60 px-3 py-2 text-center">
-          <p className="flex items-center justify-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-            <Zap className="size-2.5" aria-hidden="true" />
-            Daily Farming
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+            Wallet Limit
           </p>
-          <p className="mt-0.5 text-sm font-bold tabular-nums text-foreground">
-            {agent.pulsePerDay}
-            <span className="text-xs font-medium"> $PULSE/day</span>
-          </p>
+          <p className="mt-0.5 text-sm font-bold text-foreground">{AGENT_HUB_WALLET_LIMIT_LABEL}</p>
         </div>
       </div>
-
-      <dl className="mt-2 grid grid-cols-2 gap-y-1 text-xs">
-        <dt className="text-muted-foreground">Maximum supply</dt>
-        <dd className="text-right font-medium tabular-nums text-foreground">
-          {agent.maxSupply.toLocaleString()}
-        </dd>
-        <dt className="text-muted-foreground">Wallet limit</dt>
-        <dd className="text-right font-medium text-foreground">{AGENT_HUB_WALLET_LIMIT_LABEL}</dd>
-      </dl>
 
       <div className="mt-4 flex-1" />
 
