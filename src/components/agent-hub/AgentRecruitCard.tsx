@@ -18,7 +18,7 @@ export function AgentRecruitCard({
   const tierLabel = getRateTierLabel(agent);
 
   return (
-    <article className="group flex h-full flex-col rounded-2xl border border-border bg-card p-5 transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-xl">
+    <article className="group flex h-full flex-col rounded-2xl border border-border bg-card p-4 transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-xl">
       <div className="relative mx-auto w-fit">
         <AgentPortraitStage agent={agent} size="lg" />
         <span
@@ -29,7 +29,7 @@ export function AgentRecruitCard({
         </span>
       </div>
 
-      <div className="mt-4 text-center">
+      <div className="mt-3 text-center">
         <div className="flex items-center justify-center gap-2">
           <h3 className="text-lg font-semibold text-foreground">{agent.name}</h3>
           <RarityBadge rarity={agent.rarity} />
@@ -37,7 +37,7 @@ export function AgentRecruitCard({
         <p className="mt-0.5 text-xs uppercase tracking-wide text-muted-foreground">{agent.role}</p>
       </div>
 
-      <div className="mt-4 text-center">
+      <div className="mt-3 text-center">
         <p className="text-3xl font-bold leading-none tabular-nums" style={{ color: accent }}>
           {agent.pulsePerDay}
         </p>
@@ -46,7 +46,7 @@ export function AgentRecruitCard({
         </p>
       </div>
 
-      <div className="mt-3">
+      <div className="mt-2">
         <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-secondary">
           <div
             aria-hidden="true"
@@ -57,14 +57,14 @@ export function AgentRecruitCard({
         <p className="mt-1.5 text-center text-[11px] text-muted-foreground">0 recruited</p>
       </div>
 
-      <p className="mt-4 text-center text-sm text-muted-foreground">
+      <p className="mt-2 text-center text-sm text-muted-foreground">
         Price{" "}
         <span className="font-semibold tabular-nums text-foreground">
           {agent.price} {agent.paymentTokenSymbol}
         </span>
       </p>
 
-      <div className="mt-4 grid grid-cols-2 gap-2 border-t border-border/70 pt-4">
+      <div className="mt-3 grid grid-cols-2 gap-2 border-t border-border/70 pt-3">
         <div className="rounded-lg bg-secondary/60 px-3 py-2 text-center">
           <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
             Max Supply
@@ -81,9 +81,9 @@ export function AgentRecruitCard({
         </div>
       </div>
 
-      <div className="mt-4 flex-1" />
+      <div className="mt-3 flex-1" />
 
-      <div className="mt-4 flex flex-col gap-2">
+      <div className="mt-3 flex flex-col gap-2">
         <Button
           type="button"
           className="w-full"
