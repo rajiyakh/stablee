@@ -89,7 +89,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "author", content: "RobinPulse" },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "RobinPulse" },
+      { property: "og:image", content: "https://robinpulse.xyz/og/robinpulse-og.jpg" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "RobinPulse — AI Intelligence Protocol" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:site", content: "@Robin_Pulse" },
+      { name: "twitter:image", content: "https://robinpulse.xyz/og/robinpulse-og.jpg" },
     ],
     links: [
       {

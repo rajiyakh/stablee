@@ -28,7 +28,7 @@ export const projectConfig = {
   whitepaperUrl: read("VITE_PROJECT_WHITEPAPER_URL"),
 
   socialLinks: {
-    x: read("VITE_X_URL"),
+    x: read("VITE_X_URL") || "https://x.com/Robin_Pulse",
     discord: read("VITE_DISCORD_URL"),
     telegram: read("VITE_TELEGRAM_URL"),
     github: read("VITE_GITHUB_URL"),
