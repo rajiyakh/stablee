@@ -7,7 +7,7 @@ import { isAgentHubContractsConfigured } from "@/config/contracts";
 const STATUS_ROWS = [
   { label: "Minting", value: "Coming Soon" },
   { label: "Farming", value: "Begins after minting" },
-  { label: "$PULSE Claim", value: "Locked until TGE" },
+  { label: "$ORCA Claim", value: "Locked until TGE" },
 ];
 
 export function AgentHubHero() {
@@ -31,12 +31,12 @@ export function AgentHubHero() {
         </span>
 
         <h1 className="mt-3 font-display text-3xl tracking-tight text-foreground sm:text-4xl">
-          Mint AI Agents. Farm Future $PULSE.
+          Mint AI Agents. Farm Future $ORCA.
         </h1>
 
         <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
           Build your RobinPulse research team before TGE. Each Genesis Agent continuously
-          accumulates future $PULSE allocation according to its farming rate.
+          accumulates future $ORCA allocation according to its farming rate.
         </p>
 
         <div className="mt-5 flex flex-wrap items-center justify-center gap-3">

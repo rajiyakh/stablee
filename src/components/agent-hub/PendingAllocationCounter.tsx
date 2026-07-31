@@ -19,7 +19,7 @@ export function PendingAllocationCounter({
   return (
     <div className="flex items-center gap-1.5" aria-live="polite">
       <span className="tabular-nums text-sm font-semibold text-foreground">
-        {Number(pending).toLocaleString(undefined, { maximumFractionDigits: 4 })} $PULSE
+        {Number(pending).toLocaleString(undefined, { maximumFractionDigits: 4 })} $ORCA
       </span>
       <Tooltip>
         <TooltipTrigger asChild>

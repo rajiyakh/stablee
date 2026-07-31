@@ -61,9 +61,7 @@ export function RecruitmentConfirmationModal({
             {totalPrice} {agent.paymentTokenSymbol}
           </dd>
           <dt className="text-muted-foreground">Daily Farming</dt>
-          <dd className="text-right tabular-nums text-foreground">
-            {agent.pulsePerDay} $PULSE/day
-          </dd>
+          <dd className="text-right tabular-nums text-foreground">{agent.pulsePerDay} $ORCA/day</dd>
           <dt className="text-muted-foreground">Wallet limit</dt>
           <dd className="text-right text-foreground">{AGENT_HUB_WALLET_LIMIT_LABEL}</dd>
           <dt className="text-muted-foreground">Maximum supply</dt>
@@ -77,7 +75,7 @@ export function RecruitmentConfirmationModal({
         </dl>
 
         <p className="text-xs leading-relaxed text-muted-foreground">
-          Farmed $PULSE remains locked until TGE and official claim activation. Minting is not
+          Farmed $ORCA remains locked until TGE and official claim activation. Minting is not
           currently live — this preview does not reserve an Agent or guarantee availability.
         </p>
 

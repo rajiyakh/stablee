@@ -1,6 +1,6 @@
 # Agent Hub Overview
 
-Agent Hub (`/app/agents-hub`) is a pre-TGE (Token Generation Event) preview of RobinPulse's collectible AI-agent / $PULSE-farming product. Six Genesis Agents can eventually be recruited for a fixed price; once recruited, each continuously accumulates future $PULSE allocation at its configured daily rate. Nothing on this page is live yet — no wallet-gated purchases, no real farming, no real $PULSE exist today. Every wallet is capped at 5 Genesis Agents total (not per-agent) — see `AGENT_HUB_WALLET_LIMIT` in `src/config/agentHub.ts`.
+Agent Hub (`/app/agents-hub`) is a pre-TGE (Token Generation Event) preview of RobinPulse's collectible AI-agent / $ORCA-farming product — the Ocean Intelligence Fleet. Six Genesis Agents can eventually be recruited for a fixed price; once recruited, each continuously accumulates future $ORCA allocation at its configured daily rate. Nothing on this page is live yet — no wallet-gated purchases, no real farming, no real $ORCA exist today. Every wallet is capped at 5 Genesis Agents total (not per-agent) — see `AGENT_HUB_WALLET_LIMIT` in `src/config/agentHub.ts`.
 
 ## Where everything lives
 
@@ -15,7 +15,7 @@ Agent Hub (`/app/agents-hub`) is a pre-TGE (Token Generation Event) preview of R
 | Local dev preview positions                                | `src/lib/agent-hub/localPreview.ts`                                                 |
 | Page components                                            | `src/components/agent-hub/**`                                                       |
 | Route                                                      | `src/routes/app/agents-hub.tsx`, `src/routes/app/agents-hub.$slug.tsx`              |
-| Portrait artwork                                           | `public/agents/*.svg` (see `docs/AGENT_ARTWORK.md`)                                 |
+| Portrait artwork                                           | `public/agents/*.webp` (see `docs/AGENT_ARTWORK.md`)                                |
 
 ## Two independent on/off signals — read this before changing either
 
@@ -23,7 +23,7 @@ Agent Hub (`/app/agents-hub`) is a pre-TGE (Token Generation Event) preview of R
 
 ## Genesis Agents vs. AI analyst agents — do not merge these
 
-`src/lib/agents.ts`'s `agents` array is a completely separate, pre-existing system: real-time market-commentary analysts that power the live feed and `src/lib/feed/consensus.ts`'s scoring. Four Genesis Agent names intentionally overlap with analyst names (Vector, Echo, Ledger, Atlas) for cross-section identity consistency; Nova and Oracle have no analyst counterpart. `genesisAgentRegistry` must never be merged into, or read through, `getAgent()` — doing so would silently make a collectible config object start participating in live consensus weighting.
+`src/lib/agents.ts`'s `agents` array is a completely separate, pre-existing system: real-time market-commentary analysts that power the live feed and `src/lib/feed/consensus.ts`'s scoring. The Genesis Agent collection (the Ocean Intelligence Fleet — Shrimp Scout, Manta Signal, Dolphin Echo, Razor Shark, Blackfin Orca, Titan Whale) has no name overlap with the analyst roster. `genesisAgentRegistry` must never be merged into, or read through, `getAgent()` — doing so would silently make a collectible config object start participating in live consensus weighting.
 
 ## Current mode (as shipped)
 

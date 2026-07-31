@@ -21,12 +21,12 @@ describe("agentHubConfig", () => {
     expect(agentHubConfig.completeSetBonus.enabled).toBe(false);
     expect(agentHubConfig.completeSetBonus.bonusPercent).toBe(0);
     expect(agentHubConfig.completeSetBonus.requiredAgentIds).toEqual([
-      "vector",
-      "echo",
-      "ledger",
-      "atlas",
-      "nova",
-      "oracle",
+      "shrimp-scout",
+      "manta-signal",
+      "dolphin-echo",
+      "razor-shark",
+      "blackfin-orca",
+      "titan-whale",
     ]);
   });
 });
@@ -37,7 +37,7 @@ describe("AGENT_HUB_WALLET_LIMIT", () => {
   });
 
   it("has a label that matches the numeric constant", () => {
-    expect(AGENT_HUB_WALLET_LIMIT_LABEL).toBe("5");
+    expect(AGENT_HUB_WALLET_LIMIT_LABEL).toBe("5 Total Genesis Agents");
   });
 });
 

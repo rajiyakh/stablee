@@ -4,7 +4,7 @@ Portrait artwork lives as static image files at `public/agents/*`, referenced by
 
 ## Sourcing — client-supplied, not hand-authored
 
-The original build used hand-authored SVG geometric portraits (no external assets, matching this codebase's default "never invent/fabricate" stance). The owner asked for photorealistic character art instead, referencing an AI-generated (Midjourney-style) example. Producing that quality is outside what this assistant can generate — there's no image-generation or 3D-rendering tool available, only file/code tools. **The owner supplied the six portrait files directly (delivered as `1.png`–`6.png`, 1254×1254, mapped to agents by visor color and motif); this codebase only optimized, integrated, and animated them.**
+The original build used hand-authored SVG geometric portraits (no external assets, matching this codebase's default "never invent/fabricate" stance). The owner asked for photorealistic character art instead, referencing an AI-generated (Midjourney-style) example. Producing that quality is outside what this assistant can generate — there's no image-generation or 3D-rendering tool available, only file/code tools. **The owner supplied the portrait files directly.** The original six (delivered as `1.png`–`6.png`, 1254×1254, mapped to agents by visor color and motif) were later fully replaced by a second owner-supplied set of six marine-AI renders (also `1.png`–`6.png`, 1254×1254, mapped to agents by species and on-image branding) when the collection rebranded to the Ocean Intelligence Fleet. This codebase only optimizes, integrates, and animates whatever set is current.
 
 This means: **licensing and usage rights for these images are the owner's responsibility**, not verified or guaranteed by this codebase. If a file is ever replaced, keep the same filename/aspect ratio so nothing else needs to change.
 
@@ -12,19 +12,19 @@ Source PNGs were resized (max width ~1200px) and converted to WEBP at ~q82 via `
 
 ## Current files
 
-| File                    | Agent                                                         | Match signal                                                             |
-| ----------------------- | ------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| `vector.webp`           | Vector                                                        | Lime visor glow                                                          |
-| `echo.webp`             | Echo                                                          | Cyan visor glow + twin orbiting drone orbs                               |
-| `ledger.webp`           | Ledger                                                        | Amber visor + glowing chest core                                         |
-| `atlas.webp`            | Atlas                                                         | Green holographic globe on chest                                         |
-| `nova.webp`             | Nova                                                          | Purple visor + floating crystal shards                                   |
-| `oracle.webp`           | Oracle                                                        | Gold halo rings + ceremonial cloak + orbiting orbs (most ornate, mythic) |
-| `agent-placeholder.svg` | Error fallback only (unchanged, still hand-authored/original) |
+| File                    | Agent                                                         | Match signal                                         |
+| ----------------------- | ------------------------------------------------------------- | ---------------------------------------------------- |
+| `shrimp-scout.webp`     | Shrimp Scout                                                  | Robotic shrimp                                       |
+| `manta-signal.webp`     | Manta Signal                                                  | Robotic manta ray, "MANTA SIGNAL" labeled on the art |
+| `dolphin-echo.webp`     | Dolphin Echo                                                  | Robotic dolphin                                      |
+| `razor-shark.webp`      | Razor Shark                                                   | Robotic shark                                        |
+| `blackfin-orca.webp`    | Blackfin Orca                                                 | Robotic orca                                         |
+| `titan-whale.webp`      | Titan Whale                                                   | Robotic humpback whale (most ornate, mythic)         |
+| `agent-placeholder.svg` | Error fallback only (unchanged, still hand-authored/original) | —                                                    |
 
 ## Image spec for replacements
 
-- **Square (1:1)** — `AgentPortrait.tsx` renders every size as `aspect-square` with `object-cover`, matching the delivered art's native 1254×1254 dimensions. This is intentional: several agents (Echo, Nova, Oracle) have orbiting elements (drone orbs, floating shards, halo orbs) positioned near the horizontal edges — a portrait (2:3) crop would clip them. Don't switch back to a portrait aspect ratio without re-checking those side elements survive the crop.
+- **Square (1:1)** — `AgentPortrait.tsx` renders every size as `aspect-square` with `object-cover`, matching the delivered art's native 1254×1254 dimensions. This is intentional: some agents (e.g. Blackfin Orca, Titan Whale) have elements positioned near the horizontal edges — a portrait (2:3) crop would clip them. Don't switch back to a portrait aspect ratio without re-checking those side elements survive the crop.
 - Consistent framing/crop across all six so they sit evenly in a grid
 - Under ~500KB each; convert to WEBP if a PNG export comes in larger (see the `sharp-cli` command above)
 - Save into `public/agents/` under the agent's slug, then update that agent's `avatarPath` in `genesisAgents.ts` if the extension differs from what's already there — and update the `.svg` regex in `genesisAgents.test.ts` if the extension family changes again

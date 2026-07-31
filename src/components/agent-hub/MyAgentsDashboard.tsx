@@ -53,12 +53,12 @@ export function MyAgentsDashboard({
   const stats = [
     { label: "My Agents", value: knownPositions.length.toString() },
     { label: "Active Farmers", value: activeFarmers.toString() },
-    { label: "Daily Farming Rate", value: `${dailyRateTotal} $PULSE/day` },
+    { label: "Daily Farming Rate", value: `${dailyRateTotal} $ORCA/day` },
     {
-      label: "Pending $PULSE",
+      label: "Pending $ORCA",
       value: `${Number(pendingTotal).toLocaleString(undefined, { maximumFractionDigits: 4 })}`,
     },
-    { label: "Claimed $PULSE", value: claimedTotal.toString() },
+    { label: "Claimed $ORCA", value: claimedTotal.toString() },
     { label: "Claim Status", value: "Locked until TGE" },
   ];
 

@@ -10,7 +10,7 @@ const FAQ_ITEMS = [
   {
     question: "What is a Genesis Agent?",
     answer:
-      "A collectible RobinPulse AI Agent designed to accumulate future $PULSE allocation according to its configured farming rate.",
+      "A collectible RobinPulse AI Agent designed to accumulate future $ORCA allocation according to its configured farming rate.",
   },
   {
     question: "When does farming begin?",
@@ -18,8 +18,8 @@ const FAQ_ITEMS = [
       "Farming begins from the activation time defined by the final minting and farming system.",
   },
   {
-    question: "Can I claim $PULSE now?",
-    answer: "No. $PULSE claims remain locked until TGE and official claim activation.",
+    question: "Can I claim $ORCA now?",
+    answer: "No. $ORCA claims remain locked until TGE and official claim activation.",
   },
   {
     question: "Is minting live?",

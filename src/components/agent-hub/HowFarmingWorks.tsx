@@ -11,7 +11,7 @@ const STEPS = [
     icon: Sprout,
     title: "Farming Begins",
     description:
-      "The Agent starts accumulating future $PULSE allocation from its activation timestamp.",
+      "The Agent starts accumulating future $ORCA allocation from its activation timestamp.",
   },
   {
     icon: Coins,

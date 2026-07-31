@@ -6,8 +6,8 @@ const PLACEHOLDER_PATH = "/agents/agent-placeholder.svg";
 /**
  * Square (1:1) to match the client-supplied character art — see
  * docs/AGENT_ARTWORK.md. Widths only; height is derived from aspect-square.
- * Square keeps side elements (Echo's drone orbs, Nova's shards, Oracle's
- * halo orbs) intact — a portrait crop would clip them.
+ * Square keeps side elements (e.g. Blackfin Orca's and Titan Whale's
+ * near-edge details) intact — a portrait crop would clip them.
  */
 const SIZE_CLASSES = {
   sm: "w-14",

@@ -19,7 +19,7 @@ export function PreTgeNotice() {
         <div>
           <h2 className="text-sm font-semibold text-foreground">Pre-TGE Farming Notice</h2>
           <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-            Genesis Agents accumulate future $PULSE allocation before TGE. $PULSE is not currently
+            Genesis Agents accumulate future $ORCA allocation before TGE. $ORCA is not currently
             claimable or transferable through Agent Hub. Final contract addresses, claim mechanics,
             token details, and distribution procedures will be announced through official RobinPulse
             channels.

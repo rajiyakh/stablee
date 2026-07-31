@@ -14,7 +14,7 @@ export function AgentGrid({
       <SectionHeading
         eyebrow="Genesis Collection"
         title="Six Genesis Agents"
-        description="Each Agent has a fixed maximum supply, a shared wallet limit, and a configured daily $PULSE farming rate."
+        description="The RobinPulse Ocean Intelligence Fleet consists of six autonomous marine AI agents designed to monitor Robinhood Mainnet from the smallest emerging opportunities to the largest whale movements. Each Agent specializes in a different layer of market intelligence and farms $ORCA every day after recruitment."
       />
       <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {agents.map((agent) => (

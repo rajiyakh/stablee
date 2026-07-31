@@ -7,12 +7,12 @@ describe("sortGenesisAgents", () => {
     const sorted = sortGenesisAgents(genesisAgentRegistry, "price", "asc");
     const prices = sorted.map((a) => Number(a.price));
     expect(prices).toEqual([...prices].sort((a, b) => a - b));
-    expect(sorted[0].name).toBe("Vector");
+    expect(sorted[0].name).toBe("Shrimp Scout");
   });
 
   it("sorts by price descending", () => {
     const sorted = sortGenesisAgents(genesisAgentRegistry, "price", "desc");
-    expect(sorted[0].name).toBe("Oracle");
+    expect(sorted[0].name).toBe("Titan Whale");
   });
 
   it("sorts by rarity from Common to Mythic ascending", () => {
@@ -29,7 +29,7 @@ describe("sortGenesisAgents", () => {
 
   it("sorts by max supply", () => {
     const sorted = sortGenesisAgents(genesisAgentRegistry, "supply", "desc");
-    expect(sorted[0].name).toBe("Vector"); // largest max supply (2500)
+    expect(sorted[0].name).toBe("Shrimp Scout"); // largest max supply (2500)
   });
 
   it("does not mutate the original array", () => {

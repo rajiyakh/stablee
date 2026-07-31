@@ -30,10 +30,10 @@ describe("localPreview", () => {
 
   it("adds a preview position that starts farming immediately, under the dedicated storage key", () => {
     const storage = createMemoryStorage();
-    const position = addPreviewAgent("vector", storage);
+    const position = addPreviewAgent("shrimp-scout", storage);
 
     expect(position).not.toBeNull();
-    expect(position?.agentId).toBe("vector");
+    expect(position?.agentId).toBe("shrimp-scout");
     expect(position?.status).toBe("farming");
     expect(position?.claimedPulse).toBe("0");
     expect(storage.getItem(AGENT_HUB_PREVIEW_STORAGE_KEY)).not.toBeNull();
@@ -47,30 +47,30 @@ describe("localPreview", () => {
 
   it("round-trips multiple preview positions through storage", () => {
     const storage = createMemoryStorage();
-    addPreviewAgent("vector", storage);
-    addPreviewAgent("echo", storage);
+    addPreviewAgent("shrimp-scout", storage);
+    addPreviewAgent("manta-signal", storage);
 
     const positions = readPreviewPositions(storage);
     expect(positions).toHaveLength(2);
-    expect(positions.map((p) => p.agentId).sort()).toEqual(["echo", "vector"]);
+    expect(positions.map((p) => p.agentId).sort()).toEqual(["manta-signal", "shrimp-scout"]);
   });
 
   it("removes a single preview position by ownershipId", () => {
     const storage = createMemoryStorage();
-    const first = addPreviewAgent("vector", storage)!;
-    addPreviewAgent("echo", storage);
+    const first = addPreviewAgent("shrimp-scout", storage)!;
+    addPreviewAgent("manta-signal", storage);
 
     removePreviewAgent(first.ownershipId, storage);
 
     const remaining = readPreviewPositions(storage);
     expect(remaining).toHaveLength(1);
-    expect(remaining[0].agentId).toBe("echo");
+    expect(remaining[0].agentId).toBe("manta-signal");
   });
 
   it("clears all preview positions", () => {
     const storage = createMemoryStorage();
-    addPreviewAgent("vector", storage);
-    addPreviewAgent("oracle", storage);
+    addPreviewAgent("shrimp-scout", storage);
+    addPreviewAgent("titan-whale", storage);
 
     clearPreviewAgents(storage);
 

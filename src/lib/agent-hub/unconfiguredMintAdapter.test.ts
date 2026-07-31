@@ -9,7 +9,7 @@ describe("unconfiguredMintAdapter", () => {
   });
 
   it("returns the real configured maxSupply, but null minted count (never a fabricated number)", async () => {
-    const supply = await unconfiguredMintAdapter.getAgentSupply("vector");
+    const supply = await unconfiguredMintAdapter.getAgentSupply("shrimp-scout");
     expect(supply.maxSupply).toBe(2500);
     expect(supply.minted).toBeNull();
   });
@@ -21,13 +21,13 @@ describe("unconfiguredMintAdapter", () => {
   });
 
   it("reports zero minted count for any wallet pre-integration", async () => {
-    const count = await unconfiguredMintAdapter.getWalletMintedCount("0xabc", "vector");
+    const count = await unconfiguredMintAdapter.getWalletMintedCount("0xabc", "shrimp-scout");
     expect(count).toBe(0);
   });
 
   it("never prepares a successful recruitment while contracts are not configured", async () => {
     const prepared = await unconfiguredMintAdapter.prepareRecruitment({
-      agentId: "oracle",
+      agentId: "titan-whale",
       quantity: 1,
     });
     expect(prepared.configured).toBe(false);

@@ -77,7 +77,7 @@ function GenesisAgentDetailPage() {
                 Daily Farming
               </dt>
               <dd className="mt-1 font-semibold tabular-nums text-foreground">
-                {agent.pulsePerDay} $PULSE/day
+                {agent.pulsePerDay} $ORCA/day
               </dd>
             </div>
             <div>
@@ -118,10 +118,10 @@ function GenesisAgentDetailPage() {
           <section className="mt-4 rounded-xl border border-border bg-card p-5">
             <h2 className="text-sm font-semibold text-foreground">Farming overview</h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              Once minted, {agent.name} continuously accumulates future $PULSE allocation at{" "}
-              {agent.pulsePerDay} $PULSE per day, starting from its activation timestamp.
-              Accumulated allocation remains locked until the official Token Generation Event and
-              claim activation — minting is not currently live.
+              Once minted, {agent.name} continuously accumulates future $ORCA allocation at{" "}
+              {agent.pulsePerDay} $ORCA per day, starting from its activation timestamp. Accumulated
+              allocation remains locked until the official Token Generation Event and claim
+              activation — minting is not currently live.
             </p>
           </section>
 

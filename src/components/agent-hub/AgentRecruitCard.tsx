@@ -42,7 +42,7 @@ export function AgentRecruitCard({
           {agent.pulsePerDay}
         </p>
         <p className="mt-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-          $PULSE / day
+          $ORCA / day
         </p>
       </div>
 

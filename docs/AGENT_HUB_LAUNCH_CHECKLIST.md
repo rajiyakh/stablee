@@ -7,7 +7,7 @@ Everything below must be true before Agent Hub is described anywhere as "live." 
 - [ ] `src/config/genesisAgents.ts` — every `price`, `maxSupply`, `pulsePerDay` reviewed and approved by whoever owns final tokenomics (see `docs/AGENT_ECONOMY_CONFIG.md`)
 - [ ] `AGENT_HUB_WALLET_LIMIT` (`src/config/agentHub.ts`) — the global per-wallet cap reviewed and approved
 - [ ] `paymentTokenSymbol` confirmed correct for the actual payment asset used at mint time
-- [ ] Portrait artwork (`public/agents/*.svg`) reviewed — replace any placeholder-quality art before public launch (see `docs/AGENT_ARTWORK.md`)
+- [ ] Portrait artwork (`public/agents/*.webp`) reviewed — replace any placeholder-quality art before public launch (see `docs/AGENT_ARTWORK.md`)
 - [ ] `agentHubConfig.completeSetBonus` — either leave `enabled: false`, or fill in a real `bonusPercent` and confirm it before enabling
 
 ## Chain and wallet configuration

@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { SectionHeading } from "@/components/common/SectionHeading";
+import { AgentPortrait } from "./AgentPortrait";
 import { RarityBadge } from "./RarityBadge";
 import { sortGenesisAgents, type AgentSortKey } from "@/lib/agent-hub/sort";
 import { AGENT_HUB_WALLET_LIMIT_LABEL } from "@/config/agentHub";
@@ -79,7 +80,12 @@ export function AgentComparisonTable({ agents }: { agents: GenesisAgentConfig[] 
           <TableBody>
             {sorted.map((agent) => (
               <TableRow key={agent.id}>
-                <TableCell className="font-medium text-foreground">{agent.name}</TableCell>
+                <TableCell className="font-medium text-foreground">
+                  <div className="flex items-center gap-2">
+                    <AgentPortrait src={agent.avatarPath} name={agent.name} size="sm" />
+                    {agent.name}
+                  </div>
+                </TableCell>
                 <TableCell className="text-muted-foreground">{agent.role}</TableCell>
                 <TableCell>
                   <RarityBadge rarity={agent.rarity} />
@@ -88,7 +94,7 @@ export function AgentComparisonTable({ agents }: { agents: GenesisAgentConfig[] 
                   {agent.price} {agent.paymentTokenSymbol}
                 </TableCell>
                 <TableCell className="text-right tabular-nums">
-                  {agent.pulsePerDay} $PULSE/day
+                  {agent.pulsePerDay} $ORCA/day
                 </TableCell>
                 <TableCell className="text-right tabular-nums">
                   {agent.maxSupply.toLocaleString()}
@@ -108,7 +114,10 @@ export function AgentComparisonTable({ agents }: { agents: GenesisAgentConfig[] 
         {sorted.map((agent) => (
           <div key={agent.id} className="rounded-xl border border-border bg-card p-4">
             <div className="flex items-center justify-between gap-2">
-              <span className="font-semibold text-foreground">{agent.name}</span>
+              <div className="flex items-center gap-2">
+                <AgentPortrait src={agent.avatarPath} name={agent.name} size="sm" />
+                <span className="font-semibold text-foreground">{agent.name}</span>
+              </div>
               <RarityBadge rarity={agent.rarity} />
             </div>
             <p className="mt-0.5 text-xs text-muted-foreground">{agent.role}</p>
@@ -119,7 +128,7 @@ export function AgentComparisonTable({ agents }: { agents: GenesisAgentConfig[] 
               </dd>
               <dt className="text-muted-foreground">Daily Farming</dt>
               <dd className="text-right tabular-nums text-foreground">
-                {agent.pulsePerDay} $PULSE/day
+                {agent.pulsePerDay} $ORCA/day
               </dd>
               <dt className="text-muted-foreground">Max supply</dt>
               <dd className="text-right tabular-nums text-foreground">

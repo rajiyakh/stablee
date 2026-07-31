@@ -15,7 +15,16 @@ describe("genesisAgentRegistry", () => {
 
   it("includes the six required identities", () => {
     const names = genesisAgentRegistry.map((a) => a.name).sort();
-    expect(names).toEqual(["Atlas", "Echo", "Ledger", "Nova", "Oracle", "Vector"].sort());
+    expect(names).toEqual(
+      [
+        "Blackfin Orca",
+        "Dolphin Echo",
+        "Manta Signal",
+        "Razor Shark",
+        "Shrimp Scout",
+        "Titan Whale",
+      ].sort(),
+    );
   });
 
   it("every agent has a non-empty price and positive supply and daily farming rate", () => {
@@ -39,7 +48,7 @@ describe("genesisAgentRegistry", () => {
 
 describe("getGenesisAgent", () => {
   it("finds an agent by slug", () => {
-    expect(getGenesisAgent("vector")?.name).toBe("Vector");
+    expect(getGenesisAgent("shrimp-scout")?.name).toBe("Shrimp Scout");
   });
 
   it("returns undefined for an unknown slug", () => {

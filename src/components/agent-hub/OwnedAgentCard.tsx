@@ -54,11 +54,11 @@ export function OwnedAgentCard({
           </div>
           <div>
             <dt className="uppercase tracking-wide">Daily rate</dt>
-            <dd className="text-foreground">{agent.pulsePerDay} $PULSE/day</dd>
+            <dd className="text-foreground">{agent.pulsePerDay} $ORCA/day</dd>
           </div>
           <div>
             <dt className="uppercase tracking-wide">Claimed</dt>
-            <dd className="text-foreground">{position.claimedPulse} $PULSE</dd>
+            <dd className="text-foreground">{position.claimedPulse} $ORCA</dd>
           </div>
         </dl>
 

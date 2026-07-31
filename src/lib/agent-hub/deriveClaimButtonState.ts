@@ -19,7 +19,7 @@ export const CLAIM_BUTTON_LABEL: Record<ClaimButtonState, string> = {
   "connect-wallet": "Connect Wallet",
   "wrong-network": "Wrong Network",
   "nothing-to-claim": "Nothing to Claim",
-  "claim-ready": "Claim $PULSE",
+  "claim-ready": "Claim $ORCA",
   claiming: "Claiming",
   claimed: "Claimed",
 };

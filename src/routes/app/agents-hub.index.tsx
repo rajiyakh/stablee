@@ -24,7 +24,7 @@ export const Route = createFileRoute("/app/agents-hub/")({
       {
         name: "description",
         content:
-          "Mint Genesis Agents and farm future $PULSE allocation before TGE. Minting is not currently live — no wallet-gated purchases exist yet.",
+          "Mint Genesis Agents and farm future $ORCA allocation before TGE. Minting is not currently live — no wallet-gated purchases exist yet.",
       },
     ],
   }),
@@ -69,7 +69,7 @@ function AgentsHubPage() {
                 variant="outline"
                 size="sm"
                 className="gap-1.5"
-                onClick={() => preview.add(agents[0]?.id ?? "vector")}
+                onClick={() => preview.add(agents[0]?.id ?? "shrimp-scout")}
               >
                 <Plus className="size-3.5" aria-hidden="true" />
                 Add Preview Agent

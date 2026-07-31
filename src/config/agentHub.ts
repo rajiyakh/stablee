@@ -29,9 +29,16 @@ export const agentHubConfig = {
 
   completeSetBonus: {
     enabled: false,
-    requiredAgentIds: ["vector", "echo", "ledger", "atlas", "nova", "oracle"],
+    requiredAgentIds: [
+      "shrimp-scout",
+      "manta-signal",
+      "dolphin-echo",
+      "razor-shark",
+      "blackfin-orca",
+      "titan-whale",
+    ],
     bonusPercent: 0,
-    title: "Genesis Intelligence Team",
+    title: "Ocean Intelligence Fleet",
   } satisfies CompleteSetBonusConfig,
 } as const;
 
@@ -44,7 +51,7 @@ export type AgentHubConfig = typeof agentHubConfig;
  * real AgentMintAdapter is wired in.
  */
 export const AGENT_HUB_WALLET_LIMIT = 5;
-export const AGENT_HUB_WALLET_LIMIT_LABEL = `${AGENT_HUB_WALLET_LIMIT}`;
+export const AGENT_HUB_WALLET_LIMIT_LABEL = `${AGENT_HUB_WALLET_LIMIT} Total Genesis Agents`;
 
 /** Hard kill-switch — false means the route/nav entry should not exist at all. */
 export function isAgentHubEnabled(): boolean {
