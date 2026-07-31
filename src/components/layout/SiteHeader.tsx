@@ -131,7 +131,7 @@ export function SiteHeader() {
               <XIcon className="h-3.5 w-3.5" />
             </a>
           ) : null}
-          <WalletConnectButton className="hidden sm:inline-flex" />
+          <WalletConnectButton />
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className="xl:hidden" aria-label="Open menu">
@@ -163,6 +163,18 @@ export function SiteHeader() {
                     ) : null}
                   </Link>
                 ))}
+                {projectConfig.socialLinks.x ? (
+                  <a
+                    href={projectConfig.socialLinks.x}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary/70 hover:text-foreground"
+                  >
+                    <XIcon className="h-3.5 w-3.5" />
+                    Follow on X
+                  </a>
+                ) : null}
               </nav>
             </SheetContent>
           </Sheet>
