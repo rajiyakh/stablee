@@ -106,11 +106,6 @@ export function SwapConfirmDialog({
           <dd className="text-right font-mono text-xs">{shortenAddress(buyToken.address, 5)}</dd>
         </dl>
 
-        <p className="rounded-lg bg-muted/40 p-2.5 text-xs text-muted-foreground">
-          RobinPulse includes a platform fee in every completed swap, sent to the RobinPulse
-          treasury wallet. There is no minimum swap amount.
-        </p>
-
         {!sellToken.verified || !buyToken.verified ? (
           <p className="rounded-lg border border-warning/40 bg-warning/10 p-2.5 text-xs text-warning">
             One or more selected tokens is unverified. Trade at your own risk — liquidity and safety

@@ -36,7 +36,7 @@ export const Route = createFileRoute("/app/swap/")({
       {
         name: "description",
         content:
-          "Trade Robinhood Mainnet tokens instantly, routed through audited on-chain infrastructure with a transparent RobinPulse platform fee.",
+          "Trade Robinhood Mainnet tokens instantly, routed through audited on-chain infrastructure.",
       },
     ],
   }),
