@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { isWalletConfigured } from "@/config/project";
+import { TermsGate } from "@/components/legal/TermsGate";
 
 /**
  * Lazy so the Privy/wagmi/WalletConnect bundle (~200kb gzipped) is only
@@ -157,14 +158,16 @@ function RootComponent() {
   // context only, never extra DOM, so there's no flash/hydration mismatch
   // between the fallback and the resolved tree.
   return (
-    <QueryClientProvider client={queryClient}>
-      {walletReady ? (
-        <Suspense fallback={app}>
-          <WalletProviders>{app}</WalletProviders>
-        </Suspense>
-      ) : (
-        app
-      )}
-    </QueryClientProvider>
+    <TermsGate>
+      <QueryClientProvider client={queryClient}>
+        {walletReady ? (
+          <Suspense fallback={app}>
+            <WalletProviders>{app}</WalletProviders>
+          </Suspense>
+        ) : (
+          app
+        )}
+      </QueryClientProvider>
+    </TermsGate>
   );
 }

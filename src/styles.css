@@ -509,6 +509,36 @@
   animation: trend-line-draw 6s linear infinite;
 }
 
+/* Sitewide Terms & Conditions gate (TermsModal.tsx) — entrance only, the
+   modal simply unmounts on accept rather than animating out. */
+@keyframes terms-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@utility animate-terms-overlay {
+  animation: terms-overlay-in 0.3s ease-out forwards;
+}
+
+@keyframes terms-modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@utility animate-terms-modal {
+  animation: terms-modal-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
