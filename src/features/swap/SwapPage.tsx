@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { formatUnits, parseUnits } from "viem";
 import { useAccount, useSwitchChain } from "wagmi";
-import { ArrowDownUp, ExternalLink } from "lucide-react";
+import { ArrowDownUp, ExternalLink, History } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -31,10 +31,12 @@ import { SwapAmountInput } from "./SwapAmountInput";
 import { SwapPercentageButtons } from "./SwapPercentageButtons";
 import { SwapQuoteDetails } from "./SwapQuoteDetails";
 import { SwapConfirmDialog } from "./SwapConfirmDialog";
+import { SwapHistoryDialog } from "./SwapHistoryDialog";
 import { SlippageControl } from "./SlippageControl";
 import { useSwapTokenBalance } from "./hooks/useSwapTokenBalance";
 import { useTokenApproval } from "./hooks/useTokenApproval";
 import { useSwapExecution } from "./hooks/useSwapExecution";
+import { useSwapHistory } from "./hooks/useSwapHistory";
 
 type FlowState = "idle" | "needs-approval" | "approving" | "ready" | "success";
 
@@ -98,12 +100,14 @@ export function SwapPage({
   const [slippageBps, setSlippageBps] = useState<number | null>(null);
   const [flow, setFlow] = useState<FlowState>("idle");
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
   const [firmQuote, setFirmQuote] = useState<{ data: SwapQuoteData; fetchedAt: number } | null>(
     null,
   );
 
   const wrongNetwork = isConnected && robinhoodChain && chainId !== robinhoodChain.id;
   const balance = useSwapTokenBalance(sellToken);
+  const swapHistory = useSwapHistory(address);
 
   // The branded ValidatedQuote only exists when the server's validateQuote()
   // returned ok:true — this is a type-safe narrowing, not a cast. Neither
@@ -334,6 +338,17 @@ export function SwapPage({
       buyToken: buyToken?.address,
       transactionHash: execution.hash,
     });
+    if (execution.hash && sellToken && buyToken && firmQuote?.data.liquidityAvailable) {
+      swapHistory.addEntry({
+        hash: execution.hash,
+        timestamp: new Date().toISOString(),
+        sellSymbol: sellToken.symbol,
+        sellAmount: formatUnits(BigInt(firmQuote.data.sellAmount), sellToken.decimals),
+        buySymbol: buyToken.symbol,
+        buyAmount: formatUnits(BigInt(firmQuote.data.buyAmount), buyToken.decimals),
+        status: reverted ? "reverted" : "confirmed",
+      });
+    }
     if (!reverted) {
       setConfirmOpen(false);
       setFlow("success");
@@ -355,7 +370,7 @@ export function SwapPage({
   return (
     <div className="mx-auto w-full max-w-md">
       <div className="card-surface space-y-4 p-5">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-1 rounded-full bg-secondary/60 p-1">
             <span className="rounded-full bg-card px-3 py-1 font-display text-sm font-semibold text-foreground shadow-sm">
               Swap
@@ -372,7 +387,19 @@ export function SwapPage({
               </Badge>
             </button>
           </div>
-          <SlippageControl slippageBps={slippageBps} onChange={setSlippageBps} />
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              className="size-8 rounded-full"
+              onClick={() => setHistoryOpen(true)}
+              aria-label="Swap history"
+            >
+              <History className="size-3.5" />
+            </Button>
+            <SlippageControl slippageBps={slippageBps} onChange={setSlippageBps} />
+          </div>
         </div>
 
         <div className="space-y-4">
@@ -544,6 +571,13 @@ export function SwapPage({
           isSubmitting={execution.isSwapping || execution.isConfirming}
         />
       ) : null}
+
+      <SwapHistoryDialog
+        open={historyOpen}
+        onOpenChange={setHistoryOpen}
+        history={swapHistory.history}
+        isConnected={isConnected}
+      />
     </div>
   );
 }
