@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { RefreshCw } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { formatTokenAmount } from "@/lib/market/format";
 import type { SwapTokenConfig } from "@/config/swapTokens";
 
 const DECIMAL_INPUT_RE = /^\d*\.?\d*$/;
@@ -36,11 +37,11 @@ export function SwapAmountInput({
 }) {
   return (
     <div className="rounded-xl border border-border bg-muted/30 p-3">
-      <div className="flex items-center justify-between text-xs text-muted-foreground">
-        <span>{label}</span>
+      <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
+        <span className="shrink-0">{label}</span>
         {balanceFormatted !== undefined && balanceFormatted !== null ? (
-          <span className="flex items-center gap-1.5">
-            Balance: {balanceFormatted} {token?.symbol}
+          <span className="flex min-w-0 items-center gap-1.5 truncate">
+            Balance: {formatTokenAmount(balanceFormatted)} {token?.symbol}
           </span>
         ) : balanceLoading ? (
           <span className="text-muted-foreground/70">Loading balance…</span>

@@ -18,6 +18,21 @@ export function formatUsd(value: number | null | undefined, opts?: { compact?: b
   }).format(value);
 }
 
+/**
+ * Trims an already-`formatUnits`-formatted token amount string to a fixed
+ * max decimal places for display — `formatUnits` itself returns the full,
+ * un-rounded precision (up to 18 digits for an 18-decimal token), which
+ * overflows a narrow balance label. Never touches the integer part, and
+ * never used for the actual on-chain amount (that stays BigInt/parseUnits
+ * end to end) — display only.
+ */
+export function formatTokenAmount(rawFormatted: string, maxDecimals = 6): string {
+  const [whole, decimals] = rawFormatted.split(".");
+  if (!decimals) return whole;
+  const trimmed = decimals.slice(0, maxDecimals).replace(/0+$/, "");
+  return trimmed ? `${whole}.${trimmed}` : whole;
+}
+
 export function formatNumber(value: number | null | undefined, compact = false): string {
   if (value === null || value === undefined || !Number.isFinite(value)) return "—";
   return new Intl.NumberFormat("en-US", {

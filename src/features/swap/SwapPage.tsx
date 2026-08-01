@@ -6,6 +6,7 @@ import { ArrowDownUp, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { robinhoodChain } from "@/config/robinhoodChain";
 import { WALLET_NOT_CONFIGURED_MESSAGE } from "@/config/project";
 import {
@@ -355,7 +356,22 @@ export function SwapPage({
     <div className="mx-auto w-full max-w-md">
       <div className="card-surface space-y-4 p-5">
         <div className="flex items-center justify-between">
-          <h1 className="font-display text-xl font-semibold text-foreground">Swap</h1>
+          <div className="flex items-center gap-1 rounded-full bg-secondary/60 p-1">
+            <span className="rounded-full bg-card px-3 py-1 font-display text-sm font-semibold text-foreground shadow-sm">
+              Swap
+            </span>
+            <button
+              type="button"
+              disabled
+              aria-label="Bridge — coming soon"
+              className="flex cursor-not-allowed items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium text-muted-foreground/60"
+            >
+              Bridge
+              <Badge variant="secondary" className="rounded-full px-1.5 py-0 text-[10px]">
+                Soon
+              </Badge>
+            </button>
+          </div>
           <SlippageControl slippageBps={slippageBps} onChange={setSlippageBps} />
         </div>
 
