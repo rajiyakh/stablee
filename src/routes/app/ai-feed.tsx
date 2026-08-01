@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { BuySwapButton } from "@/components/market/BuySwapButton";
 import { AgentMessageCard } from "@/components/feed/AgentMessageCard";
 import { AgentConsensusCard } from "@/components/feed/AgentConsensusCard";
-import { chainTrendingQuery, globalTrendingQuery } from "@/lib/market/client";
+import { chainTrendingQuery } from "@/lib/market/client";
 import { manualLookupQuery } from "@/lib/feed/client";
 import { projectConfig } from "@/config/project";
 import { buildAutomatedSummaries } from "@/lib/feed/summaries";
@@ -29,7 +29,7 @@ export const Route = createFileRoute("/app/ai-feed")({
       {
         name: "description",
         content:
-          "Deterministic, data-derived market summaries generated from live CoinGecko and DEX Screener data, plus published agent calls once they exist.",
+          "Deterministic, data-derived market summaries generated from live Robinhood Mainnet DEX Screener data, plus published agent calls once they exist.",
       },
       { property: "og:title", content: "AI Feed" },
       {
@@ -43,12 +43,11 @@ export const Route = createFileRoute("/app/ai-feed")({
 
 function AiFeedPage() {
   const chainId = projectConfig.dataSources.robinhoodDexScreenerChainId;
-  const trending = useQuery(globalTrendingQuery());
   const chain = useQuery({ ...chainTrendingQuery(chainId), enabled: Boolean(chainId) });
 
-  const generatedAt = trending.data?.fetchedAt ?? new Date().toISOString();
-  const summaries = trending.data?.data
-    ? buildAutomatedSummaries(trending.data.data, chain.data?.data?.markets ?? [], generatedAt)
+  const generatedAt = chain.data?.fetchedAt ?? new Date().toISOString();
+  const summaries = chain.data?.data
+    ? buildAutomatedSummaries(chain.data.data.markets, generatedAt)
     : [];
 
   const [addressInput, setAddressInput] = useState("");
@@ -137,17 +136,24 @@ function AiFeedPage() {
       ) : null}
 
       <div className="mt-6">
-        {trending.isPending ? (
-          <CardSkeleton count={4} />
-        ) : trending.isError ? (
-          <ErrorState
-            message={(trending.error as Error).message}
-            onRetry={() => trending.refetch()}
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          Robinhood Mainnet
+        </p>
+        {!chainId ? (
+          <EmptyState
+            title="Robinhood Mainnet is not configured yet"
+            description="No DEX Screener chain identifier has been supplied for Robinhood Mainnet, so no on-chain markets can be retrieved. Nothing is shown in place of real data."
+            className="mt-3"
           />
+        ) : chain.isPending ? (
+          <CardSkeleton count={4} />
+        ) : chain.isError ? (
+          <ErrorState message={(chain.error as Error).message} onRetry={() => chain.refetch()} />
         ) : summaries.length === 0 ? (
           <EmptyState
             title="No summaries available"
-            description="Providers returned no data to summarize right now."
+            description="The provider returned no on-chain markets for Robinhood Mainnet right now."
+            className="mt-3"
           />
         ) : (
           <div className="grid gap-4 sm:grid-cols-2">
