@@ -53,6 +53,19 @@ export function changeTone(value: number | null | undefined): "positive" | "nega
   return value > 0 ? "positive" : "negative";
 }
 
+const SENTIMENT_THRESHOLD_PERCENT = 3;
+
+/** Derived purely from the 24h price move already shown next to it — not a prediction. */
+export function deriveSentiment(
+  priceChange24h: number | null | undefined,
+): "bullish" | "bearish" | "neutral" {
+  if (priceChange24h === null || priceChange24h === undefined || !Number.isFinite(priceChange24h))
+    return "neutral";
+  if (priceChange24h >= SENTIMENT_THRESHOLD_PERCENT) return "bullish";
+  if (priceChange24h <= -SENTIMENT_THRESHOLD_PERCENT) return "bearish";
+  return "neutral";
+}
+
 export function shortenAddress(address: string | null | undefined, size = 4): string {
   if (!address) return "—";
   if (address.length <= size * 2 + 3) return address;

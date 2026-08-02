@@ -6,6 +6,7 @@ import { PriceChart } from "@/components/market/PriceChart";
 import { ErrorState } from "@/components/common/ErrorState";
 import { CardSkeleton } from "@/components/common/Skeletons";
 import { ChangeBadge } from "@/components/common/ChangeBadge";
+import { SentimentBadge } from "@/components/common/SentimentBadge";
 import { WatchButton } from "@/components/common/WatchButton";
 import { coinQuery } from "@/lib/market/client";
 import { formatUsd } from "@/lib/market/format";
@@ -68,6 +69,7 @@ function CoinPage() {
             {formatUsd(coin.price)}
           </span>
           <ChangeBadge value={coin.change24h} />
+          <SentimentBadge priceChange24h={coin.change24h} />
           <WatchButton
             entry={{ kind: "coin", id: coin.id, symbol: coin.symbol, name: coin.name }}
           />

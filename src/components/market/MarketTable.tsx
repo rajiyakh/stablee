@@ -11,8 +11,10 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { ChangeBadge } from "@/components/common/ChangeBadge";
+import { SentimentBadge } from "@/components/common/SentimentBadge";
 import { TrendScoreBadge } from "@/components/common/TrendScoreBadge";
 import { WatchButton } from "@/components/common/WatchButton";
+import { CopyContractButton } from "@/components/feed/CopyContractButton";
 import { BuySwapButton } from "./BuySwapButton";
 import { RiskFlags } from "./RiskFlags";
 import { formatAge, formatNumber, formatUsd, shortenAddress } from "@/lib/market/format";
@@ -142,11 +144,19 @@ export function MarketTable({
                       {m.dexId ? ` · ${m.dexId}` : ""}
                     </span>
                   </Link>
+                  {!m.baseToken.symbol ? (
+                    <span onClick={(event) => event.stopPropagation()}>
+                      <CopyContractButton address={m.baseToken.address} className="mt-1" />
+                    </span>
+                  ) : null}
                   {showRisks ? <RiskFlags flags={entry.risks} max={2} className="mt-1" /> : null}
                 </TableCell>
                 <TableCell className="text-right tabular-nums">{formatUsd(m.priceUsd)}</TableCell>
                 <TableCell className="text-right">
-                  <ChangeBadge value={m.priceChange.h24} />
+                  <div className="flex items-center justify-end gap-1.5">
+                    <ChangeBadge value={m.priceChange.h24} />
+                    <SentimentBadge priceChange24h={m.priceChange.h24} />
+                  </div>
                 </TableCell>
                 <TableCell className="text-right tabular-nums">
                   {formatUsd(m.volume.h24, { compact: true })}

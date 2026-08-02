@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { AlertTriangle } from "lucide-react";
-import { shortenAddress } from "@/lib/market/format";
+import { CopyContractButton } from "@/components/feed/CopyContractButton";
 import { detectTokenTax } from "@/lib/swap/tokenTax";
 import { humanizeRouteSources } from "@/lib/swap/route";
 import { QUOTE_TTL_MS } from "@/config/swapPolicy";
@@ -100,10 +100,14 @@ export function SwapConfirmDialog({
           ) : null}
 
           <dt className="text-muted-foreground">Sell contract</dt>
-          <dd className="text-right font-mono text-xs">{shortenAddress(sellToken.address, 5)}</dd>
+          <dd className="text-right">
+            <CopyContractButton address={sellToken.address} />
+          </dd>
 
           <dt className="text-muted-foreground">Buy contract</dt>
-          <dd className="text-right font-mono text-xs">{shortenAddress(buyToken.address, 5)}</dd>
+          <dd className="text-right">
+            <CopyContractButton address={buyToken.address} />
+          </dd>
         </dl>
 
         {!sellToken.verified || !buyToken.verified ? (

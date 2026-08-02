@@ -8,6 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ChangeBadge } from "@/components/common/ChangeBadge";
+import { SentimentBadge } from "@/components/common/SentimentBadge";
 import { WatchButton } from "@/components/common/WatchButton";
 import { formatUsd } from "@/lib/market/format";
 import type { CoinMarket } from "@/lib/market/types";
@@ -71,7 +72,10 @@ export function CoinTable({
                 {formatUsd(coin.currentPrice)}
               </TableCell>
               <TableCell className="text-right">
-                <ChangeBadge value={coin.priceChangePercentage24h} />
+                <div className="flex items-center justify-end gap-1.5">
+                  <ChangeBadge value={coin.priceChangePercentage24h} />
+                  <SentimentBadge priceChange24h={coin.priceChangePercentage24h} />
+                </div>
               </TableCell>
               <TableCell className="text-right tabular-nums">
                 {formatUsd(coin.totalVolume, { compact: true })}

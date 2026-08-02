@@ -11,9 +11,7 @@
  * nothing invented), mirroring the priority order engine.server.ts already
  * uses for a token it has never observed before (detectEvents's `!prev`
  * branch). Everything downstream (eventAgentMap, pickTemplate,
- * computeConsensus) is reused unchanged. No trade setups are generated here
- * — see the Agent Hub-style "explicitly not changing" note in the plan this
- * shipped under: skips the extra per-lookup OHLCV call for cost/latency.
+ * computeConsensus, buildTradeSetup) is reused unchanged from engine.server.ts.
  */
 import { randomUUID } from "node:crypto";
 import { getTokenPairs } from "@/lib/market/dexscreener.server";
@@ -23,6 +21,7 @@ import { newLaunchConfig } from "@/config/newLaunches";
 import { feedConfig } from "@/config/feed";
 import { pickTemplate, eventAgentMap } from "./templates";
 import { computeConsensus } from "./consensus";
+import { buildTradeSetup } from "./tradeSetup.server";
 import type { ScoredMarket } from "@/lib/market/types";
 import type {
   AgentMessage,
@@ -53,6 +52,17 @@ export type ManualLookupResult = ManualLookupSuccess | ManualLookupFailure;
 
 /** Trend score above which a cold token reads as "would rank in the top trending tier." */
 const ENTERED_TRENDING_SCORE = 55;
+
+function robinhoodNetworkId(): string {
+  return (process.env.GECKOTERMINAL_ROBINHOOD_NETWORK_ID ?? "").trim();
+}
+
+function stanceToDirection(stance: AgentMessage["stance"]): "long" | "short" | "watch" | "avoid" {
+  if (stance === "bullish") return "long";
+  if (stance === "bearish") return "short";
+  if (stance === "avoid") return "avoid";
+  return "watch";
+}
 
 /**
  * Priority mirrors engine.server.ts's detectEvents() "!prev" (never-seen-
@@ -120,9 +130,10 @@ function buildEvent(
   };
 }
 
-function buildMessages(event: MarketEvent): AgentMessage[] {
+async function buildMessages(event: MarketEvent, scored: ScoredMarket): Promise<AgentMessage[]> {
   const candidateAgents = eventAgentMap[event.type] ?? [];
   const selected = candidateAgents.slice(0, feedConfig.maxAgentsPerEvent);
+  const networkId = robinhoodNetworkId();
   const messages: AgentMessage[] = [];
 
   for (const agentSlug of selected) {
@@ -139,7 +150,7 @@ function buildMessages(event: MarketEvent): AgentMessage[] {
       ].includes(r),
     );
 
-    messages.push({
+    const message: AgentMessage = {
       id: randomUUID(),
       eventId: event.id,
       agentSlug,
@@ -158,7 +169,14 @@ function buildMessages(event: MarketEvent): AgentMessage[] {
       dataTimestamp: event.dataTimestamp,
       createdAt: new Date().toISOString(),
       stance: template.stance,
-    });
+    };
+
+    if (agentSlug === "vector" || agentSlug === "revert") {
+      const direction = stanceToDirection(template.stance);
+      message.tradeSetup = await buildTradeSetup(event, agentSlug, scored, networkId, direction);
+    }
+
+    messages.push(message);
   }
 
   return messages;
@@ -191,7 +209,7 @@ export async function buildManualAgentPost(
   }
 
   const event = buildEvent(eventType, scored, result.fetchedAt);
-  const messages = buildMessages(event);
+  const messages = await buildMessages(event, scored);
   if (messages.length === 0) {
     return {
       ok: false,

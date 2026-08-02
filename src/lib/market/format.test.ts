@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatTokenAmount } from "./format";
+import { deriveSentiment, formatTokenAmount } from "./format";
 
 describe("formatTokenAmount", () => {
   it("trims a full-precision decimal string to the max decimal places", () => {
@@ -24,5 +24,29 @@ describe("formatTokenAmount", () => {
 
   it("defaults to 6 max decimal places", () => {
     expect(formatTokenAmount("1.1234567891")).toBe("1.123456");
+  });
+});
+
+describe("deriveSentiment", () => {
+  it("returns bullish when 24h change meets the positive threshold", () => {
+    expect(deriveSentiment(3)).toBe("bullish");
+    expect(deriveSentiment(12.5)).toBe("bullish");
+  });
+
+  it("returns bearish when 24h change meets the negative threshold", () => {
+    expect(deriveSentiment(-3)).toBe("bearish");
+    expect(deriveSentiment(-12.5)).toBe("bearish");
+  });
+
+  it("returns neutral within the threshold band", () => {
+    expect(deriveSentiment(2.9)).toBe("neutral");
+    expect(deriveSentiment(-2.9)).toBe("neutral");
+    expect(deriveSentiment(0)).toBe("neutral");
+  });
+
+  it("returns neutral for null, undefined, or non-finite values", () => {
+    expect(deriveSentiment(null)).toBe("neutral");
+    expect(deriveSentiment(undefined)).toBe("neutral");
+    expect(deriveSentiment(Number.NaN)).toBe("neutral");
   });
 });

@@ -12,8 +12,8 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { CopyContractButton } from "@/components/feed/CopyContractButton";
 import { resolveTokenQuery } from "@/lib/swap/client";
-import { shortenAddress } from "@/lib/market/format";
 import type { SwapTokenConfig } from "@/config/swapTokens";
 
 const EVM_ADDRESS_RE = /^0x[a-fA-F0-9]{40}$/;
@@ -135,8 +135,9 @@ export function TokenSelect({
                         </Badge>
                       ) : null}
                     </div>
-                    <p className="font-mono text-xs text-muted-foreground">
-                      {shortenAddress(resolved.address, 6)} · {resolved.decimals} decimals
+                    <p className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
+                      <CopyContractButton address={resolved.address} /> · {resolved.decimals}{" "}
+                      decimals
                     </p>
                     {!resolved.verified ? (
                       <>

@@ -11,6 +11,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
+import { CopyContractButton } from "@/components/feed/CopyContractButton";
 import { coinSearchQuery, dexSearchQuery } from "@/lib/market/client";
 import { formatUsd, shortenAddress } from "@/lib/market/format";
 
@@ -119,6 +120,11 @@ export function GlobalSearch() {
                   <span className="font-medium">
                     {pair.baseToken.symbol ?? shortenAddress(pair.baseToken.address)}
                   </span>
+                  {!pair.baseToken.symbol ? (
+                    <span onClick={(event) => event.stopPropagation()}>
+                      <CopyContractButton address={pair.baseToken.address} className="ml-1" />
+                    </span>
+                  ) : null}
                   <span className="ml-2 text-xs text-muted-foreground">
                     {pair.chainId}
                     {pair.dexId ? ` · ${pair.dexId}` : ""}

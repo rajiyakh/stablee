@@ -5,8 +5,10 @@ import { StatCard } from "@/components/market/StatCard";
 import { ErrorState } from "@/components/common/ErrorState";
 import { CardSkeleton } from "@/components/common/Skeletons";
 import { ChangeBadge } from "@/components/common/ChangeBadge";
+import { SentimentBadge } from "@/components/common/SentimentBadge";
 import { WatchButton } from "@/components/common/WatchButton";
 import { BuySwapButton } from "@/components/market/BuySwapButton";
+import { CopyContractButton } from "@/components/feed/CopyContractButton";
 import { RiskFlags } from "@/components/market/RiskFlags";
 import { DexChartEmbed } from "@/components/market/DexChartEmbed";
 import { EmptyState } from "@/components/common/EmptyState";
@@ -66,15 +68,17 @@ function TokenPage() {
       <div className="flex flex-wrap items-center gap-3">
         <div>
           <h1 className="font-serif text-3xl tracking-tight text-foreground">{symbol}</h1>
-          <p className="text-xs text-muted-foreground">
-            {top.baseToken.name ?? "Unknown token"} · {chainId} · {shortenAddress(address, 6)}
+          <p className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
+            {top.baseToken.name ?? "Unknown token"} · {chainId} ·{" "}
+            <CopyContractButton address={address} />
           </p>
         </div>
-        <div className="ml-auto flex items-center gap-3">
+        <div className="ml-auto flex flex-wrap items-center gap-3">
           <span className="text-2xl font-semibold tabular-nums text-foreground">
             {formatUsd(top.priceUsd)}
           </span>
           <ChangeBadge value={top.priceChange.h24} />
+          <SentimentBadge priceChange24h={top.priceChange.h24} />
           <BuySwapButton chainId={chainId} address={address} />
           <WatchButton
             entry={{
