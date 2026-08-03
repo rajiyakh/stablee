@@ -93,6 +93,14 @@ export function TokenSelect({
         >
           {value ? (
             <span className="flex items-center gap-1.5 overflow-hidden">
+              {value.logoUrl ? (
+                <img
+                  src={value.logoUrl}
+                  alt=""
+                  className="size-4 shrink-0 rounded-full"
+                  loading="lazy"
+                />
+              ) : null}
               <span className="truncate font-medium">{value.symbol}</span>
               {value.verified ? (
                 <BadgeCheck className="size-3.5 shrink-0 text-positive" aria-label="Verified" />
@@ -125,6 +133,14 @@ export function TokenSelect({
                 ) : resolved ? (
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
+                      {resolved.logoUrl ? (
+                        <img
+                          src={resolved.logoUrl}
+                          alt=""
+                          className="size-5 shrink-0 rounded-full"
+                          loading="lazy"
+                        />
+                      ) : null}
                       <span className="shrink-0 font-medium">{resolved.symbol}</span>
                       <span className="min-w-0 truncate text-xs text-muted-foreground">
                         {resolved.name}
@@ -194,6 +210,14 @@ export function TokenSelect({
                   onSelect={() => selectToken(token)}
                 >
                   <div className="flex w-full items-center gap-2">
+                    {token.logoUrl ? (
+                      <img
+                        src={token.logoUrl}
+                        alt=""
+                        className="size-5 shrink-0 rounded-full"
+                        loading="lazy"
+                      />
+                    ) : null}
                     <span className="shrink-0 font-medium">{token.symbol}</span>
                     <span className="min-w-0 truncate text-xs text-muted-foreground">
                       {token.name}

@@ -38,6 +38,12 @@ export const NATIVE_SELL_ENABLED = true;
  */
 export const NATIVE_GAS_RESERVE_WEI = 1_000_000_000_000_000n; // 0.001 ETH
 
+// logoUrl values below were read live from robinhoodchain.blockscout.com's own
+// token API (icon_url field) — same verification discipline as the
+// symbol/decimals above, not a guessed CDN path. Native ETH has no contract
+// of its own, so it reuses WETH's icon (WETH is ETH 1:1 wrapped).
+const WETH_LOGO_URL = "https://assets.coingecko.com/coins/images/2518/small/weth.png?1696503332";
+
 export const swapTokens: SwapTokenConfig[] = [
   ...(NATIVE_SELL_ENABLED
     ? [
@@ -46,6 +52,7 @@ export const swapTokens: SwapTokenConfig[] = [
           symbol: "ETH",
           name: "Ether",
           decimals: 18,
+          logoUrl: WETH_LOGO_URL,
           verified: true,
         },
       ]
@@ -55,6 +62,7 @@ export const swapTokens: SwapTokenConfig[] = [
     symbol: "WETH",
     name: "WETH",
     decimals: 18,
+    logoUrl: WETH_LOGO_URL,
     verified: true,
   },
   {
@@ -62,6 +70,8 @@ export const swapTokens: SwapTokenConfig[] = [
     symbol: "USDG",
     name: "Global Dollar",
     decimals: 6,
+    logoUrl:
+      "https://assets.coingecko.com/coins/images/51281/standard/GDN_USDG_Token_200x200.png?1730484111",
     isStablecoin: true,
     verified: true,
   },

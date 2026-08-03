@@ -27,6 +27,7 @@ import {
 import { trackSwapEvent } from "@/lib/swap/analytics";
 import { ApiError } from "@/lib/market/client";
 import { TokenSelect } from "./TokenSelect";
+import { SwapTokenChart } from "./SwapTokenChart";
 import { SwapAmountInput } from "./SwapAmountInput";
 import { SwapPercentageButtons } from "./SwapPercentageButtons";
 import { SwapQuoteDetails } from "./SwapQuoteDetails";
@@ -391,201 +392,207 @@ export function SwapPage({
   const chain = robinhoodChain;
 
   return (
-    <div className="mx-auto w-full max-w-md">
-      <div className="card-surface space-y-4 p-5">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          {tabsSlot}
-          <div className="flex items-center gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              className="size-8 rounded-full"
-              onClick={() => setHistoryOpen(true)}
-              aria-label="Swap history"
-            >
-              <History className="size-3.5" />
-            </Button>
-            <SlippageControl slippageBps={slippageBps} onChange={setSlippageBps} />
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          {wrongNetwork ? (
-            <div className="rounded-lg border border-warning/40 bg-warning/10 p-3 text-sm text-warning">
-              <p>Wrong network. Swaps only work on {chain.name}.</p>
-              <Button
-                size="sm"
-                variant="outline"
-                className="mt-2"
-                disabled={isSwitching}
-                onClick={() => switchChain({ chainId: chain.id })}
-              >
-                Switch to {chain.name}
-              </Button>
-            </div>
-          ) : null}
-
-          <div className="space-y-1">
-            <SwapAmountInput
-              label="Sell"
-              token={sellToken}
-              value={sellAmountInput}
-              onChange={setSellAmountInput}
-              balanceFormatted={balance.formatted}
-              balanceLoading={isConnected && balance.isLoading}
-              balanceError={isConnected && balance.isError}
-              onRetryBalance={balance.refetch}
-              tokenSelect={
-                <TokenSelect
-                  tokens={availableTokens}
-                  value={sellToken}
-                  onChange={setSellToken}
-                  onCustomTokenResolved={rememberCustomToken}
-                  excludeAddress={buyToken?.address}
-                  label="Sell token"
-                />
-              }
-              footer={
-                <SwapPercentageButtons
-                  onSelect={handlePercentageSelect}
-                  disabled={balance.maxSellValue === null}
-                />
-              }
-            />
-            <div className="flex justify-center">
+    <div className="mx-auto w-full max-w-6xl lg:grid lg:grid-cols-[minmax(0,1fr)_28rem] lg:items-start lg:gap-6">
+      <div className="mx-auto w-full max-w-md lg:order-2 lg:mx-0">
+        <div className="card-surface space-y-4 p-5">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            {tabsSlot}
+            <div className="flex items-center gap-2">
               <Button
                 type="button"
                 variant="outline"
                 size="icon"
                 className="size-8 rounded-full"
-                onClick={() => {
-                  const s = sellToken;
-                  setSellToken(buyToken);
-                  setBuyToken(s);
-                }}
-                aria-label="Reverse pair"
+                onClick={() => setHistoryOpen(true)}
+                aria-label="Swap history"
               >
-                <ArrowDownUp className="size-3.5" />
+                <History className="size-3.5" />
               </Button>
+              <SlippageControl slippageBps={slippageBps} onChange={setSlippageBps} />
             </div>
-            <SwapAmountInput
-              label="Buy (estimated)"
-              token={buyToken}
-              value={
-                priceQuery.data?.data?.liquidityAvailable
-                  ? String(
-                      Number(priceQuery.data.data.buyAmount) / 10 ** (buyToken?.decimals ?? 18),
-                    )
-                  : ""
-              }
-              readOnly
-              tokenSelect={
-                <TokenSelect
-                  tokens={availableTokens}
-                  value={buyToken}
-                  onChange={setBuyToken}
-                  onCustomTokenResolved={rememberCustomToken}
-                  excludeAddress={sellToken?.address}
-                  label="Buy token"
-                />
-              }
-            />
           </div>
 
-          {insufficientBalance ? (
-            <p className="rounded-lg border border-negative/30 bg-negative/10 p-3 text-sm text-negative">
-              Insufficient {sellToken?.symbol} balance.
-            </p>
-          ) : null}
+          <div className="space-y-4">
+            {wrongNetwork ? (
+              <div className="rounded-lg border border-warning/40 bg-warning/10 p-3 text-sm text-warning">
+                <p>Wrong network. Swaps only work on {chain.name}.</p>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="mt-2"
+                  disabled={isSwitching}
+                  onClick={() => switchChain({ chainId: chain.id })}
+                >
+                  Switch to {chain.name}
+                </Button>
+              </div>
+            ) : null}
 
-          {flow === "needs-approval" ? (
-            <Button
-              className="w-full"
-              onClick={handleApproveClick}
-              disabled={approval.isApproving || approval.isConfirming}
-            >
-              {approval.isApproving || approval.isConfirming
-                ? "Approving…"
-                : `Approve ${sellToken?.symbol}`}
-            </Button>
-          ) : (
-            <Button
-              className="w-full"
-              disabled={
-                !isConnected ||
-                Boolean(wrongNetwork) ||
-                !sellAmountBaseUnits ||
-                insufficientBalance ||
-                (priceQuery.data?.data?.priceImpactBps !== null &&
-                  priceQuery.data?.data?.priceImpactBps !== undefined &&
-                  priceQuery.data.data.priceImpactBps >= PRICE_IMPACT_MAX_BPS) ||
-                quoteQuery.isFetching
-              }
-              onClick={handleSwapClick}
-            >
-              {insufficientBalance
-                ? "Insufficient balance"
-                : quoteQuery.isFetching
-                  ? "Fetching quote…"
-                  : "Review Swap"}
-            </Button>
-          )}
-
-          {priceQuery.isError ? (
-            <p className="rounded-lg border border-negative/30 bg-negative/10 p-3 text-sm text-negative">
-              {priceQuery.error instanceof ApiError
-                ? priceQuery.error.message
-                : "Robinhood Mainnet market data is temporarily unavailable."}
-            </p>
-          ) : null}
-
-          {priceQuery.data?.data && sellToken && buyToken ? (
-            <SwapQuoteDetails
-              sellToken={sellToken}
-              buyToken={buyToken}
-              quote={priceQuery.data.data}
-              fetchedAt={Date.parse(priceQuery.data.fetchedAt ?? new Date().toISOString())}
-              slippageBps={slippageBps}
-            />
-          ) : null}
-
-          {flow === "success" && execution.hash ? (
-            <div className="rounded-lg border border-positive/30 bg-positive/10 p-3 text-sm text-positive">
-              <p className="font-medium">Transaction confirmed</p>
-              <a
-                href={`${chain.blockExplorers?.default.url}/tx/${execution.hash}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-1 inline-flex items-center gap-1 text-xs underline"
-              >
-                View on Blockscout <ExternalLink className="size-3" />
-              </a>
+            <div className="space-y-1">
+              <SwapAmountInput
+                label="Sell"
+                token={sellToken}
+                value={sellAmountInput}
+                onChange={setSellAmountInput}
+                balanceFormatted={balance.formatted}
+                balanceLoading={isConnected && balance.isLoading}
+                balanceError={isConnected && balance.isError}
+                onRetryBalance={balance.refetch}
+                tokenSelect={
+                  <TokenSelect
+                    tokens={availableTokens}
+                    value={sellToken}
+                    onChange={setSellToken}
+                    onCustomTokenResolved={rememberCustomToken}
+                    excludeAddress={buyToken?.address}
+                    label="Sell token"
+                  />
+                }
+                footer={
+                  <SwapPercentageButtons
+                    onSelect={handlePercentageSelect}
+                    disabled={balance.maxSellValue === null}
+                  />
+                }
+              />
+              <div className="flex justify-center">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  className="size-8 rounded-full"
+                  onClick={() => {
+                    const s = sellToken;
+                    setSellToken(buyToken);
+                    setBuyToken(s);
+                  }}
+                  aria-label="Reverse pair"
+                >
+                  <ArrowDownUp className="size-3.5" />
+                </Button>
+              </div>
+              <SwapAmountInput
+                label="Buy (estimated)"
+                token={buyToken}
+                value={
+                  priceQuery.data?.data?.liquidityAvailable
+                    ? String(
+                        Number(priceQuery.data.data.buyAmount) / 10 ** (buyToken?.decimals ?? 18),
+                      )
+                    : ""
+                }
+                readOnly
+                tokenSelect={
+                  <TokenSelect
+                    tokens={availableTokens}
+                    value={buyToken}
+                    onChange={setBuyToken}
+                    onCustomTokenResolved={rememberCustomToken}
+                    excludeAddress={sellToken?.address}
+                    label="Buy token"
+                  />
+                }
+              />
             </div>
-          ) : null}
+
+            {insufficientBalance ? (
+              <p className="rounded-lg border border-negative/30 bg-negative/10 p-3 text-sm text-negative">
+                Insufficient {sellToken?.symbol} balance.
+              </p>
+            ) : null}
+
+            {flow === "needs-approval" ? (
+              <Button
+                className="w-full"
+                onClick={handleApproveClick}
+                disabled={approval.isApproving || approval.isConfirming}
+              >
+                {approval.isApproving || approval.isConfirming
+                  ? "Approving…"
+                  : `Approve ${sellToken?.symbol}`}
+              </Button>
+            ) : (
+              <Button
+                className="w-full"
+                disabled={
+                  !isConnected ||
+                  Boolean(wrongNetwork) ||
+                  !sellAmountBaseUnits ||
+                  insufficientBalance ||
+                  (priceQuery.data?.data?.priceImpactBps !== null &&
+                    priceQuery.data?.data?.priceImpactBps !== undefined &&
+                    priceQuery.data.data.priceImpactBps >= PRICE_IMPACT_MAX_BPS) ||
+                  quoteQuery.isFetching
+                }
+                onClick={handleSwapClick}
+              >
+                {insufficientBalance
+                  ? "Insufficient balance"
+                  : quoteQuery.isFetching
+                    ? "Fetching quote…"
+                    : "Review Swap"}
+              </Button>
+            )}
+
+            {priceQuery.isError ? (
+              <p className="rounded-lg border border-negative/30 bg-negative/10 p-3 text-sm text-negative">
+                {priceQuery.error instanceof ApiError
+                  ? priceQuery.error.message
+                  : "Robinhood Mainnet market data is temporarily unavailable."}
+              </p>
+            ) : null}
+
+            {priceQuery.data?.data && sellToken && buyToken ? (
+              <SwapQuoteDetails
+                sellToken={sellToken}
+                buyToken={buyToken}
+                quote={priceQuery.data.data}
+                fetchedAt={Date.parse(priceQuery.data.fetchedAt ?? new Date().toISOString())}
+                slippageBps={slippageBps}
+              />
+            ) : null}
+
+            {flow === "success" && execution.hash ? (
+              <div className="rounded-lg border border-positive/30 bg-positive/10 p-3 text-sm text-positive">
+                <p className="font-medium">Transaction confirmed</p>
+                <a
+                  href={`${chain.blockExplorers?.default.url}/tx/${execution.hash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 inline-flex items-center gap-1 text-xs underline"
+                >
+                  View on Blockscout <ExternalLink className="size-3" />
+                </a>
+              </div>
+            ) : null}
+          </div>
         </div>
+
+        {firmQuote && firmQuote.data.liquidityAvailable && sellToken && buyToken ? (
+          <SwapConfirmDialog
+            open={confirmOpen}
+            onOpenChange={setConfirmOpen}
+            sellToken={sellToken}
+            buyToken={buyToken}
+            quote={firmQuote.data}
+            fetchedAt={firmQuote.fetchedAt}
+            slippageBps={slippageBps}
+            onConfirm={handleConfirmSwap}
+            isSubmitting={execution.isSwapping || execution.isConfirming}
+          />
+        ) : null}
+
+        <SwapHistoryDialog
+          open={historyOpen}
+          onOpenChange={setHistoryOpen}
+          history={swapHistory.history}
+          isConnected={isConnected}
+        />
       </div>
 
-      {firmQuote && firmQuote.data.liquidityAvailable && sellToken && buyToken ? (
-        <SwapConfirmDialog
-          open={confirmOpen}
-          onOpenChange={setConfirmOpen}
-          sellToken={sellToken}
-          buyToken={buyToken}
-          quote={firmQuote.data}
-          fetchedAt={firmQuote.fetchedAt}
-          slippageBps={slippageBps}
-          onConfirm={handleConfirmSwap}
-          isSubmitting={execution.isSwapping || execution.isConfirming}
-        />
-      ) : null}
-
-      <SwapHistoryDialog
-        open={historyOpen}
-        onOpenChange={setHistoryOpen}
-        history={swapHistory.history}
-        isConnected={isConnected}
-      />
+      <div className="mt-6 lg:order-1 lg:mt-0">
+        <SwapTokenChart token={sellToken} />
+      </div>
     </div>
   );
 }
