@@ -59,7 +59,12 @@ export function AgentHubHero() {
             Contract Status
           </p>
           <div className="mt-1.5 flex justify-center">
-            <ContractStatusBadge configured={contractsConfigured} />
+            <ContractStatusBadge
+              configured={contractsConfigured}
+              className={
+                !contractsConfigured ? "border border-white/20 bg-white/10 text-white" : undefined
+              }
+            />
           </div>
         </div>
       </div>
