@@ -148,6 +148,10 @@ function Home() {
         </main>
 
         <aside className="hidden space-y-6 lg:sticky lg:top-20 lg:block">
+          <div className="rounded-xl border border-border bg-card p-3">
+            <FeedSidebarNav {...sidebarProps} />
+          </div>
+
           <section>
             <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
               Top Trending Tokens

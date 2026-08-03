@@ -8,14 +8,12 @@ import { isWalletConfigured, WALLET_NOT_CONFIGURED_MESSAGE } from "@/config/proj
 
 /**
  * Lazy, not a static import: swap.index.tsx is statically imported by the
- * router-generated routeTree.gen.ts, which loads on every route. TradePanel
- * (via SwapPage/BridgePage) pulls in the Privy SDK (usePrivy) — a static
- * import here would ship that to every visitor regardless of whether they
- * ever open /swap. TradePanel statically imports both SwapPage and
- * BridgePage itself, so both stay behind this one lazy() boundary.
+ * router-generated routeTree.gen.ts, which loads on every route. SwapPage
+ * pulls in the Privy SDK (usePrivy) — a static import here would ship that
+ * to every visitor regardless of whether they ever open /swap.
  */
-const TradePanel = lazy(() =>
-  import("@/features/trade/TradePanel").then((m) => ({ default: m.TradePanel })),
+const SwapPage = lazy(() =>
+  import("@/features/swap/SwapPage").then((m) => ({ default: m.SwapPage })),
 );
 
 const evmAddress = z
@@ -24,11 +22,10 @@ const evmAddress = z
   .optional()
   .catch(undefined);
 
-/** ?buy=/?sell= let any page deep-link a specific token into the swap form (see BuySwapButton). ?tab= persists the active Swap/Bridge tab in the URL. */
+/** ?buy=/?sell= let any page deep-link a specific token into the swap form (see BuySwapButton). */
 const searchSchema = z.object({
   buy: evmAddress,
   sell: evmAddress,
-  tab: z.enum(["swap", "bridge"]).catch("swap"),
 });
 
 export const Route = createFileRoute("/app/swap/")({
@@ -47,7 +44,7 @@ export const Route = createFileRoute("/app/swap/")({
 });
 
 function SwapRoute() {
-  const { buy, sell, tab } = Route.useSearch();
+  const { buy, sell } = Route.useSearch();
 
   if (!isWalletConfigured()) {
     return (
@@ -70,7 +67,7 @@ function SwapRoute() {
       />
       <div className="mt-6">
         <Suspense fallback={<PulseLoadingState />}>
-          <TradePanel initialTab={tab} initialBuyAddress={buy} initialSellAddress={sell} />
+          <SwapPage initialBuyAddress={buy} initialSellAddress={sell} />
         </Suspense>
       </div>
     </PageContainer>

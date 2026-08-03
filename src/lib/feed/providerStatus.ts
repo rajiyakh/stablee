@@ -16,7 +16,7 @@ function bestState(providers: ProviderStatus[], ids: string[]): ProviderState {
     );
 }
 
-/** Shared by the Overview page and AppSidebar so both read the same provider-status summary. */
+/** Shared status-summary derivation used by the Overview page's status widget. */
 export function deriveProviderStates(providers: ProviderStatus[] | undefined): {
   marketDataState: ProviderState;
   robinhoodState: ProviderState;

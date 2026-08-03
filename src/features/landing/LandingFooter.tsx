@@ -6,6 +6,7 @@ const platformLinks = [
   { to: "/app" as const, label: "Overview" },
   { to: "/app/markets" as const, label: "Markets" },
   { to: "/app/swap" as const, label: "Swap" },
+  { to: "/app/bridge" as const, label: "Bridge" },
   { to: "/app/portfolio" as const, label: "Portfolio" },
 ];
 

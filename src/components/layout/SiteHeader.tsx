@@ -1,18 +1,22 @@
 import { Link } from "@tanstack/react-router";
-import { Menu, PanelLeft } from "lucide-react";
-import { useState } from "react";
+import { ChevronDown } from "lucide-react";
 import { isWalletConfigured, projectConfig } from "@/config/project";
 import { agentHubConfig } from "@/config/agentHub";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { useSidebar } from "@/components/ui/sidebar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { WalletConnectButton } from "@/components/wallet/WalletConnectButton";
 import { AnimatedPulseLogo } from "@/components/branding/AnimatedPulseLogo";
-import { cn } from "@/lib/utils";
 
-// Most important destinations only — everything else lives in the left
-// sidebar (see AppSidebar.tsx) to keep this from getting crowded.
+// Primary top nav — the most important destinations, always visible at xl+.
+// Below xl (where this row is hidden) these same items also appear at the
+// top of the Menu dropdown, so nothing becomes unreachable on small screens.
 const navItems = [
   { to: "/app", label: "Overview" },
   { to: "/app/ai-feed", label: "AI Feed", hot: true },
@@ -23,7 +27,7 @@ const navItems = [
     badge: isWalletConfigured() ? undefined : "Soon",
     hot: isWalletConfigured(),
   },
-  { to: "/app/portfolio", label: "Portfolio", badge: isWalletConfigured() ? undefined : "Soon" },
+  { to: "/app/bridge", label: "Bridge", badge: isWalletConfigured() ? undefined : "Soon" },
   {
     to: "/app/agents-hub",
     label: "Agent Hub",
@@ -31,15 +35,26 @@ const navItems = [
   },
 ] as const;
 
-// Full list for the mobile menu, where there's no separate sidebar affordance.
-// Leaderboard and Data Sources are intentionally left out of both nav lists
-// (still reachable directly at /app/leaderboard and /app/data) — hidden from nav, not deleted.
-const mobileNavItems = [
-  ...navItems,
-  { to: "/app/trending", label: "Robinhood Trends" },
-  { to: "/app/agents", label: "Agents" },
-  { to: "/app/watchlist", label: "Watchlist" },
-  { to: "/app/token", label: "Token", badge: "Soon" },
+// Everything that used to live in the sidebar or the mobile hamburger sheet,
+// now consolidated into one "Menu" dropdown next to Connect. Portfolio moved
+// here from the primary nav (see navItems above). Leaderboard, Data Sources,
+// Methodology, and Disclaimer previously had no nav entry at all (direct-URL
+// only) — surfaced here for the first time.
+const menuItems = [
+  {
+    to: "/app/portfolio",
+    label: "Portfolio",
+    tag: "APP",
+    badge: isWalletConfigured() ? undefined : "Soon",
+  },
+  { to: "/app/trending", label: "Robinhood Trends", tag: "MARKET" },
+  { to: "/app/agents", label: "Agents", tag: "AI" },
+  { to: "/app/watchlist", label: "Watchlist", tag: "APP" },
+  { to: "/app/token", label: "Token", tag: "ORCA", badge: "Soon" },
+  { to: "/app/leaderboard", label: "Leaderboard", tag: "MARKET" },
+  { to: "/app/data", label: "Data Sources", tag: "DOCS" },
+  { to: "/app/methodology", label: "Methodology", tag: "DOCS" },
+  { to: "/app/disclaimer", label: "Disclaimer", tag: "LEGAL" },
 ] as const;
 
 function XIcon({ className }: { className?: string }) {
@@ -50,29 +65,28 @@ function XIcon({ className }: { className?: string }) {
   );
 }
 
-/**
- * Icon-only sidebar toggle, built on useSidebar() rather than hand-editing
- * the generated shadcn SidebarTrigger primitive. Exported for reuse in
- * AppSidebar.tsx (the sidebar shows its own copy at the top when expanded).
- */
-export function SidebarToggle({ className }: { className?: string }) {
-  const { toggleSidebar } = useSidebar();
+function NavRow({ to, label, badge }: { to: string; label: string; badge?: string }) {
   return (
-    <Button
-      variant="outline"
-      size="icon"
-      className={className}
-      onClick={toggleSidebar}
-      aria-label="Toggle menu"
+    <Link
+      to={to}
+      activeOptions={{ exact: to === "/app" }}
+      activeProps={{ className: "bg-secondary text-foreground" }}
+      className="flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary/70 hover:text-foreground"
     >
-      <PanelLeft className="h-4 w-4" aria-hidden="true" />
-    </Button>
+      {label}
+      {badge ? (
+        <Badge
+          variant="secondary"
+          className="rounded-full px-1.5 py-0 text-[10px] font-semibold leading-4"
+        >
+          {badge}
+        </Badge>
+      ) : null}
+    </Link>
   );
 }
 
 export function SiteHeader() {
-  const [open, setOpen] = useState(false);
-
   return (
     <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-lg [background-image:linear-gradient(to_right,transparent,var(--color-border)_15%,var(--color-border)_85%,transparent)] [background-position:bottom] [background-repeat:no-repeat] [background-size:100%_1px]">
       <div className="mx-auto grid h-14 w-full max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-4 px-4 sm:px-6 lg:px-8">
@@ -132,52 +146,71 @@ export function SiteHeader() {
             </a>
           ) : null}
           <WalletConnectButton />
-          <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="xl:hidden" aria-label="Open menu">
-                <Menu className="h-4 w-4" aria-hidden="true" />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-1.5 rounded-full">
+                Menu
+                <ChevronDown className="size-3.5 opacity-60" />
               </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-72">
-              <SheetTitle className="px-4 pt-4 text-sm font-semibold">Navigate</SheetTitle>
-              <nav className="mt-4 flex flex-col gap-1 px-2 pb-6" aria-label="Mobile">
-                {mobileNavItems.map((item) => (
-                  <Link
-                    key={item.to}
-                    to={item.to}
-                    activeOptions={{ exact: item.to === "/app" }}
-                    onClick={() => setOpen(false)}
-                    activeProps={{ className: "bg-secondary text-foreground" }}
-                    className={cn(
-                      "flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary/70 hover:text-foreground",
-                    )}
-                  >
-                    {item.label}
-                    {"badge" in item && item.badge ? (
-                      <Badge
-                        variant="secondary"
-                        className="rounded-full px-1.5 py-0 text-[10px] font-semibold leading-4"
-                      >
-                        {item.badge}
-                      </Badge>
-                    ) : null}
-                  </Link>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-64">
+              <div className="xl:hidden">
+                {navItems.map((item) => (
+                  <DropdownMenuItem key={item.to} asChild>
+                    <NavRow
+                      to={item.to}
+                      label={item.label}
+                      badge={"badge" in item ? item.badge : undefined}
+                    />
+                  </DropdownMenuItem>
                 ))}
-                {projectConfig.socialLinks.x ? (
-                  <a
-                    href={projectConfig.socialLinks.x}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => setOpen(false)}
-                    className="flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary/70 hover:text-foreground"
+                <DropdownMenuSeparator />
+              </div>
+              {menuItems.map((item) => (
+                <DropdownMenuItem key={item.to} asChild>
+                  <Link
+                    to={item.to}
+                    className="flex items-center justify-between gap-3 text-sm text-muted-foreground hover:text-foreground"
                   >
-                    <XIcon className="h-3.5 w-3.5" />
-                    Follow on X
-                  </a>
-                ) : null}
-              </nav>
-            </SheetContent>
-          </Sheet>
+                    <span className="flex items-center gap-1.5">
+                      {item.label}
+                      {"badge" in item && item.badge ? (
+                        <Badge
+                          variant="secondary"
+                          className="rounded-full px-1.5 py-0 text-[10px] font-semibold leading-4"
+                        >
+                          {item.badge}
+                        </Badge>
+                      ) : null}
+                    </span>
+                    <span className="font-mono text-[10px] uppercase tracking-wide text-muted-foreground/70">
+                      {item.tag}
+                    </span>
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+              {projectConfig.socialLinks.x ? (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <a
+                      href={projectConfig.socialLinks.x}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between gap-3 text-sm text-muted-foreground hover:text-foreground"
+                    >
+                      <span className="flex items-center gap-1.5">
+                        <XIcon className="size-3.5" />X / Twitter
+                      </span>
+                      <span className="font-mono text-[10px] uppercase tracking-wide text-muted-foreground/70">
+                        Social
+                      </span>
+                    </a>
+                  </DropdownMenuItem>
+                </>
+              ) : null}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>

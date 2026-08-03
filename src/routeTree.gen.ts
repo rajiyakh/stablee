@@ -17,6 +17,7 @@ import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as AppAgentsRouteImport } from './routes/app/agents'
 import { Route as AppAgentsHubRouteImport } from './routes/app/agents-hub'
 import { Route as AppAiFeedRouteImport } from './routes/app/ai-feed'
+import { Route as AppBridgeRouteImport } from './routes/app/bridge'
 import { Route as AppDataRouteImport } from './routes/app/data'
 import { Route as AppDisclaimerRouteImport } from './routes/app/disclaimer'
 import { Route as AppLeaderboardRouteImport } from './routes/app/leaderboard'
@@ -111,6 +112,11 @@ const AppAgentsHubRoute = AppAgentsHubRouteImport.update({
 const AppAiFeedRoute = AppAiFeedRouteImport.update({
   id: '/ai-feed',
   path: '/ai-feed',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBridgeRoute = AppBridgeRouteImport.update({
+  id: '/bridge',
+  path: '/bridge',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDataRoute = AppDataRouteImport.update({
@@ -413,6 +419,7 @@ export interface FileRoutesByFullPath {
   '/app/agents': typeof AppAgentsRouteWithChildren
   '/app/agents-hub': typeof AppAgentsHubRouteWithChildren
   '/app/ai-feed': typeof AppAiFeedRoute
+  '/app/bridge': typeof AppBridgeRoute
   '/app/data': typeof AppDataRoute
   '/app/disclaimer': typeof AppDisclaimerRoute
   '/app/leaderboard': typeof AppLeaderboardRoute
@@ -476,6 +483,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/app/agents': typeof AppAgentsRouteWithChildren
   '/app/ai-feed': typeof AppAiFeedRoute
+  '/app/bridge': typeof AppBridgeRoute
   '/app/data': typeof AppDataRoute
   '/app/disclaimer': typeof AppDisclaimerRoute
   '/app/leaderboard': typeof AppLeaderboardRoute
@@ -539,6 +547,7 @@ export interface FileRoutesById {
   '/app/agents': typeof AppAgentsRouteWithChildren
   '/app/agents-hub': typeof AppAgentsHubRouteWithChildren
   '/app/ai-feed': typeof AppAiFeedRoute
+  '/app/bridge': typeof AppBridgeRoute
   '/app/data': typeof AppDataRoute
   '/app/disclaimer': typeof AppDisclaimerRoute
   '/app/leaderboard': typeof AppLeaderboardRoute
@@ -606,6 +615,7 @@ export interface FileRouteTypes {
     | '/app/agents'
     | '/app/agents-hub'
     | '/app/ai-feed'
+    | '/app/bridge'
     | '/app/data'
     | '/app/disclaimer'
     | '/app/leaderboard'
@@ -669,6 +679,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/app/agents'
     | '/app/ai-feed'
+    | '/app/bridge'
     | '/app/data'
     | '/app/disclaimer'
     | '/app/leaderboard'
@@ -731,6 +742,7 @@ export interface FileRouteTypes {
     | '/app/agents'
     | '/app/agents-hub'
     | '/app/ai-feed'
+    | '/app/bridge'
     | '/app/data'
     | '/app/disclaimer'
     | '/app/leaderboard'
@@ -884,6 +896,13 @@ declare module '@tanstack/react-router' {
       path: '/ai-feed'
       fullPath: '/app/ai-feed'
       preLoaderRoute: typeof AppAiFeedRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/bridge': {
+      id: '/app/bridge'
+      path: '/bridge'
+      fullPath: '/app/bridge'
+      preLoaderRoute: typeof AppBridgeRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/data': {
@@ -1349,6 +1368,7 @@ interface AppRouteChildren {
   AppAgentsRoute: typeof AppAgentsRouteWithChildren
   AppAgentsHubRoute: typeof AppAgentsHubRouteWithChildren
   AppAiFeedRoute: typeof AppAiFeedRoute
+  AppBridgeRoute: typeof AppBridgeRoute
   AppDataRoute: typeof AppDataRoute
   AppDisclaimerRoute: typeof AppDisclaimerRoute
   AppLeaderboardRoute: typeof AppLeaderboardRoute
@@ -1368,6 +1388,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAgentsRoute: AppAgentsRouteWithChildren,
   AppAgentsHubRoute: AppAgentsHubRouteWithChildren,
   AppAiFeedRoute: AppAiFeedRoute,
+  AppBridgeRoute: AppBridgeRoute,
   AppDataRoute: AppDataRoute,
   AppDisclaimerRoute: AppDisclaimerRoute,
   AppLeaderboardRoute: AppLeaderboardRoute,

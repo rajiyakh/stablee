@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useAccount, useSwitchChain } from "wagmi";
 import { usePrivy } from "@privy-io/react-auth";
@@ -54,7 +54,7 @@ function formatUsd(value: number): string {
   return `$${value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
-export function BridgePage({ tabsSlot }: { tabsSlot?: ReactNode }) {
+export function BridgePage() {
   const { address, isConnected, chainId } = useAccount();
   const { switchChain, isPending: isSwitching } = useSwitchChain();
   const { connectWallet } = usePrivy();
@@ -288,7 +288,6 @@ export function BridgePage({ tabsSlot }: { tabsSlot?: ReactNode }) {
     return (
       <div className="mx-auto w-full max-w-md">
         <div className="card-surface space-y-4 p-5">
-          <div className="flex flex-wrap items-center justify-between gap-2">{tabsSlot}</div>
           <p className="py-10 text-center text-sm text-muted-foreground">Loading…</p>
         </div>
       </div>
@@ -299,7 +298,6 @@ export function BridgePage({ tabsSlot }: { tabsSlot?: ReactNode }) {
     return (
       <div className="mx-auto w-full max-w-md">
         <div className="card-surface space-y-4 p-5">
-          <div className="flex flex-wrap items-center justify-between gap-2">{tabsSlot}</div>
           <BridgeNotConfiguredNotice message="Bridge provider credentials and the RobinPulse treasury address haven't been configured for this deployment yet." />
         </div>
       </div>
@@ -341,22 +339,19 @@ export function BridgePage({ tabsSlot }: { tabsSlot?: ReactNode }) {
   return (
     <div className="mx-auto w-full max-w-md">
       <div className="card-surface space-y-4 p-5">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          {tabsSlot}
-          <div className="flex items-center gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              className="size-8 rounded-full"
-              onClick={() => void quoteQuery.refetch()}
-              aria-label="Refresh quote"
-              disabled={quoteQuery.isFetching}
-            >
-              <RefreshCw className={quoteQuery.isFetching ? "size-3.5 animate-spin" : "size-3.5"} />
-            </Button>
-            <SlippageControl slippageBps={slippageBps} onChange={setSlippageBps} />
-          </div>
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            className="size-8 rounded-full"
+            onClick={() => void quoteQuery.refetch()}
+            aria-label="Refresh quote"
+            disabled={quoteQuery.isFetching}
+          >
+            <RefreshCw className={quoteQuery.isFetching ? "size-3.5 animate-spin" : "size-3.5"} />
+          </Button>
+          <SlippageControl slippageBps={slippageBps} onChange={setSlippageBps} />
         </div>
 
         <div className="space-y-4">

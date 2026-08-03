@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { formatUnits, parseUnits } from "viem";
 import { useAccount, useSwitchChain } from "wagmi";
@@ -6,7 +6,6 @@ import { ArrowDownUp, ExternalLink, History } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { robinhoodChain } from "@/config/robinhoodChain";
 import { WALLET_NOT_CONFIGURED_MESSAGE } from "@/config/project";
 import {
@@ -41,36 +40,13 @@ import { useSwapHistory } from "./hooks/useSwapHistory";
 
 type FlowState = "idle" | "needs-approval" | "approving" | "ready" | "success";
 
-/** Default pill row — reproduced exactly so rendering <SwapPage /> standalone is unaffected by the Bridge tab existing. */
-const DEFAULT_TABS_SLOT = (
-  <div className="flex items-center gap-1 rounded-full bg-secondary/60 p-1">
-    <span className="rounded-full bg-card px-3 py-1 font-display text-sm font-semibold text-foreground shadow-sm">
-      Swap
-    </span>
-    <button
-      type="button"
-      disabled
-      aria-label="Bridge — coming soon"
-      className="flex cursor-not-allowed items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium text-muted-foreground/60"
-    >
-      Bridge
-      <Badge variant="secondary" className="rounded-full px-1.5 py-0 text-[10px]">
-        Soon
-      </Badge>
-    </button>
-  </div>
-);
-
 export function SwapPage({
   initialBuyAddress,
   initialSellAddress,
-  tabsSlot = DEFAULT_TABS_SLOT,
 }: {
   /** Deep-links a token in as the buy/sell side — see BuySwapButton, the only producer of these. */
   initialBuyAddress?: string;
   initialSellAddress?: string;
-  /** Shared Swap/Bridge tab-pill row, injected by TradePanel — defaults to the standalone pill so `<SwapPage />` alone is unaffected. */
-  tabsSlot?: ReactNode;
 }) {
   const { address, isConnected, chainId } = useAccount();
   const { switchChain, isPending: isSwitching } = useSwitchChain();
@@ -395,21 +371,18 @@ export function SwapPage({
     <div className="mx-auto w-full max-w-6xl lg:grid lg:grid-cols-[minmax(0,1fr)_28rem] lg:items-start lg:gap-6">
       <div className="mx-auto w-full max-w-md lg:order-2 lg:mx-0">
         <div className="card-surface space-y-4 p-5">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            {tabsSlot}
-            <div className="flex items-center gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                className="size-8 rounded-full"
-                onClick={() => setHistoryOpen(true)}
-                aria-label="Swap history"
-              >
-                <History className="size-3.5" />
-              </Button>
-              <SlippageControl slippageBps={slippageBps} onChange={setSlippageBps} />
-            </div>
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              className="size-8 rounded-full"
+              onClick={() => setHistoryOpen(true)}
+              aria-label="Swap history"
+            >
+              <History className="size-3.5" />
+            </Button>
+            <SlippageControl slippageBps={slippageBps} onChange={setSlippageBps} />
           </div>
 
           <div className="space-y-4">
