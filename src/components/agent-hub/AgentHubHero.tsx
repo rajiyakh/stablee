@@ -14,27 +14,28 @@ export function AgentHubHero() {
   const contractsConfigured = isAgentHubContractsConfigured();
 
   return (
-    <section className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 sm:p-8">
+    <section className="relative overflow-hidden rounded-2xl border border-border p-6 sm:p-8">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-64 opacity-40"
-        style={{
-          background: "radial-gradient(circle at 50% 0%, var(--color-brand) 0%, transparent 70%)",
-          filter: "blur(20px)",
-        }}
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: "url(/backgrounds/agent-hub-hero.webp)" }}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/55 to-black/30"
       />
 
-      <div className="flex flex-col items-center text-center">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
+      <div className="relative flex flex-col items-center text-center">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary backdrop-blur">
           <Sparkles className="size-3.5" aria-hidden="true" />
           Pre-TGE Agent Farming
         </span>
 
-        <h1 className="mt-3 font-display text-3xl tracking-tight text-foreground sm:text-4xl">
+        <h1 className="mt-3 font-display text-3xl tracking-tight text-white sm:text-4xl">
           Mint AI Agents. Farm Future $ORCA.
         </h1>
 
-        <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+        <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/75 sm:text-base">
           Build your RobinPulse research team before TGE. Each Genesis Agent continuously
           accumulates future $ORCA allocation according to its farming rate.
         </p>
@@ -43,23 +44,28 @@ export function AgentHubHero() {
           <Button asChild size="lg" className="rounded-full">
             <a href="#agents">Explore Agents</a>
           </Button>
-          <Button asChild size="lg" variant="outline" className="rounded-full">
+          <Button
+            asChild
+            size="lg"
+            variant="outline"
+            className="rounded-full border-white/30 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+          >
             <a href="#how-farming-works">How Farming Works</a>
           </Button>
         </div>
       </div>
 
-      <div className="mt-6 grid gap-3 border-t border-border/70 pt-5 sm:grid-cols-3">
+      <div className="relative mt-6 grid gap-3 border-t border-white/15 pt-5 sm:grid-cols-3">
         {STATUS_ROWS.map((row) => (
-          <div key={row.label} className="rounded-xl bg-secondary/60 p-4 text-center">
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+          <div key={row.label} className="rounded-xl bg-white/10 p-4 text-center backdrop-blur">
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-white/60">
               {row.label}
             </p>
-            <p className="mt-1 text-sm font-medium text-foreground">{row.value}</p>
+            <p className="mt-1 text-sm font-medium text-white">{row.value}</p>
           </div>
         ))}
-        <div className="rounded-xl bg-secondary/60 p-4 text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+        <div className="rounded-xl bg-white/10 p-4 text-center backdrop-blur">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-white/60">
             Contract Status
           </p>
           <div className="mt-1.5 flex justify-center">
@@ -69,7 +75,7 @@ export function AgentHubHero() {
       </div>
 
       {agentHubConfig.mode === "preview" ? (
-        <p className="mt-3 text-center text-xs text-muted-foreground">
+        <p className="relative mt-3 text-center text-xs text-white/60">
           Agent Hub is in preview mode — nothing shown here is a live purchase.
         </p>
       ) : null}

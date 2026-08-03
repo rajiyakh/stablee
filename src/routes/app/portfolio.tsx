@@ -46,6 +46,7 @@ function PortfolioRoute() {
         eyebrow="Holdings · Robinhood Mainnet"
         title="Portfolio"
         description="Every token your connected wallet holds on Robinhood Mainnet, priced live."
+        backgroundImage="/backgrounds/portfolio-hero.webp"
       />
       <div className="mt-6">
         <Suspense fallback={<PulseLoadingState />}>

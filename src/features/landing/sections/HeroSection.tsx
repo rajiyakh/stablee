@@ -26,6 +26,12 @@ export function HeroSection({ tickerTokens }: { tickerTokens: TrendingTokenInfo[
       <div className="relative flex min-h-[92vh] flex-col items-center justify-center px-4 pb-16 pt-28 text-center sm:px-6 lg:px-8">
         {/* Ambient decoration — purely visual, no data attached */}
         <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+          <div
+            className="absolute inset-0 hidden bg-cover bg-[center_right_-6rem] opacity-[0.16] sm:block"
+            style={{ backgroundImage: "url(/backgrounds/landing-hero.webp)" }}
+          />
+          <div className="absolute inset-0 hidden bg-gradient-to-r from-background via-background/70 to-transparent sm:block" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/40" />
           <div className="absolute inset-x-0 bottom-0 h-64 opacity-[0.07]">
             <DecorativeCandles className="h-full px-8" />
           </div>
