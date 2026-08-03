@@ -12,12 +12,23 @@ export function AppShell({ children }: { children: ReactNode }) {
       >
         Skip to content
       </a>
-      <div className="flex min-h-screen w-full flex-col bg-background">
-        <SiteHeader />
-        <main id="main-content" className="min-w-0 flex-1 pb-16 md:pb-0">
-          {children}
-        </main>
-        <SiteFooter />
+      <div className="relative min-h-screen w-full">
+        {/* Site-wide ambient backdrop — DOM-first + relative z-10 on the
+            content below (not negative z-index) so it never risks painting
+            behind an ancestor's own opaque background. Fixed to the
+            viewport so it stays put while each page scrolls. */}
+        <div
+          className="pointer-events-none fixed inset-0 bg-cover bg-center opacity-[0.06]"
+          style={{ backgroundImage: "url(/backgrounds/app-shell-bg.webp)" }}
+          aria-hidden="true"
+        />
+        <div className="relative z-10 flex min-h-screen w-full flex-col">
+          <SiteHeader />
+          <main id="main-content" className="min-w-0 flex-1 pb-16 md:pb-0">
+            {children}
+          </main>
+          <SiteFooter />
+        </div>
       </div>
       <MobileTabBar />
     </>
