@@ -68,7 +68,9 @@ function StepCard({
   className?: string;
 }) {
   return (
-    <div className={`rounded-xl border border-border bg-card p-5 ${className ?? ""}`}>
+    <div
+      className={`rounded-xl border border-border bg-card backdrop-blur-md p-5 ${className ?? ""}`}
+    >
       <div className="flex items-center gap-2">
         <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
           <step.icon className="size-4" aria-hidden="true" />

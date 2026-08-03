@@ -368,7 +368,7 @@ export function SwapPage({
 
   if (!robinhoodChain) {
     return (
-      <div className="mx-auto max-w-md rounded-xl border border-border bg-card p-6 text-center text-sm text-muted-foreground">
+      <div className="mx-auto max-w-md rounded-xl border border-border bg-card backdrop-blur-md p-6 text-center text-sm text-muted-foreground">
         {WALLET_NOT_CONFIGURED_MESSAGE}
       </div>
     );

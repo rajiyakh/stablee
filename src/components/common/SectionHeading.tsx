@@ -15,7 +15,18 @@ export function SectionHeading({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-wrap items-end justify-between gap-4", className)}>
+    <div
+      className={cn(
+        // Every /app/* page sits over the site-wide background photo
+        // (see AppShell.tsx), which is position:fixed — so this heading can
+        // land on the photo's busiest region on any page, not just some.
+        // The scrim is inert wherever it isn't needed (e.g. deep in a page
+        // that has scrolled past the busy region, or nested inside a card
+        // that already has its own opaque/blurred background).
+        "flex flex-wrap items-end justify-between gap-4 rounded-xl bg-background/60 px-4 py-3 backdrop-blur-sm",
+        className,
+      )}
+    >
       <div className="max-w-2xl">
         {eyebrow ? (
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">

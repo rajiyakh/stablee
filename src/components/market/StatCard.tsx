@@ -14,7 +14,7 @@ export function StatCard({
   className?: string;
 }) {
   return (
-    <div className={cn("rounded-xl border border-border bg-card p-5", className)}>
+    <div className={cn("rounded-xl border border-border bg-card backdrop-blur-md p-5", className)}>
       <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
         {label}
       </p>

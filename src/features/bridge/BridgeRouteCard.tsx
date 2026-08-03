@@ -36,7 +36,7 @@ export function BridgeRouteCard({
   return (
     <div
       className={cn(
-        "rounded-xl border bg-card p-4 transition-colors",
+        "rounded-xl border bg-card backdrop-blur-md p-4 transition-colors",
         selected ? "border-primary ring-1 ring-primary" : "border-border hover:border-primary/40",
       )}
     >

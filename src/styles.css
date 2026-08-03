@@ -84,7 +84,7 @@
   --background: oklch(0.9702 0.0117 108.66);
   /* #14251C */
   --foreground: oklch(0.2417 0.0245 158.03);
-  --card: oklch(1 0 0);
+  --card: oklch(1 0 0 / 92%);
   --card-foreground: oklch(0.2417 0.0245 158.03);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.2417 0.0245 158.03);

@@ -43,7 +43,10 @@ function DataPage() {
         ) : (
           <div className="grid gap-4 md:grid-cols-2">
             {(query.data?.providers ?? []).map((p) => (
-              <div key={p.id} className="rounded-xl border border-border bg-card p-5">
+              <div
+                key={p.id}
+                className="rounded-xl border border-border bg-card backdrop-blur-md p-5"
+              >
                 <div className="flex items-center justify-between">
                   <p className="font-semibold text-foreground">{p.label}</p>
                   <span className="text-xs uppercase tracking-[0.14em] text-muted-foreground">

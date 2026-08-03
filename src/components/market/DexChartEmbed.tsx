@@ -8,7 +8,7 @@ export function DexChartEmbed({ chainId, pairAddress, height = 480 }: DexChartEm
   const src = `https://dexscreener.com/${encodeURIComponent(chainId)}/${encodeURIComponent(pairAddress)}?embed=1&theme=light&trades=0&info=0`;
 
   return (
-    <div className="rounded-xl border border-border bg-card p-5">
+    <div className="rounded-xl border border-border bg-card backdrop-blur-md p-5">
       <h3 className="text-sm font-semibold text-foreground">Chart</h3>
       <iframe
         title="DEX Screener chart"

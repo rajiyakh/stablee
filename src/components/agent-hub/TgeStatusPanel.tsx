@@ -23,7 +23,7 @@ export function TgeStatusPanel() {
     <section>
       <SectionHeading eyebrow="Token Generation Event" title="TGE and claim status" />
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <div className="rounded-xl border border-border bg-card p-5">
+        <div className="rounded-xl border border-border bg-card backdrop-blur-md p-5">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             TGE status
           </p>
@@ -31,7 +31,7 @@ export function TgeStatusPanel() {
             {STATUS_LABEL[tgeConfig.status]}
           </p>
         </div>
-        <div className="rounded-xl border border-border bg-card p-5">
+        <div className="rounded-xl border border-border bg-card backdrop-blur-md p-5">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             Launch date
           </p>
@@ -39,7 +39,7 @@ export function TgeStatusPanel() {
             {tgeConfig.date || TGE_NOT_ANNOUNCED_MESSAGE}
           </p>
         </div>
-        <div className="rounded-xl border border-border bg-card p-5">
+        <div className="rounded-xl border border-border bg-card backdrop-blur-md p-5">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             Distribution method
           </p>
