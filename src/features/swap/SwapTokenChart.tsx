@@ -7,6 +7,21 @@ import { formatUsd } from "@/lib/market/format";
 import { projectConfig } from "@/config/project";
 import { NATIVE_SENTINEL, WETH_ADDRESS, type SwapTokenConfig } from "@/config/swapTokens";
 
+// Symbols with no meaningful price chart to show: ETH/WETH trade 1:1 (chart
+// would just mirror WETH's own near-flat pair), and BTC/WBTC aren't part of
+// the curated list today but are excluded pre-emptively for the same reason
+// as stablecoins — a flat/mirrored chart isn't worth the layout space.
+const CHART_EXCLUDED_SYMBOLS = new Set(["ETH", "WETH", "BTC", "WBTC"]);
+
+/** Whether a token is "interesting" enough to show a live DEX price chart for —
+ *  false for the chain's native asset, stablecoins, and major wrapped assets. */
+export function isChartEligible(token: SwapTokenConfig | null): boolean {
+  if (!token) return false;
+  if (token.address.toLowerCase() === NATIVE_SENTINEL.toLowerCase()) return false;
+  if (token.isStablecoin) return false;
+  return !CHART_EXCLUDED_SYMBOLS.has(token.symbol.toUpperCase());
+}
+
 /** Price chart for the token being swapped, sourced from DEX Screener's highest-liquidity
  *  pair — the only working price-history source for an arbitrary Robinhood Chain ERC-20
  *  with no CoinGecko id (see src/routes/app/token.$chainId.$address.tsx for the same pattern). */
@@ -24,7 +39,7 @@ export function SwapTokenChart({ token }: { token: SwapTokenConfig | null }) {
   const pairs = query.data?.data ?? [];
   const top = [...pairs].sort((a, b) => (b.liquidityUsd ?? 0) - (a.liquidityUsd ?? 0))[0];
 
-  if (!token || !chainSlug || !chartAddress) return null;
+  if (!token || !chainSlug || !chartAddress || !isChartEligible(token)) return null;
 
   return (
     <div className="space-y-2">

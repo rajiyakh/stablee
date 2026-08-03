@@ -10,6 +10,7 @@ import {
 import { WatchButton } from "@/components/common/WatchButton";
 import { BuySwapButton } from "@/components/market/BuySwapButton";
 import { CopyContractButton } from "@/components/feed/CopyContractButton";
+import { TokenLogo } from "./TokenLogo";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   changeClass,
@@ -227,19 +228,13 @@ export function RobinhoodTokenTable({
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    {token.logoUrl ? (
-                      <img
-                        src={token.logoUrl}
-                        alt=""
-                        width={28}
-                        height={28}
-                        className="size-7 rounded-full border border-border"
-                      />
-                    ) : (
-                      <div className="flex size-7 items-center justify-center rounded-full border border-border bg-muted text-[10px] font-semibold">
-                        {token.symbol.slice(0, 2).toUpperCase()}
-                      </div>
-                    )}
+                    <TokenLogo
+                      logoUrl={token.logoUrl}
+                      symbol={token.symbol}
+                      size={28}
+                      sizeClassName="size-7"
+                      textClassName="text-[10px]"
+                    />
                     <div className="min-w-0 flex-1">
                       <p className="truncate font-medium text-foreground">{token.symbol}</p>
                       <p className="text-xs text-muted-foreground">
@@ -332,19 +327,13 @@ function MobileTokenCard({
       onClick={onOpen}
       className="flex w-full items-center gap-3 rounded-xl border border-border bg-card p-3 text-left"
     >
-      {token.logoUrl ? (
-        <img
-          src={token.logoUrl}
-          alt=""
-          width={36}
-          height={36}
-          className="size-9 rounded-full border border-border"
-        />
-      ) : (
-        <div className="flex size-9 items-center justify-center rounded-full border border-border bg-muted text-xs font-semibold">
-          {token.symbol.slice(0, 2).toUpperCase()}
-        </div>
-      )}
+      <TokenLogo
+        logoUrl={token.logoUrl}
+        symbol={token.symbol}
+        size={36}
+        sizeClassName="size-9"
+        textClassName="text-xs"
+      />
       <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between gap-2">
           <p className="truncate font-medium text-foreground">{token.symbol}</p>

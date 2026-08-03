@@ -2,6 +2,7 @@ import { ArrowUpRight } from "lucide-react";
 import { CopyContractButton } from "@/components/feed/CopyContractButton";
 import { WatchButton } from "@/components/common/WatchButton";
 import { BuySwapButton } from "@/components/market/BuySwapButton";
+import { TokenLogo } from "./TokenLogo";
 import {
   Sheet,
   SheetContent,
@@ -56,19 +57,13 @@ export function TokenDetailDrawer({
       <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-md">
         <SheetHeader>
           <div className="flex items-center gap-3">
-            {token.logoUrl ? (
-              <img
-                src={token.logoUrl}
-                alt=""
-                width={40}
-                height={40}
-                className="size-10 rounded-full border border-border"
-              />
-            ) : (
-              <div className="flex size-10 items-center justify-center rounded-full border border-border bg-muted text-sm font-semibold">
-                {token.symbol.slice(0, 2).toUpperCase()}
-              </div>
-            )}
+            <TokenLogo
+              logoUrl={token.logoUrl}
+              symbol={token.symbol}
+              size={40}
+              sizeClassName="size-10"
+              textClassName="text-sm"
+            />
             <div>
               <SheetTitle>{token.name}</SheetTitle>
               <SheetDescription>{token.symbol} · Robinhood Mainnet</SheetDescription>

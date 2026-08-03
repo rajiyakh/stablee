@@ -2,10 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { formatUnits, parseUnits } from "viem";
 import { useAccount, useSwitchChain } from "wagmi";
-import { ArrowDownUp, ExternalLink, History } from "lucide-react";
+import { ArrowDownUp, ChartLine, ExternalLink, History } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { robinhoodChain } from "@/config/robinhoodChain";
 import { WALLET_NOT_CONFIGURED_MESSAGE } from "@/config/project";
 import {
@@ -26,7 +27,7 @@ import {
 import { trackSwapEvent } from "@/lib/swap/analytics";
 import { ApiError } from "@/lib/market/client";
 import { TokenSelect } from "./TokenSelect";
-import { SwapTokenChart } from "./SwapTokenChart";
+import { isChartEligible, SwapTokenChart } from "./SwapTokenChart";
 import { SwapAmountInput } from "./SwapAmountInput";
 import { SwapPercentageButtons } from "./SwapPercentageButtons";
 import { SwapQuoteDetails } from "./SwapQuoteDetails";
@@ -101,6 +102,8 @@ export function SwapPage({
   const [flow, setFlow] = useState<FlowState>("idle");
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
+  // Closed by default — the chart is opt-in, never auto-opened on page load.
+  const [chartOpen, setChartOpen] = useState(false);
   const [firmQuote, setFirmQuote] = useState<{ data: SwapQuoteData; fetchedAt: number } | null>(
     null,
   );
@@ -108,6 +111,13 @@ export function SwapPage({
   const wrongNetwork = isConnected && robinhoodChain && chainId !== robinhoodChain.id;
   const balance = useSwapTokenBalance(sellToken);
   const swapHistory = useSwapHistory(address);
+
+  const chartEligible = isChartEligible(sellToken);
+  useEffect(() => {
+    // If the user switches Sell to ETH/WETH/a stablecoin while the chart was
+    // open, close it rather than leaving a dead grid column with nothing to show.
+    if (!chartEligible) setChartOpen(false);
+  }, [chartEligible]);
 
   // The branded ValidatedQuote only exists when the server's validateQuote()
   // returned ok:true — this is a type-safe narrowing, not a cast. Neither
@@ -367,11 +377,33 @@ export function SwapPage({
   // below (TS doesn't carry module-import narrowing across arrow functions).
   const chain = robinhoodChain;
 
+  const showChart = chartOpen && chartEligible;
+
   return (
-    <div className="mx-auto w-full max-w-6xl lg:grid lg:grid-cols-[minmax(0,1fr)_28rem] lg:items-start lg:gap-6">
+    <div
+      className={cn(
+        "mx-auto w-full",
+        showChart
+          ? "max-w-6xl lg:grid lg:grid-cols-[minmax(0,1fr)_28rem] lg:items-start lg:gap-6"
+          : "max-w-md",
+      )}
+    >
       <div className="mx-auto w-full max-w-md lg:order-2 lg:mx-0">
         <div className="card-surface space-y-4 p-5">
           <div className="flex flex-wrap items-center justify-end gap-2">
+            {chartEligible ? (
+              <Button
+                type="button"
+                variant={chartOpen ? "default" : "outline"}
+                size="icon"
+                className="size-8 rounded-full"
+                onClick={() => setChartOpen((open) => !open)}
+                aria-label={chartOpen ? "Hide price chart" : "Show price chart"}
+                aria-pressed={chartOpen}
+              >
+                <ChartLine className="size-3.5" />
+              </Button>
+            ) : null}
             <Button
               type="button"
               variant="outline"
@@ -563,9 +595,11 @@ export function SwapPage({
         />
       </div>
 
-      <div className="mt-6 lg:order-1 lg:mt-0">
-        <SwapTokenChart token={sellToken} />
-      </div>
+      {showChart ? (
+        <div className="mt-6 lg:order-1 lg:mt-0">
+          <SwapTokenChart token={sellToken} />
+        </div>
+      ) : null}
     </div>
   );
 }
