@@ -14,51 +14,6 @@
 export const TOTAL_SUPPLY = 1_000_000_000;
 export const TOKEN_SYMBOL = "ORCA";
 
-export interface AllocationCategory {
-  label: string;
-  percent: number;
-  items: string[];
-}
-
-export const ALLOCATION: AllocationCategory[] = [
-  {
-    label: "Community & Ecosystem",
-    percent: 30,
-    items: [
-      "AI Agent Farming",
-      "Community Campaigns",
-      "Trading Rewards",
-      "Ecosystem Incentives",
-      "Future Programs",
-    ],
-  },
-  {
-    label: "Liquidity",
-    percent: 20,
-    items: ["DEX Liquidity", "CEX Liquidity", "Market Stability"],
-  },
-  {
-    label: "Treasury",
-    percent: 15,
-    items: ["Protocol Operations", "Infrastructure", "Security", "Development"],
-  },
-  {
-    label: "AI Development",
-    percent: 15,
-    items: ["AI Models", "AI Agents", "Backend Infrastructure", "Future AI Expansion"],
-  },
-  {
-    label: "Team",
-    percent: 10,
-    items: ["24 Month Vesting", "Transparent Unlock"],
-  },
-  {
-    label: "Marketing & Partnerships",
-    percent: 10,
-    items: ["KOL Campaigns", "Growth", "Partnerships", "Expansion"],
-  },
-];
-
 export interface GenesisFarmingAgent {
   order: string;
   name: string;

@@ -1,6 +1,5 @@
 import { HeroSection } from "./sections/HeroSection";
 import { SupplyNode } from "./sections/SupplyNode";
-import { AllocationSection } from "./sections/AllocationSection";
 import { GenesisAgentFarming } from "./sections/GenesisAgentFarming";
 import { RewardEngineFlow } from "./sections/RewardEngineFlow";
 import { RevenueEngineFlow } from "./sections/RevenueEngineFlow";
@@ -20,7 +19,6 @@ export function TokenomicsPage() {
     <div className="orca-docs -mx-4 -mt-10 sm:-mx-6 lg:-mx-8">
       <HeroSection />
       <SupplyNode />
-      <AllocationSection />
       <GenesisAgentFarming />
       <RewardEngineFlow />
       <RevenueEngineFlow />
