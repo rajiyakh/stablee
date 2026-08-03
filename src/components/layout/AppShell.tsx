@@ -18,7 +18,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             behind an ancestor's own opaque background. Fixed to the
             viewport so it stays put while each page scrolls. */}
         <div
-          className="pointer-events-none fixed inset-0 bg-cover bg-center opacity-[0.06]"
+          className="pointer-events-none fixed inset-0 bg-cover bg-center opacity-[0.8]"
           style={{ backgroundImage: "url(/backgrounds/app-shell-bg.webp)" }}
           aria-hidden="true"
         />
