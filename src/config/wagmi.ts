@@ -1,7 +1,7 @@
-import { http } from "wagmi";
+import { fallback, http } from "wagmi";
 import { createConfig } from "@privy-io/wagmi";
 import { robinhoodChain } from "./robinhoodChain";
-import { bridgeWalletChains } from "./bridgeChains";
+import { BRIDGE_CHAIN_RPC_URLS, bridgeWalletChains } from "./bridgeChains";
 import { projectConfig, isWalletConfigured } from "./project";
 
 type PrivyWagmiConfig = ReturnType<typeof createConfig> | null;
@@ -43,10 +43,15 @@ export function getWagmiConfig(): PrivyWagmiConfig {
     transports: Object.fromEntries(
       chains.map((chain) => [
         chain.id,
-        // Robinhood Chain keeps its own configured RPC URL; any additional
-        // bridge source chain uses viem's bundled default public RPC for
-        // that chain — never a guessed/hand-typed URL, never a new env var.
-        chain.id === primaryChainId ? http(projectConfig.wallet.rpcUrl) : http(),
+        // Robinhood Chain keeps its own configured RPC URL. Every other
+        // bridge source chain uses a live-verified PublicNode endpoint
+        // (BRIDGE_CHAIN_RPC_URLS) as primary — viem's single bundled
+        // default proved unreliable for mainnet balance reads — with
+        // viem's bundled default kept as a fallback if PublicNode is ever
+        // down.
+        chain.id === primaryChainId
+          ? http(projectConfig.wallet.rpcUrl)
+          : fallback([http(BRIDGE_CHAIN_RPC_URLS[chain.id]), http()]),
       ]),
     ),
     ssr: true,

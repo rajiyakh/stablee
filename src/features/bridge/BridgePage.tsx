@@ -8,6 +8,7 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { robinhoodChainFacts } from "@/config/robinhoodChain";
+import { BRIDGE_CHAIN_IDS } from "@/config/bridgeChains";
 import {
   bridgeChainsQuery,
   bridgeProvidersQuery,
@@ -65,7 +66,16 @@ export function BridgePage({ tabsSlot }: { tabsSlot?: ReactNode }) {
     Boolean(providersData?.providers.some((p) => p.configured && p.feeMode === "provider-native"));
 
   const chainsQuery = useQuery(bridgeChainsQuery(bridgingConfigured));
-  const chains = useMemo(() => chainsQuery.data?.data ?? [], [chainsQuery.data]);
+  // Only offer chains the connected wallet can actually sign/read on
+  // (BRIDGE_CHAIN_IDS = Robinhood Chain + the common EVM chains wagmi is
+  // configured for). Providers list a much broader catalog (e.g. Hyperliquid,
+  // HyperEVM, Monad) — selecting one of those crashed balance reads with a
+  // wagmi ChainNotConfiguredError, independent of whether the wallet was
+  // actually connected.
+  const chains = useMemo(
+    () => (chainsQuery.data?.data ?? []).filter((c) => BRIDGE_CHAIN_IDS.includes(c.chainId)),
+    [chainsQuery.data],
+  );
 
   const [fromChain, setFromChain] = useState<SupportedChain | null>(null);
   const [toChain, setToChain] = useState<SupportedChain | null>(null);

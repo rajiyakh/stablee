@@ -14,6 +14,25 @@ const env = import.meta.env as Record<string, string | undefined>;
  */
 const COMMON_BRIDGE_CHAINS: Chain[] = [mainnet, arbitrum, base, optimism, polygon, bsc];
 
+/**
+ * viem's single bundled default RPC per chain (used by a bare `http()`) is
+ * not reliable for every chain — mainnet's in particular
+ * (https://ethereum.reth.rs/rpc) was confirmed live to return a JSON-RPC
+ * error on a real eth_getBalance call, causing "Balance unavailable" for a
+ * genuinely connected wallet. Every URL below was live-verified (curl,
+ * eth_chainId/eth_getBalance) against PublicNode, a well-known public
+ * multi-chain RPC provider, before being added here — used as the primary
+ * transport in wagmi.ts, with viem's bundled default kept as a fallback.
+ */
+export const BRIDGE_CHAIN_RPC_URLS: Record<number, string> = {
+  [mainnet.id]: "https://ethereum-rpc.publicnode.com",
+  [arbitrum.id]: "https://arbitrum-one-rpc.publicnode.com",
+  [base.id]: "https://base-rpc.publicnode.com",
+  [optimism.id]: "https://optimism-rpc.publicnode.com",
+  [polygon.id]: "https://polygon-bor-rpc.publicnode.com",
+  [bsc.id]: "https://bsc-rpc.publicnode.com",
+};
+
 /** VITE_BRIDGE_ENABLED is the hard kill-switch for the whole multi-chain wallet config. */
 export function isBridgeEnabled(): boolean {
   return (env.VITE_BRIDGE_ENABLED ?? "").trim() === "true";
