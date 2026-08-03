@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { PanelsTopLeft } from "lucide-react";
 import { z } from "zod";
 import { PageContainer } from "@/components/layout/AppShell";
+import { PageHeroBackground } from "@/components/layout/PageHeroBackground";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
 import { AgentFeed } from "@/components/feed/AgentFeed";
@@ -99,18 +100,8 @@ function Home() {
 
   return (
     <PageContainer>
-      <div className="relative overflow-hidden rounded-2xl border border-border">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url(/backgrounds/overview-hero.webp)" }}
-        />
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-black/20"
-        />
-
-        <div className="relative flex items-center justify-between gap-3 p-5 lg:hidden">
+      <PageHeroBackground image="/backgrounds/overview-hero.webp" height={200}>
+        <div className="flex items-center justify-between gap-3 py-5 lg:hidden">
           <div>
             <h1 className="font-serif text-xl tracking-tight text-white">
               Robinhood Mainnet Intelligence Feed
@@ -131,7 +122,7 @@ function Home() {
           </Button>
         </div>
 
-        <div className="relative hidden p-8 lg:block">
+        <div className="hidden py-8 lg:block">
           <h1 className="font-serif text-2xl tracking-tight text-white">
             Robinhood Mainnet Intelligence Feed
           </h1>
@@ -140,7 +131,7 @@ function Home() {
             market structure.
           </p>
         </div>
-      </div>
+      </PageHeroBackground>
 
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
         <main>

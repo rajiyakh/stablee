@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useAccount } from "wagmi";
 import { Plus } from "lucide-react";
 import { PageContainer } from "@/components/layout/AppShell";
+import { PageHeroBackground } from "@/components/layout/PageHeroBackground";
 import { Button } from "@/components/ui/button";
 import { robinhoodChain } from "@/config/robinhoodChain";
 import { enabledGenesisAgents, type GenesisAgentConfig } from "@/config/genesisAgents";
@@ -46,7 +47,9 @@ function AgentsHubPage() {
   return (
     <PageContainer>
       <div className="space-y-16">
-        <AgentHubHero />
+        <PageHeroBackground image="/backgrounds/agent-hub-hero.webp" height={560}>
+          <AgentHubHero />
+        </PageHeroBackground>
 
         <AgentGrid agents={agents} onRecruitClick={setRecruitTarget} />
 

@@ -14,18 +14,8 @@ export function AgentHubHero() {
   const contractsConfigured = isAgentHubContractsConfigured();
 
   return (
-    <section className="relative overflow-hidden rounded-2xl border border-border p-6 sm:p-8">
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: "url(/backgrounds/agent-hub-hero.webp)" }}
-      />
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/55 to-black/30"
-      />
-
-      <div className="relative flex flex-col items-center text-center">
+    <section className="relative py-6 sm:py-10">
+      <div className="flex flex-col items-center text-center">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary backdrop-blur">
           <Sparkles className="size-3.5" aria-hidden="true" />
           Pre-TGE Agent Farming
@@ -57,14 +47,14 @@ export function AgentHubHero() {
 
       <div className="relative mt-6 grid gap-3 border-t border-white/15 pt-5 sm:grid-cols-3">
         {STATUS_ROWS.map((row) => (
-          <div key={row.label} className="rounded-xl bg-white/10 p-4 text-center backdrop-blur">
+          <div key={row.label} className="rounded-xl bg-black/25 p-4 text-center backdrop-blur">
             <p className="text-[11px] font-semibold uppercase tracking-wide text-white/60">
               {row.label}
             </p>
             <p className="mt-1 text-sm font-medium text-white">{row.value}</p>
           </div>
         ))}
-        <div className="rounded-xl bg-white/10 p-4 text-center backdrop-blur">
+        <div className="rounded-xl bg-black/25 p-4 text-center backdrop-blur">
           <p className="text-[11px] font-semibold uppercase tracking-wide text-white/60">
             Contract Status
           </p>
