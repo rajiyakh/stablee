@@ -44,6 +44,7 @@ beforeEach(() => {
   delete process.env.LIFI_ENABLED;
   delete process.env.LIFI_API_KEY;
   delete process.env.LIFI_INTEGRATOR;
+  delete process.env.LIFI_PAYOUT_CONFIRMED;
   delete process.env.ROBINPULSE_TREASURY_ADDRESS;
 });
 
@@ -68,6 +69,28 @@ describe("lifiAdapter.configured", () => {
     process.env.LIFI_ENABLED = "yes";
     const { lifiAdapter } = await import("./lifi.server");
     expect(lifiAdapter.configured()).toBe(false);
+  });
+});
+
+describe("lifiAdapter.feeMode", () => {
+  it("is unavailable when configured but LIFI_PAYOUT_CONFIRMED is not set", async () => {
+    setConfigured();
+    const { lifiAdapter } = await import("./lifi.server");
+    expect(lifiAdapter.feeMode()).toBe("unavailable");
+  });
+
+  it("is provider-native once LIFI_PAYOUT_CONFIRMED is true", async () => {
+    setConfigured();
+    process.env.LIFI_PAYOUT_CONFIRMED = "true";
+    const { lifiAdapter } = await import("./lifi.server");
+    expect(lifiAdapter.feeMode()).toBe("provider-native");
+  });
+
+  it('is unavailable when LIFI_PAYOUT_CONFIRMED is set but not exactly "true"', async () => {
+    setConfigured();
+    process.env.LIFI_PAYOUT_CONFIRMED = "yes";
+    const { lifiAdapter } = await import("./lifi.server");
+    expect(lifiAdapter.feeMode()).toBe("unavailable");
   });
 });
 

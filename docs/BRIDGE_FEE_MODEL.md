@@ -30,12 +30,30 @@ the outbound request parameter sent to the provider and (b) run a consistency ch
 
 ## Per-provider mechanism
 
-| Provider | Mechanism                                                                                                                                                                                                                                                                                                                | Confirmed via                                                                                      |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
-| LI.FI    | `@lifi/sdk`'s `fee` param (`computeBridgeFeeBps()/10000`, never a literal `0.01`) + `integrator: "robinpulse"`. Read back from `estimate.feeCosts[].feeSplit.integratorFee` (the SDK's authoritative per-recipient breakdown), falling back to name-matching a `feeCosts` entry only when `feeSplit` is entirely absent. | `@lifi/types`' real `FeeCost`/`FeeSplit` interfaces.                                               |
-| Relay    | Relay's `appFees: [{recipient, fee}]` request param, only sent when `RELAY_APP_FEE_CONFIRMED=true`. Read back from `fees.app.amount`.                                                                                                                                                                                    | Relay's public docs (`/quote/v2`); response shape not fully verified — see `docs/BRIDGE_SETUP.md`. |
-| Across   | `appFeeBps`/`appFeeRecipient` request params, only sent when `ACROSS_APP_FEE_CONFIRMED=true`. Read back from `fees.total.details.app.amount` — Across's own first-class app-fee slot.                                                                                                                                    | Live-confirmed real response from `app.across.to/api/swap/approval`.                               |
-| Gas.zip  | None — `feeMode()` always returns `"unavailable"`.                                                                                                                                                                                                                                                                       | N/A — see `docs/BRIDGE_SETUP.md`.                                                                  |
+| Provider | Mechanism                                                                                                                                                                                                                                                                                                                                                                                           | Confirmed via                                                                                      |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| LI.FI    | `@lifi/sdk`'s `fee` param (`computeBridgeFeeBps()/10000`, never a literal `0.01`) + `integrator: "robinpulse"`. Read back from `estimate.feeCosts[].feeSplit.integratorFee` (the SDK's authoritative per-recipient breakdown), falling back to name-matching a `feeCosts` entry only when `feeSplit` is entirely absent. Only treated as fee-bearing once `LIFI_PAYOUT_CONFIRMED=true` — see below. | `@lifi/types`' real `FeeCost`/`FeeSplit` interfaces.                                               |
+| Relay    | Relay's `appFees: [{recipient, fee}]` request param, only sent when `RELAY_APP_FEE_CONFIRMED=true`. Read back from `fees.app.amount`.                                                                                                                                                                                                                                                               | Relay's public docs (`/quote/v2`); response shape not fully verified — see `docs/BRIDGE_SETUP.md`. |
+| Across   | `appFeeBps`/`appFeeRecipient` request params, only sent when `ACROSS_APP_FEE_CONFIRMED=true`. Read back from `fees.total.details.app.amount` — Across's own first-class app-fee slot.                                                                                                                                                                                                               | Live-confirmed real response from `app.across.to/api/swap/approval`.                               |
+| Gas.zip  | None — `feeMode()` always returns `"unavailable"`.                                                                                                                                                                                                                                                                                                                                                  | N/A — see `docs/BRIDGE_SETUP.md`.                                                                  |
+
+## Why LI.FI needs its own confirmation flag
+
+Unlike Relay and Across, LI.FI's requests never carry `ROBINPULSE_TREASURY_ADDRESS` at all — there
+is no `recipient`-style field in the LI.FI SDK's quote request. LI.FI's fee model instead pays the
+integrator cut out to whatever wallet is registered against the `"robinpulse"` integrator account
+on **LI.FI's own partner dashboard**, a step entirely outside this codebase and independent of
+whatever value sits in `.env`. `lifiConfigured()` checking that _some_ treasury address is set is
+only a readiness proxy — it cannot verify that address is the one actually registered on LI.FI's
+side.
+
+`LIFI_PAYOUT_CONFIRMED` closes that gap the same way `RELAY_APP_FEE_CONFIRMED` /
+`ACROSS_APP_FEE_CONFIRMED` do: `feeMode()` returns `"unavailable"` (LI.FI excluded from results
+entirely) until a human has manually logged into LI.FI's dashboard, confirmed the registered
+payout wallet exactly matches `ROBINPULSE_TREASURY_ADDRESS`, and only then set the flag to
+`"true"`. This is the one link in the whole fee model that no automated check can ever close — it
+depends on two independently-set values (an env var here, a dashboard field on LI.FI's servers)
+actually agreeing, which only a human comparing both can confirm.
 
 ## Explicitly rejected alternative
 

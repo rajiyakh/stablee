@@ -40,6 +40,21 @@ export function lifiConfigured(): boolean {
   );
 }
 
+/**
+ * LI.FI's request never carries ROBINPULSE_TREASURY_ADDRESS at all — unlike
+ * Relay/Across, LI.FI pays the integrator fee out to whatever wallet is
+ * registered against the "robinpulse" integrator account on LI.FI's own
+ * partner dashboard, entirely outside this codebase. lifiConfigured() only
+ * checks that *some* treasury address is set as a readiness proxy; it
+ * cannot verify that address matches what's actually registered on LI.FI's
+ * side. This flag exists so that match is confirmed by a human before
+ * LI.FI is ever treated as fee-bearing — mirrors RELAY_APP_FEE_CONFIRMED /
+ * ACROSS_APP_FEE_CONFIRMED exactly.
+ */
+function payoutConfirmed(): boolean {
+  return (process.env.LIFI_PAYOUT_CONFIRMED ?? "").trim() === "true";
+}
+
 let cachedClient: ReturnType<typeof createClient> | undefined;
 
 /**
@@ -105,7 +120,7 @@ async function getSupportedTokens(chainId: number): Promise<SupportedToken[]> {
 }
 
 function feeMode(): FeeCollectionMode {
-  return lifiConfigured() ? "provider-native" : "unavailable";
+  return lifiConfigured() && payoutConfirmed() ? "provider-native" : "unavailable";
 }
 
 /**
