@@ -52,8 +52,18 @@ export function BridgeTokenSelect({
           disabled={loading}
           className="h-9 min-w-[6.5rem] justify-between gap-1.5 rounded-full px-3 font-normal"
         >
-          <span className="truncate font-medium">
-            {loading ? "Loading…" : (value?.symbol ?? "Select")}
+          <span className="flex min-w-0 items-center gap-1.5">
+            {value?.logoUrl ? (
+              <img
+                src={value.logoUrl}
+                alt=""
+                className="size-4 shrink-0 rounded-full"
+                loading="lazy"
+              />
+            ) : null}
+            <span className="truncate font-medium">
+              {loading ? "Loading…" : (value?.symbol ?? "Select")}
+            </span>
           </span>
           <ChevronDown className="size-4 shrink-0 opacity-50" />
         </Button>
@@ -82,6 +92,14 @@ export function BridgeTokenSelect({
                     setSearch("");
                   }}
                 >
+                  {token.logoUrl ? (
+                    <img
+                      src={token.logoUrl}
+                      alt=""
+                      className="size-5 shrink-0 rounded-full"
+                      loading="lazy"
+                    />
+                  ) : null}
                   <span className="shrink-0 font-medium">{token.symbol}</span>
                   <span className="min-w-0 truncate text-xs text-muted-foreground">
                     {token.name}

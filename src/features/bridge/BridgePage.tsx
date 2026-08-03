@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useAccount, useSwitchChain } from "wagmi";
-import { ArrowDownUp, RefreshCw } from "lucide-react";
+import { usePrivy } from "@privy-io/react-auth";
+import { formatUnits } from "viem";
+import { ArrowDownUp, ChevronDown, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -26,8 +28,10 @@ import { SwapAmountInput } from "@/features/swap/SwapAmountInput";
 import { SlippageControl } from "@/features/swap/SlippageControl";
 import { BridgeChainSelect } from "./BridgeChainSelect";
 import { BridgeTokenSelect } from "./BridgeTokenSelect";
+import { BridgeQuoteSummary } from "./BridgeQuoteSummary";
 import { RecipientAddressInput } from "./RecipientAddressInput";
 import { BridgeRouteCard } from "./BridgeRouteCard";
+import { BridgeRouteSteps } from "./BridgeRouteDetailsDialog";
 import { BridgeConfirmDialog } from "./BridgeConfirmDialog";
 import { BridgeStatusPanel } from "./BridgeStatusPanel";
 import { BridgeRiskNotice } from "./BridgeRiskNotice";
@@ -45,9 +49,14 @@ const SORT_TABS: Array<{ value: BridgeSortMode; label: string }> = [
 
 type Flow = "idle" | "needs-approval" | "approving" | "ready" | "submitted";
 
+function formatUsd(value: number): string {
+  return `$${value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
 export function BridgePage({ tabsSlot }: { tabsSlot?: ReactNode }) {
   const { address, isConnected, chainId } = useAccount();
   const { switchChain, isPending: isSwitching } = useSwitchChain();
+  const { connectWallet } = usePrivy();
 
   const providersQuery = useQuery(bridgeProvidersQuery());
   const providersData = providersQuery.data?.data;
@@ -156,6 +165,18 @@ export function BridgePage({ tabsSlot }: { tabsSlot?: ReactNode }) {
   const excluded = quoteQuery.data?.data?.excluded ?? [];
   const feeBps = quoteQuery.data?.data?.feeBps ?? 100;
 
+  // The route the summary/CTA/details disclosure reflect: whichever route the
+  // user explicitly picked, as long as it's still present in the latest quote
+  // results, else the top-ranked route for the active sort.
+  const activeQuote =
+    selectedQuote && routes.some((r) => r.routeId === selectedQuote.routeId)
+      ? selectedQuote
+      : (routes[0] ?? null);
+  const providerDisplayName =
+    providersData?.providers.find((p) => p.id === activeQuote?.provider)?.displayName ??
+    activeQuote?.provider ??
+    null;
+
   const validatedQuote = selectedQuote as ValidatedBridgeQuote | null;
   const approval = useBridgeApproval(
     flow === "needs-approval" || flow === "approving" ? validatedQuote : null,
@@ -217,6 +238,27 @@ export function BridgePage({ tabsSlot }: { tabsSlot?: ReactNode }) {
     execution.executeBridge(validatedQuote);
   }
 
+  function handlePrimaryCta() {
+    if (!isConnected) {
+      connectWallet();
+      return;
+    }
+    if (wrongNetwork && fromChain) {
+      switchChain({ chainId: fromChain.chainId });
+      return;
+    }
+    if (!activeQuote) return;
+    if (flow === "needs-approval") {
+      handleApproveClick();
+      return;
+    }
+    if (flow === "ready" && selectedQuote?.routeId === activeQuote.routeId) {
+      setConfirmOpen(true);
+      return;
+    }
+    selectRoute(activeQuote);
+  }
+
   useEffect(() => {
     if (!execution.isConfirmed) return;
     setConfirmOpen(false);
@@ -253,6 +295,38 @@ export function BridgePage({ tabsSlot }: { tabsSlot?: ReactNode }) {
       </div>
     );
   }
+
+  const fromUsd =
+    fromToken?.priceUsd != null && Number(amountInput) > 0
+      ? formatUsd(Number(amountInput) * fromToken.priceUsd)
+      : null;
+  const toOutputAmount = activeQuote
+    ? Number(formatUnits(BigInt(activeQuote.estimatedOutputAmount || "0"), toToken?.decimals ?? 18))
+    : null;
+  const toUsd =
+    toToken?.priceUsd != null && toOutputAmount !== null && toOutputAmount > 0
+      ? formatUsd(toOutputAmount * toToken.priceUsd)
+      : null;
+
+  let ctaLabel: string;
+  if (!isConnected) {
+    ctaLabel = "Connect Wallet";
+  } else if (wrongNetwork) {
+    ctaLabel = `Switch to ${fromChain?.name ?? "source chain"}`;
+  } else if (insufficientBalance) {
+    ctaLabel = "Insufficient balance";
+  } else if (!activeQuote) {
+    ctaLabel = quoteQuery.isFetching ? "Fetching routes…" : "Enter an amount";
+  } else if (flow === "needs-approval") {
+    ctaLabel =
+      approval.isApproving || approval.isConfirming ? "Approving…" : `Approve ${fromToken?.symbol}`;
+  } else {
+    ctaLabel = "Review Bridge";
+  }
+  const ctaDisabled =
+    (isConnected && !wrongNetwork && (insufficientBalance || !activeQuote)) ||
+    (flow === "needs-approval" && (approval.isApproving || approval.isConfirming)) ||
+    (wrongNetwork ? isSwitching : false);
 
   return (
     <div className="mx-auto w-full max-w-md">
@@ -293,23 +367,66 @@ export function BridgePage({ tabsSlot }: { tabsSlot?: ReactNode }) {
 
           <BridgeRiskNotice fromChain={fromChain} toChain={toChain} />
 
-          <div className="grid grid-cols-2 gap-2">
-            <div className="space-y-1">
-              <span className="text-xs text-muted-foreground">From Network</span>
-              <BridgeChainSelect
-                chains={chains}
-                value={fromChain}
-                onChange={setFromChain}
-                label="From network"
-                loading={chainsQuery.isLoading}
-              />
-            </div>
-            <div className="flex items-end justify-center pb-1">
+          <div className="space-y-1">
+            <SwapAmountInput
+              label={
+                <span className="flex items-center gap-1">
+                  From
+                  <span className="opacity-40">·</span>
+                  <BridgeChainSelect
+                    variant="minimal"
+                    chains={chains}
+                    value={fromChain}
+                    onChange={setFromChain}
+                    label="From network"
+                    loading={chainsQuery.isLoading}
+                  />
+                </span>
+              }
+              token={fromToken}
+              value={amountInput}
+              onChange={setAmountInput}
+              balanceFormatted={balance.formatted}
+              balanceLoading={isConnected && balance.isLoading}
+              balanceError={isConnected && balance.isError}
+              onRetryBalance={balance.refetch}
+              tokenSelect={
+                <BridgeTokenSelect
+                  tokens={fromTokens}
+                  value={fromToken}
+                  onChange={setFromToken}
+                  label="From token"
+                  loading={fromTokensQuery.isLoading}
+                />
+              }
+              footer={
+                <div className="mt-2 flex items-center justify-between gap-2">
+                  <span className="truncate text-xs text-muted-foreground">{fromUsd ?? ""}</span>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    className="h-6 shrink-0 px-2 text-[11px]"
+                    disabled={balance.balance === null}
+                    onClick={() => {
+                      if (!fromToken || balance.balance === null) return;
+                      setAmountInput(
+                        (Number(balance.balance) / 10 ** fromToken.decimals).toString(),
+                      );
+                    }}
+                  >
+                    Max
+                  </Button>
+                </div>
+              }
+            />
+
+            <div className="relative z-10 -my-5 flex justify-center">
               <Button
                 type="button"
                 variant="outline"
                 size="icon"
-                className="size-8 rounded-full"
+                className="size-9 rounded-full border-4 border-background bg-card shadow-sm"
                 aria-label="Reverse chains"
                 onClick={() => {
                   const f = fromChain;
@@ -323,64 +440,43 @@ export function BridgePage({ tabsSlot }: { tabsSlot?: ReactNode }) {
                 <ArrowDownUp className="size-3.5" />
               </Button>
             </div>
-          </div>
 
-          <SwapAmountInput
-            label="Amount"
-            token={fromToken}
-            value={amountInput}
-            onChange={setAmountInput}
-            balanceFormatted={balance.formatted}
-            balanceLoading={isConnected && balance.isLoading}
-            balanceError={isConnected && balance.isError}
-            onRetryBalance={balance.refetch}
-            tokenSelect={
-              <BridgeTokenSelect
-                tokens={fromTokens}
-                value={fromToken}
-                onChange={setFromToken}
-                label="From token"
-                loading={fromTokensQuery.isLoading}
-              />
-            }
-            footer={
-              <div className="mt-2 flex items-center justify-end">
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  className="h-6 px-2 text-[11px]"
-                  disabled={balance.balance === null}
-                  onClick={() => {
-                    if (!fromToken || balance.balance === null) return;
-                    setAmountInput((Number(balance.balance) / 10 ** fromToken.decimals).toString());
-                  }}
-                >
-                  Max
-                </Button>
-              </div>
-            }
-          />
-
-          <div className="space-y-1">
-            <span className="text-xs text-muted-foreground">To Network</span>
-            <BridgeChainSelect
-              chains={chains}
-              value={toChain}
-              onChange={setToChain}
-              label="To network"
-              loading={chainsQuery.isLoading}
-            />
-          </div>
-
-          <div className="space-y-1">
-            <span className="text-xs text-muted-foreground">To Token</span>
-            <BridgeTokenSelect
-              tokens={toTokens}
-              value={toToken}
-              onChange={setToToken}
-              label="To token"
-              loading={toTokensQuery.isLoading}
+            <SwapAmountInput
+              label={
+                <span className="flex items-center gap-1">
+                  To
+                  <span className="opacity-40">·</span>
+                  <BridgeChainSelect
+                    variant="minimal"
+                    chains={chains}
+                    value={toChain}
+                    onChange={setToChain}
+                    label="To network"
+                    loading={chainsQuery.isLoading}
+                  />
+                </span>
+              }
+              token={toToken}
+              value={
+                toOutputAmount !== null
+                  ? toOutputAmount.toLocaleString("en-US", { maximumFractionDigits: 6 })
+                  : ""
+              }
+              readOnly
+              tokenSelect={
+                <BridgeTokenSelect
+                  tokens={toTokens}
+                  value={toToken}
+                  onChange={setToToken}
+                  label="To token"
+                  loading={toTokensQuery.isLoading}
+                />
+              }
+              footer={
+                toUsd ? (
+                  <div className="mt-2 text-xs text-muted-foreground">{toUsd}</div>
+                ) : undefined
+              }
             />
           </div>
 
@@ -406,67 +502,90 @@ export function BridgePage({ tabsSlot }: { tabsSlot?: ReactNode }) {
             </p>
           ) : null}
 
-          {routes.length > 0 || excluded.length > 0 ? (
-            <div className="space-y-2">
-              <div className="flex items-center gap-1 rounded-full bg-secondary/60 p-1 text-xs">
-                {SORT_TABS.map((tab) => (
-                  <button
-                    key={tab.value}
-                    type="button"
-                    onClick={() => setSort(tab.value)}
-                    className={
-                      sort === tab.value
-                        ? "flex-1 rounded-full bg-card px-2 py-1 font-semibold text-foreground shadow-sm"
-                        : "flex-1 rounded-full px-2 py-1 text-muted-foreground"
-                    }
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </div>
-
-              {routes.map((route, index) => (
-                <BridgeRouteCard
-                  key={`${route.provider}-${route.routeId}`}
-                  quote={route}
-                  highlight={
-                    index === 0 ? SORT_TABS.find((t) => t.value === sort)?.label : undefined
-                  }
-                  selected={selectedQuote?.routeId === route.routeId}
-                  onSelect={() => selectRoute(route)}
-                />
-              ))}
-
-              {excluded.length > 0 ? (
-                <details className="text-xs text-muted-foreground">
-                  <summary className="cursor-pointer">
-                    {excluded.length} provider{excluded.length === 1 ? "" : "s"} unavailable for
-                    this route
-                  </summary>
-                  <ul className="mt-1 space-y-0.5">
-                    {excluded.map((e) => (
-                      <li key={e.provider}>
-                        {e.provider}: {e.reason}
-                      </li>
-                    ))}
-                  </ul>
-                </details>
-              ) : null}
-            </div>
+          {activeQuote ? (
+            <BridgeQuoteSummary
+              quote={activeQuote}
+              onRefresh={() => void quoteQuery.refetch()}
+              refreshing={quoteQuery.isFetching}
+            />
           ) : quoteQuery.isFetching ? (
             <p className="py-6 text-center text-sm text-muted-foreground">Fetching routes…</p>
           ) : null}
 
-          {flow === "needs-approval" ? (
-            <Button
-              className="w-full"
-              onClick={handleApproveClick}
-              disabled={approval.isApproving || approval.isConfirming}
-            >
-              {approval.isApproving || approval.isConfirming
-                ? "Approving…"
-                : `Approve ${fromToken?.symbol}`}
-            </Button>
+          {activeQuote ? (
+            <details className="group rounded-full border border-border">
+              <summary className="flex cursor-pointer list-none items-center justify-between px-3 py-1.5 text-xs text-muted-foreground">
+                Route details
+                <ChevronDown className="size-3.5 transition-transform group-open:rotate-180" />
+              </summary>
+              <div className="border-t border-border p-3">
+                <BridgeRouteSteps quote={activeQuote} />
+              </div>
+            </details>
+          ) : null}
+
+          {routes.length > 0 || excluded.length > 0 ? (
+            <details className="text-sm">
+              <summary className="cursor-pointer list-none text-xs font-medium text-muted-foreground hover:text-foreground">
+                Compare all routes
+              </summary>
+              <div className="mt-2 space-y-2">
+                <div className="flex items-center gap-1 rounded-full bg-secondary/60 p-1 text-xs">
+                  {SORT_TABS.map((tab) => (
+                    <button
+                      key={tab.value}
+                      type="button"
+                      onClick={() => setSort(tab.value)}
+                      className={
+                        sort === tab.value
+                          ? "flex-1 rounded-full bg-card px-2 py-1 font-semibold text-foreground shadow-sm"
+                          : "flex-1 rounded-full px-2 py-1 text-muted-foreground"
+                      }
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+
+                {routes.map((route, index) => (
+                  <BridgeRouteCard
+                    key={`${route.provider}-${route.routeId}`}
+                    quote={route}
+                    highlight={
+                      index === 0 ? SORT_TABS.find((t) => t.value === sort)?.label : undefined
+                    }
+                    selected={activeQuote?.routeId === route.routeId}
+                    onSelect={() => selectRoute(route)}
+                  />
+                ))}
+
+                {excluded.length > 0 ? (
+                  <details className="text-xs text-muted-foreground">
+                    <summary className="cursor-pointer">
+                      {excluded.length} provider{excluded.length === 1 ? "" : "s"} unavailable for
+                      this route
+                    </summary>
+                    <ul className="mt-1 space-y-0.5">
+                      {excluded.map((e) => (
+                        <li key={e.provider}>
+                          {e.provider}: {e.reason}
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
+                ) : null}
+              </div>
+            </details>
+          ) : null}
+
+          <Button className="w-full" onClick={handlePrimaryCta} disabled={ctaDisabled}>
+            {ctaLabel}
+          </Button>
+
+          {providerDisplayName && flow !== "submitted" ? (
+            <p className="text-center text-xs text-muted-foreground">
+              routing by {providerDisplayName}
+            </p>
           ) : null}
 
           {statusTracking.status ? <BridgeStatusPanel status={statusTracking.status} /> : null}

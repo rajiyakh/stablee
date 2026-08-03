@@ -13,7 +13,48 @@ function formatStepAmount(amount: string, decimals: number, symbol: string): str
   return `${value.toLocaleString("en-US", { maximumFractionDigits: 6 })} ${symbol}`;
 }
 
-/** Every bridge/swap step this route actually executes, in order — the provider's own breakdown, never invented. */
+/** Every bridge/swap step this route actually executes, in order — the provider's own breakdown, never invented. Shared between the modal below and the inline disclosure on BridgePage. */
+export function BridgeRouteSteps({ quote }: { quote: NormalizedBridgeQuote }) {
+  const steps = quote.meta.steps;
+
+  return (
+    <>
+      {steps.length === 0 ? (
+        <p className="text-sm text-muted-foreground">
+          This provider didn't return a step-by-step breakdown for this route.
+        </p>
+      ) : (
+        <ol className="space-y-3">
+          {steps.map((step, index) => (
+            <li
+              key={`${step.toolName}-${index}`}
+              className="rounded-lg border border-border p-3 text-sm"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-medium capitalize text-foreground">
+                  {index + 1}. {step.type} via {step.toolName}
+                </span>
+              </div>
+              <p className="mt-1 text-xs text-muted-foreground">
+                {formatStepAmount(step.fromAmount, step.fromToken.decimals, step.fromToken.symbol)}{" "}
+                → {formatStepAmount(step.toAmount, step.toToken.decimals, step.toToken.symbol)}
+              </p>
+            </li>
+          ))}
+        </ol>
+      )}
+
+      {quote.meta.providerRiskNotes.length > 0 ? (
+        <div className="rounded-lg border border-warning/40 bg-warning/10 p-3 text-xs text-warning">
+          {quote.meta.providerRiskNotes.map((note) => (
+            <p key={note}>{note}</p>
+          ))}
+        </div>
+      ) : null}
+    </>
+  );
+}
+
 export function BridgeRouteDetailsDialog({
   open,
   onOpenChange,
@@ -23,8 +64,6 @@ export function BridgeRouteDetailsDialog({
   onOpenChange: (open: boolean) => void;
   quote: NormalizedBridgeQuote;
 }) {
-  const steps = quote.meta.steps;
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -35,42 +74,7 @@ export function BridgeRouteDetailsDialog({
           </DialogDescription>
         </DialogHeader>
 
-        {steps.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
-            This provider didn't return a step-by-step breakdown for this route.
-          </p>
-        ) : (
-          <ol className="space-y-3">
-            {steps.map((step, index) => (
-              <li
-                key={`${step.toolName}-${index}`}
-                className="rounded-lg border border-border p-3 text-sm"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-medium capitalize text-foreground">
-                    {index + 1}. {step.type} via {step.toolName}
-                  </span>
-                </div>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  {formatStepAmount(
-                    step.fromAmount,
-                    step.fromToken.decimals,
-                    step.fromToken.symbol,
-                  )}{" "}
-                  → {formatStepAmount(step.toAmount, step.toToken.decimals, step.toToken.symbol)}
-                </p>
-              </li>
-            ))}
-          </ol>
-        )}
-
-        {quote.meta.providerRiskNotes.length > 0 ? (
-          <div className="rounded-lg border border-warning/40 bg-warning/10 p-3 text-xs text-warning">
-            {quote.meta.providerRiskNotes.map((note) => (
-              <p key={note}>{note}</p>
-            ))}
-          </div>
-        ) : null}
+        <BridgeRouteSteps quote={quote} />
       </DialogContent>
     </Dialog>
   );

@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import type { SupportedChain } from "@/lib/bridge/types";
 
 export function BridgeChainSelect({
@@ -18,12 +19,16 @@ export function BridgeChainSelect({
   onChange,
   label,
   loading,
+  /** "pill" (default) is the bordered standalone dropdown. "minimal" is a plain text+chevron
+   *  trigger meant to sit inside a card header, e.g. "From · Robinhood". */
+  variant = "pill",
 }: {
   chains: SupportedChain[];
   value: SupportedChain | null;
   onChange: (chain: SupportedChain) => void;
   label: string;
   loading?: boolean;
+  variant?: "pill" | "minimal";
 }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -37,15 +42,24 @@ export function BridgeChainSelect({
       <PopoverTrigger asChild>
         <Button
           type="button"
-          variant="outline"
+          variant={variant === "minimal" ? "ghost" : "outline"}
           aria-label={label}
           disabled={loading}
-          className="h-9 min-w-[8rem] justify-between gap-1.5 rounded-full px-3 font-normal"
+          className={cn(
+            "justify-between gap-1 font-normal",
+            variant === "minimal"
+              ? "h-auto min-w-0 px-0 py-0 text-xs text-muted-foreground hover:bg-transparent hover:text-foreground"
+              : "h-9 min-w-[8rem] rounded-full px-3",
+          )}
         >
           <span className="truncate">
             {loading ? "Loading…" : (value?.name ?? "Select network")}
           </span>
-          <ChevronDown className="size-4 shrink-0 opacity-50" />
+          <ChevronDown
+            className={
+              variant === "minimal" ? "size-3 shrink-0 opacity-60" : "size-4 shrink-0 opacity-50"
+            }
+          />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-64 p-0" align="start">

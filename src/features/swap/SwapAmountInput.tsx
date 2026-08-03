@@ -18,7 +18,7 @@ export function SwapAmountInput({
   tokenSelect,
   footer,
 }: {
-  label: string;
+  label: ReactNode;
   token: { symbol: string } | null;
   value: string;
   onChange?: (value: string) => void;
