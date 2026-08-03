@@ -99,16 +99,18 @@ function CircularFlow({ steps, className }: { steps: string[]; className?: strin
           className="animate-orca-line"
           style={{ ["--orca-line-length" as string]: 2 * Math.PI * radius }}
         />
+        <circle
+          r={4}
+          fill="var(--color-primary)"
+          className="animate-orca-packet"
+          style={{
+            offsetPath: `path("M ${center + radius},${center} a ${radius},${radius} 0 1,0 -${
+              2 * radius
+            },0 a ${radius},${radius} 0 1,0 ${2 * radius},0")`,
+            filter: "drop-shadow(0 0 6px var(--color-primary))",
+          }}
+        />
       </svg>
-      <span
-        className="animate-orca-packet absolute left-1/2 top-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary"
-        style={{
-          offsetPath: `path("M ${center + radius},${center} a ${radius},${radius} 0 1,0 -${
-            2 * radius
-          },0 a ${radius},${radius} 0 1,0 ${2 * radius},0")`,
-          boxShadow: "0 0 10px var(--color-primary)",
-        }}
-      />
       <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1 text-center text-muted-foreground">
         <span className="text-[10px] font-semibold uppercase tracking-[0.2em]">Long-term</span>
         <span className="text-xs font-semibold uppercase tracking-[0.2em]">Scarcity Loop</span>

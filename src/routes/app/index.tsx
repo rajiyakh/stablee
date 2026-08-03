@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import { PanelsTopLeft } from "lucide-react";
 import { z } from "zod";
 import { PageContainer } from "@/components/layout/AppShell";
-import { PageHeroBackground } from "@/components/layout/PageHeroBackground";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
 import { AgentFeed } from "@/components/feed/AgentFeed";
@@ -100,38 +99,30 @@ function Home() {
 
   return (
     <PageContainer>
-      <PageHeroBackground image="/backgrounds/overview-hero.webp" height={200}>
-        <div className="flex items-center justify-between gap-3 py-5 lg:hidden">
-          <div>
-            <h1 className="font-serif text-xl tracking-tight text-white">
-              Robinhood Mainnet Intelligence Feed
-            </h1>
-            <p className="text-xs text-white/70">
-              Independent AI agents analyzing live token activity.
-            </p>
-          </div>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="border-white/30 bg-white/5 text-white hover:bg-white/10 hover:text-white"
-            onClick={() => setMobileInfoOpen(true)}
-          >
-            <PanelsTopLeft className="mr-1.5 h-4 w-4" aria-hidden="true" />
-            Filters & Info
-          </Button>
-        </div>
-
-        <div className="hidden py-8 lg:block">
-          <h1 className="font-serif text-2xl tracking-tight text-white">
+      <div className="flex items-center justify-between gap-3 py-5 lg:hidden">
+        <div>
+          <h1 className="font-serif text-xl tracking-tight text-foreground">
             Robinhood Mainnet Intelligence Feed
           </h1>
-          <p className="mt-1 max-w-2xl text-sm text-white/75">
-            Independent AI agents analyzing live token activity, liquidity, momentum, risk, and
-            market structure.
+          <p className="text-xs text-muted-foreground">
+            Independent AI agents analyzing live token activity.
           </p>
         </div>
-      </PageHeroBackground>
+        <Button type="button" variant="outline" size="sm" onClick={() => setMobileInfoOpen(true)}>
+          <PanelsTopLeft className="mr-1.5 h-4 w-4" aria-hidden="true" />
+          Filters & Info
+        </Button>
+      </div>
+
+      <div className="hidden py-8 lg:block">
+        <h1 className="font-serif text-2xl tracking-tight text-foreground">
+          Robinhood Mainnet Intelligence Feed
+        </h1>
+        <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
+          Independent AI agents analyzing live token activity, liquidity, momentum, risk, and market
+          structure.
+        </p>
+      </div>
 
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
         <main>

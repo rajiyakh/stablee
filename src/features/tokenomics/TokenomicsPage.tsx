@@ -10,13 +10,12 @@ import { EconomyLoopFlow } from "./sections/EconomyLoopFlow";
 import { ProtocolMetrics } from "./sections/ProtocolMetrics";
 import { RoadmapSection } from "./sections/RoadmapSection";
 
-/** $ORCA protocol documentation page — dark, glassmorphic, scoped entirely
- *  via the .orca-docs class (see src/styles.css) so nothing outside this
- *  page is affected. -mt-10 cancels PageContainer's top padding so the hero
- *  sits flush against the app header instead of showing a light gap. */
+/** $ORCA protocol documentation page — uses the site's normal light theme.
+ *  -mt-10 cancels PageContainer's top padding so the hero sits flush against
+ *  the app header instead of showing a light gap. */
 export function TokenomicsPage() {
   return (
-    <div className="orca-docs -mx-4 -mt-10 sm:-mx-6 lg:-mx-8">
+    <div className="-mx-4 -mt-10 sm:-mx-6 lg:-mx-8">
       <HeroSection />
       <SupplyNode />
       <GenesisAgentFarming />
