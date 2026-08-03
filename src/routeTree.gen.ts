@@ -28,7 +28,13 @@ import { Route as AppTokenRouteImport } from './routes/app/token'
 import { Route as AppTrendingRouteImport } from './routes/app/trending'
 import { Route as AppWatchlistRouteImport } from './routes/app/watchlist'
 import { Route as AppXstocksRouteImport } from './routes/app/xstocks'
+import { Route as ApiAnalyticsBridgeEventRouteImport } from './routes/api/analytics/bridge-event'
 import { Route as ApiAnalyticsSwapEventRouteImport } from './routes/api/analytics/swap-event'
+import { Route as ApiBridgeChainsRouteImport } from './routes/api/bridge/chains'
+import { Route as ApiBridgeProvidersRouteImport } from './routes/api/bridge/providers'
+import { Route as ApiBridgeQuoteRouteImport } from './routes/api/bridge/quote'
+import { Route as ApiBridgeStatusRouteImport } from './routes/api/bridge/status'
+import { Route as ApiBridgeTokensRouteImport } from './routes/api/bridge/tokens'
 import { Route as ApiFeedNewLaunchesRouteImport } from './routes/api/feed/new-launches'
 import { Route as ApiFeedSnapshotRouteImport } from './routes/api/feed/snapshot'
 import { Route as ApiMarketStatusRouteImport } from './routes/api/market/status'
@@ -162,9 +168,39 @@ const AppXstocksRoute = AppXstocksRouteImport.update({
   path: '/xstocks',
   getParentRoute: () => AppRoute,
 } as any)
+const ApiAnalyticsBridgeEventRoute = ApiAnalyticsBridgeEventRouteImport.update({
+  id: '/api/analytics/bridge-event',
+  path: '/api/analytics/bridge-event',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAnalyticsSwapEventRoute = ApiAnalyticsSwapEventRouteImport.update({
   id: '/api/analytics/swap-event',
   path: '/api/analytics/swap-event',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiBridgeChainsRoute = ApiBridgeChainsRouteImport.update({
+  id: '/api/bridge/chains',
+  path: '/api/bridge/chains',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiBridgeProvidersRoute = ApiBridgeProvidersRouteImport.update({
+  id: '/api/bridge/providers',
+  path: '/api/bridge/providers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiBridgeQuoteRoute = ApiBridgeQuoteRouteImport.update({
+  id: '/api/bridge/quote',
+  path: '/api/bridge/quote',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiBridgeStatusRoute = ApiBridgeStatusRouteImport.update({
+  id: '/api/bridge/status',
+  path: '/api/bridge/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiBridgeTokensRoute = ApiBridgeTokensRouteImport.update({
+  id: '/api/bridge/tokens',
+  path: '/api/bridge/tokens',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiFeedNewLaunchesRoute = ApiFeedNewLaunchesRouteImport.update({
@@ -389,7 +425,13 @@ export interface FileRoutesByFullPath {
   '/app/watchlist': typeof AppWatchlistRoute
   '/app/xstocks': typeof AppXstocksRoute
   '/app/': typeof AppIndexRoute
+  '/api/analytics/bridge-event': typeof ApiAnalyticsBridgeEventRoute
   '/api/analytics/swap-event': typeof ApiAnalyticsSwapEventRoute
+  '/api/bridge/chains': typeof ApiBridgeChainsRoute
+  '/api/bridge/providers': typeof ApiBridgeProvidersRoute
+  '/api/bridge/quote': typeof ApiBridgeQuoteRoute
+  '/api/bridge/status': typeof ApiBridgeStatusRoute
+  '/api/bridge/tokens': typeof ApiBridgeTokensRoute
   '/api/feed/new-launches': typeof ApiFeedNewLaunchesRoute
   '/api/feed/snapshot': typeof ApiFeedSnapshotRoute
   '/api/market/status': typeof ApiMarketStatusRoute
@@ -443,7 +485,13 @@ export interface FileRoutesByTo {
   '/app/watchlist': typeof AppWatchlistRoute
   '/app/xstocks': typeof AppXstocksRoute
   '/app': typeof AppIndexRoute
+  '/api/analytics/bridge-event': typeof ApiAnalyticsBridgeEventRoute
   '/api/analytics/swap-event': typeof ApiAnalyticsSwapEventRoute
+  '/api/bridge/chains': typeof ApiBridgeChainsRoute
+  '/api/bridge/providers': typeof ApiBridgeProvidersRoute
+  '/api/bridge/quote': typeof ApiBridgeQuoteRoute
+  '/api/bridge/status': typeof ApiBridgeStatusRoute
+  '/api/bridge/tokens': typeof ApiBridgeTokensRoute
   '/api/feed/new-launches': typeof ApiFeedNewLaunchesRoute
   '/api/feed/snapshot': typeof ApiFeedSnapshotRoute
   '/api/market/status': typeof ApiMarketStatusRoute
@@ -503,7 +551,13 @@ export interface FileRoutesById {
   '/app/watchlist': typeof AppWatchlistRoute
   '/app/xstocks': typeof AppXstocksRoute
   '/app/': typeof AppIndexRoute
+  '/api/analytics/bridge-event': typeof ApiAnalyticsBridgeEventRoute
   '/api/analytics/swap-event': typeof ApiAnalyticsSwapEventRoute
+  '/api/bridge/chains': typeof ApiBridgeChainsRoute
+  '/api/bridge/providers': typeof ApiBridgeProvidersRoute
+  '/api/bridge/quote': typeof ApiBridgeQuoteRoute
+  '/api/bridge/status': typeof ApiBridgeStatusRoute
+  '/api/bridge/tokens': typeof ApiBridgeTokensRoute
   '/api/feed/new-launches': typeof ApiFeedNewLaunchesRoute
   '/api/feed/snapshot': typeof ApiFeedSnapshotRoute
   '/api/market/status': typeof ApiMarketStatusRoute
@@ -564,7 +618,13 @@ export interface FileRouteTypes {
     | '/app/watchlist'
     | '/app/xstocks'
     | '/app/'
+    | '/api/analytics/bridge-event'
     | '/api/analytics/swap-event'
+    | '/api/bridge/chains'
+    | '/api/bridge/providers'
+    | '/api/bridge/quote'
+    | '/api/bridge/status'
+    | '/api/bridge/tokens'
     | '/api/feed/new-launches'
     | '/api/feed/snapshot'
     | '/api/market/status'
@@ -618,7 +678,13 @@ export interface FileRouteTypes {
     | '/app/watchlist'
     | '/app/xstocks'
     | '/app'
+    | '/api/analytics/bridge-event'
     | '/api/analytics/swap-event'
+    | '/api/bridge/chains'
+    | '/api/bridge/providers'
+    | '/api/bridge/quote'
+    | '/api/bridge/status'
+    | '/api/bridge/tokens'
     | '/api/feed/new-launches'
     | '/api/feed/snapshot'
     | '/api/market/status'
@@ -677,7 +743,13 @@ export interface FileRouteTypes {
     | '/app/watchlist'
     | '/app/xstocks'
     | '/app/'
+    | '/api/analytics/bridge-event'
     | '/api/analytics/swap-event'
+    | '/api/bridge/chains'
+    | '/api/bridge/providers'
+    | '/api/bridge/quote'
+    | '/api/bridge/status'
+    | '/api/bridge/tokens'
     | '/api/feed/new-launches'
     | '/api/feed/snapshot'
     | '/api/market/status'
@@ -722,7 +794,13 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
+  ApiAnalyticsBridgeEventRoute: typeof ApiAnalyticsBridgeEventRoute
   ApiAnalyticsSwapEventRoute: typeof ApiAnalyticsSwapEventRoute
+  ApiBridgeChainsRoute: typeof ApiBridgeChainsRoute
+  ApiBridgeProvidersRoute: typeof ApiBridgeProvidersRoute
+  ApiBridgeQuoteRoute: typeof ApiBridgeQuoteRoute
+  ApiBridgeStatusRoute: typeof ApiBridgeStatusRoute
+  ApiBridgeTokensRoute: typeof ApiBridgeTokensRoute
   ApiFeedNewLaunchesRoute: typeof ApiFeedNewLaunchesRoute
   ApiFeedSnapshotRoute: typeof ApiFeedSnapshotRoute
   ApiMarketStatusRoute: typeof ApiMarketStatusRoute
@@ -885,11 +963,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppXstocksRouteImport
       parentRoute: typeof AppRoute
     }
+    '/api/analytics/bridge-event': {
+      id: '/api/analytics/bridge-event'
+      path: '/api/analytics/bridge-event'
+      fullPath: '/api/analytics/bridge-event'
+      preLoaderRoute: typeof ApiAnalyticsBridgeEventRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/analytics/swap-event': {
       id: '/api/analytics/swap-event'
       path: '/api/analytics/swap-event'
       fullPath: '/api/analytics/swap-event'
       preLoaderRoute: typeof ApiAnalyticsSwapEventRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/bridge/chains': {
+      id: '/api/bridge/chains'
+      path: '/api/bridge/chains'
+      fullPath: '/api/bridge/chains'
+      preLoaderRoute: typeof ApiBridgeChainsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/bridge/providers': {
+      id: '/api/bridge/providers'
+      path: '/api/bridge/providers'
+      fullPath: '/api/bridge/providers'
+      preLoaderRoute: typeof ApiBridgeProvidersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/bridge/quote': {
+      id: '/api/bridge/quote'
+      path: '/api/bridge/quote'
+      fullPath: '/api/bridge/quote'
+      preLoaderRoute: typeof ApiBridgeQuoteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/bridge/status': {
+      id: '/api/bridge/status'
+      path: '/api/bridge/status'
+      fullPath: '/api/bridge/status'
+      preLoaderRoute: typeof ApiBridgeStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/bridge/tokens': {
+      id: '/api/bridge/tokens'
+      path: '/api/bridge/tokens'
+      fullPath: '/api/bridge/tokens'
+      preLoaderRoute: typeof ApiBridgeTokensRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/feed/new-launches': {
@@ -1270,7 +1390,13 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
+  ApiAnalyticsBridgeEventRoute: ApiAnalyticsBridgeEventRoute,
   ApiAnalyticsSwapEventRoute: ApiAnalyticsSwapEventRoute,
+  ApiBridgeChainsRoute: ApiBridgeChainsRoute,
+  ApiBridgeProvidersRoute: ApiBridgeProvidersRoute,
+  ApiBridgeQuoteRoute: ApiBridgeQuoteRoute,
+  ApiBridgeStatusRoute: ApiBridgeStatusRoute,
+  ApiBridgeTokensRoute: ApiBridgeTokensRoute,
   ApiFeedNewLaunchesRoute: ApiFeedNewLaunchesRoute,
   ApiFeedSnapshotRoute: ApiFeedSnapshotRoute,
   ApiMarketStatusRoute: ApiMarketStatusRoute,

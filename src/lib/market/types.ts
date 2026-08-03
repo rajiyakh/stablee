@@ -1,7 +1,18 @@
 /** Shared market data types (client-safe, no server imports). */
 
 export type ProviderId =
-  "coingecko" | "dexscreener" | "geckoterminal" | "gmgn" | "zeroex" | "verified" | "blockscout";
+  | "coingecko"
+  | "dexscreener"
+  | "geckoterminal"
+  | "gmgn"
+  | "zeroex"
+  | "verified"
+  | "blockscout"
+  | "bridge"
+  | "lifi"
+  | "relay"
+  | "across"
+  | "gaszip";
 
 export type ProviderState = "live" | "delayed" | "unavailable" | "not_configured";
 

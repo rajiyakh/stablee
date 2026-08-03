@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import { RefreshCw } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { formatTokenAmount } from "@/lib/market/format";
-import type { SwapTokenConfig } from "@/config/swapTokens";
 
 const DECIMAL_INPUT_RE = /^\d*\.?\d*$/;
 
@@ -20,7 +19,7 @@ export function SwapAmountInput({
   footer,
 }: {
   label: string;
-  token: SwapTokenConfig | null;
+  token: { symbol: string } | null;
   value: string;
   onChange?: (value: string) => void;
   balanceFormatted?: string | null;

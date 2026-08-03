@@ -10,6 +10,11 @@ export const ATTRIBUTION: Record<ProviderId, string> = {
   zeroex: "Swap quotes by 0x",
   verified: "Owner-verified registry",
   blockscout: "On-chain holdings by Blockscout",
+  bridge: "Cross-chain bridge routes aggregated by RobinPulse",
+  lifi: "Bridge routes by LI.FI",
+  relay: "Bridge routes by Relay",
+  across: "Bridge routes by Across",
+  gaszip: "Gas refuel by Gas.zip",
 };
 
 export function envelope<T>(
