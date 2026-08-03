@@ -539,6 +539,120 @@
   animation: terms-modal-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* $ORCA Tokenomics page (src/features/tokenomics/**) — a dark, glassmorphic
+   "protocol docs" treatment scoped entirely to this one page via the
+   .orca-docs wrapper class. Deliberately NOT the stashed [data-theme="dark"]
+   block above: that one's --primary/--brand are the lime brand mark, not
+   the forest green this page uses as its accent. Nothing here touches the
+   site-wide light theme. */
+.orca-docs {
+  --background: oklch(0.19 0.018 158); /* #0E1512 */
+  --foreground: oklch(0.95 0.012 158); /* #EAF2EC */
+  --card: oklch(0.235 0.019 158); /* #16201C */
+  --card-foreground: oklch(0.95 0.012 158);
+  --border: oklch(0.32 0.025 152); /* #2A382F */
+  --input: oklch(0.32 0.025 152);
+  --secondary: oklch(0.275 0.021 152);
+  --secondary-foreground: oklch(0.95 0.012 158);
+  --surface: oklch(0.275 0.021 152);
+  --muted: oklch(0.275 0.021 152);
+  --muted-foreground: oklch(0.68 0.03 152); /* #8CA095 */
+  --accent: oklch(0.275 0.021 152);
+  /* Vivid glow-green, brightened from the site's light-mode --primary — the
+     accent for this page only, kept out of the site-wide palette. */
+  --primary: oklch(0.72 0.19 155);
+  --primary-foreground: oklch(0.16 0.02 158);
+  --ring: oklch(0.72 0.19 155);
+  /* Pure-black shadow — the light theme's green-tinted shadow disappears
+     against a near-black card. */
+  --shadow-card: 0 1px 2px oklch(0 0 0 / 30%), 0 8px 24px oklch(0 0 0 / 25%);
+  --shadow-lift: 0 2px 4px oklch(0 0 0 / 35%), 0 16px 40px oklch(0 0 0 / 30%);
+
+  /* Same reason as the stashed [data-theme="dark"] block above: @theme
+     inline's --color-X: var(--X) mappings resolve once at :root, so a
+     nested override must re-declare them itself to make bg-card/
+     text-foreground/etc. utilities actually pick up the values above. */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-surface: var(--surface);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+
+  background: var(--background);
+  color: var(--foreground);
+}
+
+@utility glass-panel {
+  background: color-mix(in oklch, var(--color-card) 60%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid color-mix(in oklch, var(--color-border) 85%, transparent);
+  border-radius: var(--radius-2xl);
+}
+
+@keyframes orca-line-draw {
+  from {
+    stroke-dashoffset: var(--orca-line-length, 400);
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@utility animate-orca-line {
+  animation: orca-line-draw 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Small dot traveling along an SVG connector's own path (offset-path is set
+   inline per-use, referencing that connector's <path> d attribute) —
+   represents a "data packet" moving down a flow diagram. */
+@keyframes orca-packet-travel {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  10%,
+  90% {
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+@utility animate-orca-packet {
+  animation: orca-packet-travel 2.6s linear infinite;
+  offset-rotate: 0deg;
+}
+
+@keyframes orca-glow-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(0.97);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+}
+
+@utility animate-orca-glow {
+  animation: orca-glow-pulse 3.5s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
