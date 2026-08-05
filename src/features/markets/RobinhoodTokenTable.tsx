@@ -175,9 +175,9 @@ export function RobinhoodTokenTable({
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-border bg-card backdrop-blur-md">
+    <div className="overflow-x-auto rounded-xl border border-border bg-card">
       <Table>
-        <TableHeader className="sticky top-0 z-10 bg-card backdrop-blur-md">
+        <TableHeader className="sticky top-0 z-10 bg-card">
           <TableRow className="hover:bg-transparent">
             <TableHead className="w-10" />
             {columns.map((col) => (
@@ -325,7 +325,7 @@ function MobileTokenCard({
     <button
       type="button"
       onClick={onOpen}
-      className="flex w-full items-center gap-3 rounded-xl border border-border bg-card backdrop-blur-md p-3 text-left"
+      className="flex w-full items-center gap-3 rounded-xl border border-border bg-card p-3 text-left"
     >
       <TokenLogo
         logoUrl={token.logoUrl}

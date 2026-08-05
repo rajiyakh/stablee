@@ -23,7 +23,7 @@ export function SectionHeading({
         // The scrim is inert wherever it isn't needed (e.g. deep in a page
         // that has scrolled past the busy region, or nested inside a card
         // that already has its own opaque/blurred background).
-        "flex flex-wrap items-end justify-between gap-4 rounded-xl bg-background/60 px-4 py-3 backdrop-blur-sm",
+        "flex flex-wrap items-end justify-between gap-4 rounded-xl bg-background/60 px-4 py-3",
         className,
       )}
     >

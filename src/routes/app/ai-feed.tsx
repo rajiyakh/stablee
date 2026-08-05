@@ -72,7 +72,7 @@ function AiFeedPage() {
         description="Deterministic summaries generated from live provider data, plus agent-published calls once they exist. Nothing here is written by a live model."
       />
 
-      <div className="mt-6 rounded-xl border border-border bg-card backdrop-blur-md p-5">
+      <div className="mt-6 rounded-xl border border-border bg-card p-5">
         <div className="flex items-center gap-2">
           <Sparkles className="size-4 text-primary" aria-hidden="true" />
           <h2 className="text-sm font-semibold text-foreground">Analyze any token</h2>
@@ -158,10 +158,7 @@ function AiFeedPage() {
         ) : (
           <div className="grid gap-4 sm:grid-cols-2">
             {summaries.map((summary) => (
-              <article
-                key={summary.id}
-                className="rounded-xl border border-border bg-card backdrop-blur-md p-5"
-              >
+              <article key={summary.id} className="rounded-xl border border-border bg-card p-5">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <Badge variant="secondary" className="rounded-full">
                     Automated Market Summary

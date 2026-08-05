@@ -29,7 +29,7 @@ export function PriceChart({ coinId }: { coinId: string }) {
   const points = query.data?.data ?? [];
 
   return (
-    <div className="rounded-xl border border-border bg-card backdrop-blur-md p-5">
+    <div className="rounded-xl border border-border bg-card p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h3 className="text-sm font-semibold text-foreground">Price history</h3>
         <div className="flex gap-1">

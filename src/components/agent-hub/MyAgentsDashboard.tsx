@@ -72,10 +72,7 @@ export function MyAgentsDashboard({
 
       <div className="mt-6 grid gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {stats.map((stat) => (
-          <div
-            key={stat.label}
-            className="rounded-xl border border-border bg-card backdrop-blur-md p-4"
-          >
+          <div key={stat.label} className="rounded-xl border border-border bg-card p-4">
             <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
               {stat.label}
             </p>

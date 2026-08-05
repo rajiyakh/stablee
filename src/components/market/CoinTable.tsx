@@ -29,7 +29,7 @@ export function CoinTable({
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-border bg-card backdrop-blur-md">
+    <div className="overflow-x-auto rounded-xl border border-border bg-card">
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">

@@ -431,7 +431,7 @@ export function BridgePage() {
                 type="button"
                 variant="outline"
                 size="icon"
-                className="size-9 rounded-full border-4 border-background bg-card backdrop-blur-md shadow-sm"
+                className="size-9 rounded-full border-4 border-background bg-card shadow-sm"
                 aria-label="Reverse chains"
                 onClick={() => {
                   const f = fromChain;
@@ -543,7 +543,7 @@ export function BridgePage() {
                       onClick={() => setSort(tab.value)}
                       className={
                         sort === tab.value
-                          ? "flex-1 rounded-full bg-card backdrop-blur-md px-2 py-1 font-semibold text-foreground shadow-sm"
+                          ? "flex-1 rounded-full bg-card px-2 py-1 font-semibold text-foreground shadow-sm"
                           : "flex-1 rounded-full px-2 py-1 text-muted-foreground"
                       }
                     >

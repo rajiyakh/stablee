@@ -13,9 +13,7 @@ export function NewLaunchAlert({ launch }: { launch: NewLaunchInfo }) {
     <article
       className={
         "rounded-xl border p-4 sm:p-5 " +
-        (launch.trendingWithinOneHour
-          ? "border-brand/50 bg-brand/5"
-          : "border-border bg-card backdrop-blur-md")
+        (launch.trendingWithinOneHour ? "border-brand/50 bg-brand/5" : "border-border bg-card")
       }
     >
       <div className="flex flex-wrap items-center justify-between gap-2">

@@ -88,7 +88,7 @@ function NavRow({ to, label, badge }: { to: string; label: string; badge?: strin
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-lg [background-image:linear-gradient(to_right,transparent,var(--color-border)_15%,var(--color-border)_85%,transparent)] [background-position:bottom] [background-repeat:no-repeat] [background-size:100%_1px]">
+    <header className="sticky top-0 z-40 bg-background/95 [background-image:linear-gradient(to_right,transparent,var(--color-border)_15%,var(--color-border)_85%,transparent)] [background-position:bottom] [background-repeat:no-repeat] [background-size:100%_1px]">
       <div className="mx-auto grid h-14 w-full max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-4 px-4 sm:px-6 lg:px-8">
         <Link
           to="/app"

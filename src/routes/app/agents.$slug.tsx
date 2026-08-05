@@ -46,7 +46,7 @@ function AgentPage() {
       </p>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
-        <section className="rounded-xl border border-border bg-card backdrop-blur-md p-5">
+        <section className="rounded-xl border border-border bg-card p-5">
           <h2 className="text-sm font-semibold text-foreground">Methodology</h2>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
             {agent.methodology.map((m) => (
@@ -54,7 +54,7 @@ function AgentPage() {
             ))}
           </ul>
         </section>
-        <section className="rounded-xl border border-border bg-card backdrop-blur-md p-5">
+        <section className="rounded-xl border border-border bg-card p-5">
           <h2 className="text-sm font-semibold text-foreground">Inputs</h2>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
             {agent.inputs.map((m) => (
@@ -66,7 +66,7 @@ function AgentPage() {
         </section>
       </div>
 
-      <section className="mt-6 rounded-xl border border-border bg-card backdrop-blur-md p-5">
+      <section className="mt-6 rounded-xl border border-border bg-card p-5">
         <h2 className="text-sm font-semibold text-foreground">Track record</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           {stats.totalCalls === 0

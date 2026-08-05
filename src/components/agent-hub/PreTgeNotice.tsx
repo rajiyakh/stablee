@@ -11,7 +11,7 @@ const SAFETY_POINTS = [
 
 export function PreTgeNotice() {
   return (
-    <section className="rounded-xl border border-border bg-card backdrop-blur-md p-5 sm:p-6">
+    <section className="rounded-xl border border-border bg-card p-5 sm:p-6">
       <div className="flex items-start gap-3">
         <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-warning/15 text-warning-foreground">
           <ShieldAlert className="size-4.5" aria-hidden="true" />
