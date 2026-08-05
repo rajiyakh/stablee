@@ -88,7 +88,7 @@ function CoinPage() {
       </div>
 
       {coin.description ? (
-        <section className="mt-6 rounded-xl border border-border bg-card p-5">
+        <section className="mt-6 rounded-xl border border-border bg-card backdrop-blur-sm p-5">
           <h2 className="text-sm font-semibold text-foreground">About</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{coin.description}</p>
         </section>

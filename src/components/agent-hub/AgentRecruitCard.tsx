@@ -18,7 +18,7 @@ export function AgentRecruitCard({
   const tierLabel = getRateTierLabel(agent);
 
   return (
-    <article className="group flex h-full flex-col rounded-2xl border border-border bg-card p-4 transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-xl">
+    <article className="group flex h-full flex-col rounded-2xl border border-border bg-card backdrop-blur-sm p-4 transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-xl">
       <div className="relative mx-auto w-fit">
         <AgentPortraitStage agent={agent} size="lg" />
         <span

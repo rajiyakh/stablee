@@ -100,7 +100,7 @@ function Home() {
   return (
     <PageContainer>
       <div className="flex items-center justify-between gap-3 py-5 lg:hidden">
-        <div className="rounded-xl bg-background/60 px-3 py-2">
+        <div className="rounded-xl bg-background/60 px-3 py-2 backdrop-blur-sm">
           <h1 className="font-serif text-xl tracking-tight text-foreground">
             Robinhood Mainnet Intelligence Feed
           </h1>
@@ -114,7 +114,7 @@ function Home() {
         </Button>
       </div>
 
-      <div className="hidden rounded-xl bg-background/60 px-4 py-4 lg:block">
+      <div className="hidden rounded-xl bg-background/60 px-4 py-4 backdrop-blur-sm lg:block">
         <h1 className="font-serif text-2xl tracking-tight text-foreground">
           Robinhood Mainnet Intelligence Feed
         </h1>
@@ -139,7 +139,7 @@ function Home() {
         </main>
 
         <aside className="hidden space-y-6 lg:sticky lg:top-20 lg:block">
-          <div className="rounded-xl border border-border bg-card p-3">
+          <div className="rounded-xl border border-border bg-card backdrop-blur-sm p-3">
             <FeedSidebarNav {...sidebarProps} />
           </div>
 
@@ -147,7 +147,7 @@ function Home() {
             <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
               Top Trending Tokens
             </h2>
-            <div className="mt-2 rounded-xl border border-border bg-card p-3">
+            <div className="mt-2 rounded-xl border border-border bg-card backdrop-blur-sm p-3">
               <TrendingTokenPanel tokens={snapshot?.trendingTokens ?? []} />
             </div>
           </section>
@@ -156,7 +156,7 @@ function Home() {
             <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
               Top Profitable Tokens
             </h2>
-            <div className="mt-2 rounded-xl border border-border bg-card p-3">
+            <div className="mt-2 rounded-xl border border-border bg-card backdrop-blur-sm p-3">
               <TrendingTokenPanel
                 tokens={topProfitable}
                 emptyMessage="No profitable tokens right now."

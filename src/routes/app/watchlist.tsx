@@ -54,7 +54,7 @@ function WatchlistPage() {
             }
           />
         ) : (
-          <ul className="divide-y divide-border rounded-xl border border-border bg-card">
+          <ul className="divide-y divide-border rounded-xl border border-border bg-card backdrop-blur-sm">
             {entries.map((entry) => (
               <li key={entry.key} className="flex items-center gap-3 px-4 py-3">
                 {entry.kind === "coin" ? (

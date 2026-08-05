@@ -75,63 +75,65 @@ export function RobinhoodMarketsPage({
         description={copy.description}
       />
 
-      <nav
-        aria-label="Markets"
-        className="flex flex-wrap items-center gap-1 border-b border-border"
-      >
-        {TABS.map((t) =>
-          t.to ? (
-            <Link
-              key={t.id}
-              to={t.to}
-              search={{ interval }}
-              className={cn(
-                "-mb-px border-b-2 px-3 py-2 text-sm font-medium",
-                t.id === tab
-                  ? "border-brand text-foreground"
-                  : "border-transparent text-muted-foreground hover:text-foreground",
-              )}
-            >
-              {t.label}
-            </Link>
-          ) : (
-            <span
-              key={t.id}
-              className="-mb-px flex items-center gap-1 border-b-2 border-transparent px-3 py-2 text-sm text-muted-foreground/50"
-            >
-              {t.label}
-              <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-medium">
-                Soon
+      <div className="rounded-xl border border-border bg-card p-3 backdrop-blur-sm">
+        <nav
+          aria-label="Markets"
+          className="flex flex-wrap items-center gap-1 border-b border-border"
+        >
+          {TABS.map((t) =>
+            t.to ? (
+              <Link
+                key={t.id}
+                to={t.to}
+                search={{ interval }}
+                className={cn(
+                  "-mb-px border-b-2 px-3 py-2 text-sm font-medium",
+                  t.id === tab
+                    ? "border-brand text-foreground"
+                    : "border-transparent text-muted-foreground hover:text-foreground",
+                )}
+              >
+                {t.label}
+              </Link>
+            ) : (
+              <span
+                key={t.id}
+                className="-mb-px flex items-center gap-1 border-b-2 border-transparent px-3 py-2 text-sm text-muted-foreground/50"
+              >
+                {t.label}
+                <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-medium">
+                  Soon
+                </span>
               </span>
-            </span>
-          ),
-        )}
-      </nav>
+            ),
+          )}
+        </nav>
 
-      <div className="flex flex-wrap items-center gap-2">
-        <Input
-          value={search}
-          onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="Search name, symbol, or contract address"
-          className="h-9 w-full max-w-xs"
-        />
-        <IntervalSelector value={interval} onChange={onIntervalChange} />
-        <MarketFilters scope={tab} filters={filters} onChange={onFiltersChange} />
-        <div className="ml-auto flex items-center gap-3">
-          <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Switch checked={autoRefresh} onCheckedChange={onAutoRefreshChange} />
-            Auto-refresh
-          </label>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onRefresh}
-            disabled={isFetching}
-            className="gap-1.5"
-          >
-            <RefreshCw className={cn("size-3.5", isFetching && "animate-spin")} />
-            Refresh
-          </Button>
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <Input
+            value={search}
+            onChange={(e) => onSearchChange(e.target.value)}
+            placeholder="Search name, symbol, or contract address"
+            className="h-9 w-full max-w-xs"
+          />
+          <IntervalSelector value={interval} onChange={onIntervalChange} />
+          <MarketFilters scope={tab} filters={filters} onChange={onFiltersChange} />
+          <div className="ml-auto flex items-center gap-3">
+            <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Switch checked={autoRefresh} onCheckedChange={onAutoRefreshChange} />
+              Auto-refresh
+            </label>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onRefresh}
+              disabled={isFetching}
+              className="gap-1.5"
+            >
+              <RefreshCw className={cn("size-3.5", isFetching && "animate-spin")} />
+              Refresh
+            </Button>
+          </div>
         </div>
       </div>
 

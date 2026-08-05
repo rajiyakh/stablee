@@ -93,7 +93,7 @@ function AgentsHubPage() {
 
         <AgentHubFaq />
 
-        <section className="rounded-2xl border border-border bg-card p-8 text-center sm:p-12">
+        <section className="rounded-2xl border border-border bg-card backdrop-blur-sm p-8 text-center sm:p-12">
           <h2 className="font-display text-2xl tracking-tight text-foreground sm:text-3xl">
             Ready to build your research team?
           </h2>

@@ -38,7 +38,7 @@ function AgentsPage() {
             key={agent.slug}
             to="/app/agents/$slug"
             params={{ slug: agent.slug }}
-            className="rounded-xl border border-border bg-card p-5 transition-colors hover:border-primary/40"
+            className="rounded-xl border border-border bg-card backdrop-blur-sm p-5 transition-colors hover:border-primary/40"
           >
             <p className="text-base font-semibold text-foreground">{agent.name}</p>
             <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">

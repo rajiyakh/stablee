@@ -30,7 +30,7 @@ export function OwnedAgentCard({
   });
 
   return (
-    <div className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 sm:flex-row sm:items-center">
+    <div className="flex flex-col gap-4 rounded-xl border border-border bg-card backdrop-blur-sm p-4 sm:flex-row sm:items-center">
       <AgentPortrait src={agent.avatarPath} name={agent.name} size="sm" />
 
       <div className="flex-1">

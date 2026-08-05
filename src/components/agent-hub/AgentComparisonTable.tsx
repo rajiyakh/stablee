@@ -63,7 +63,7 @@ export function AgentComparisonTable({ agents }: { agents: GenesisAgentConfig[] 
       </div>
 
       {/* Desktop: real table */}
-      <div className="mt-4 hidden rounded-xl border border-border bg-card sm:block">
+      <div className="mt-4 hidden rounded-xl border border-border bg-card backdrop-blur-sm sm:block">
         <Table>
           <TableHeader>
             <TableRow>
@@ -112,7 +112,10 @@ export function AgentComparisonTable({ agents }: { agents: GenesisAgentConfig[] 
       {/* Mobile: stacked cards */}
       <div className="mt-4 space-y-3 sm:hidden">
         {sorted.map((agent) => (
-          <div key={agent.id} className="rounded-xl border border-border bg-card p-4">
+          <div
+            key={agent.id}
+            className="rounded-xl border border-border bg-card backdrop-blur-sm p-4"
+          >
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <AgentPortrait src={agent.avatarPath} name={agent.name} size="sm" />

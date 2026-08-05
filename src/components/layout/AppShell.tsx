@@ -27,7 +27,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             above). Needed because the backdrop is fixed to the viewport, so
             any bare (non-card) text can scroll through its busiest region on
             any page, not just one. */}
-        <div className="pointer-events-none fixed inset-0 bg-background/30" aria-hidden="true" />
+        <div className="pointer-events-none fixed inset-0 bg-background/55" aria-hidden="true" />
         <div className="relative z-10 flex min-h-screen w-full flex-col">
           <SiteHeader />
           <main id="main-content" className="min-w-0 flex-1 pb-16 md:pb-0">

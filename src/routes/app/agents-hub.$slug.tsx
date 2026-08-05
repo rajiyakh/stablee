@@ -65,7 +65,7 @@ function GenesisAgentDetailPage() {
             {agent.lore}
           </p>
 
-          <dl className="mt-6 grid grid-cols-2 gap-4 rounded-xl border border-border bg-card p-5 sm:grid-cols-4">
+          <dl className="mt-6 grid grid-cols-2 gap-4 rounded-xl border border-border bg-card backdrop-blur-sm p-5 sm:grid-cols-4">
             <div>
               <dt className="text-xs uppercase tracking-wide text-muted-foreground">Price</dt>
               <dd className="mt-1 font-semibold tabular-nums text-foreground">
@@ -97,7 +97,7 @@ function GenesisAgentDetailPage() {
           </dl>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <section className="rounded-xl border border-border bg-card p-5">
+            <section className="rounded-xl border border-border bg-card backdrop-blur-sm p-5">
               <h2 className="text-sm font-semibold text-foreground">Specialties</h2>
               <ul className="mt-2 space-y-1.5 text-sm text-muted-foreground">
                 {agent.specialties.map((s) => (
@@ -105,7 +105,7 @@ function GenesisAgentDetailPage() {
                 ))}
               </ul>
             </section>
-            <section className="rounded-xl border border-border bg-card p-5">
+            <section className="rounded-xl border border-border bg-card backdrop-blur-sm p-5">
               <h2 className="text-sm font-semibold text-foreground">Personality traits</h2>
               <ul className="mt-2 space-y-1.5 text-sm text-muted-foreground">
                 {agent.personalityTraits.map((t) => (
@@ -115,7 +115,7 @@ function GenesisAgentDetailPage() {
             </section>
           </div>
 
-          <section className="mt-4 rounded-xl border border-border bg-card p-5">
+          <section className="mt-4 rounded-xl border border-border bg-card backdrop-blur-sm p-5">
             <h2 className="text-sm font-semibold text-foreground">Farming overview</h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               Once minted, {agent.name} continuously accumulates future $ORCA allocation at{" "}
@@ -142,7 +142,7 @@ function GenesisAgentDetailPage() {
                 key={other.id}
                 to="/app/agents-hub/$slug"
                 params={{ slug: other.slug }}
-                className="rounded-xl border border-border bg-card p-3 text-center transition-colors hover:border-primary/40"
+                className="rounded-xl border border-border bg-card backdrop-blur-sm p-3 text-center transition-colors hover:border-primary/40"
               >
                 <AgentPortrait
                   src={other.avatarPath}

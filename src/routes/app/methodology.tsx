@@ -32,7 +32,7 @@ function MethodologyPage() {
         description="The score is a weighted combination of real, provider-reported metrics. Components with missing data are excluded rather than filled in, and a score is withheld entirely when too little data exists."
       />
       <div className="mt-6 grid gap-4 md:grid-cols-2">
-        <section className="rounded-xl border border-border bg-card p-5">
+        <section className="rounded-xl border border-border bg-card backdrop-blur-sm p-5">
           <h2 className="text-sm font-semibold text-foreground">Component weights</h2>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
             {weights.map(([key, value]) => (
@@ -43,7 +43,7 @@ function MethodologyPage() {
             ))}
           </ul>
         </section>
-        <section className="rounded-xl border border-border bg-card p-5">
+        <section className="rounded-xl border border-border bg-card backdrop-blur-sm p-5">
           <h2 className="text-sm font-semibold text-foreground">Safeguards</h2>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
             {Object.entries(trendingConfig.safeguards ?? {}).map(([key, value]) => (

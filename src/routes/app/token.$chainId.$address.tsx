@@ -106,7 +106,7 @@ function TokenPage() {
         <DexChartEmbed chainId={top.chainId} pairAddress={top.pairAddress} />
       </div>
 
-      <section className="mt-6 rounded-xl border border-border bg-card p-5">
+      <section className="mt-6 rounded-xl border border-border bg-card backdrop-blur-sm p-5">
         <h2 className="text-sm font-semibold text-foreground">All pairs ({pairs.length})</h2>
         <ul className="mt-3 divide-y divide-border text-sm">
           {pairs.map((p) => (
