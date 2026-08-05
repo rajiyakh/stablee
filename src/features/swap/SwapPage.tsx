@@ -112,10 +112,19 @@ export function SwapPage({
   const balance = useSwapTokenBalance(sellToken);
   const swapHistory = useSwapHistory(address);
 
-  const chartEligible = isChartEligible(sellToken);
+  // Sell takes priority (matches "the token being swapped" from the original
+  // spec), but a very common direction is stablecoin -> memecoin, where the
+  // interesting token sits on the Buy side instead — fall back to it so the
+  // chart isn't hidden just because the user is paying with a stablecoin.
+  const chartToken = isChartEligible(sellToken)
+    ? sellToken
+    : isChartEligible(buyToken)
+      ? buyToken
+      : null;
+  const chartEligible = chartToken !== null;
   useEffect(() => {
-    // If the user switches Sell to ETH/WETH/a stablecoin while the chart was
-    // open, close it rather than leaving a dead grid column with nothing to show.
+    // If neither side is chart-eligible anymore while the chart was open,
+    // close it rather than leaving a dead grid column with nothing to show.
     if (!chartEligible) setChartOpen(false);
   }, [chartEligible]);
 
@@ -597,7 +606,7 @@ export function SwapPage({
 
       {showChart ? (
         <div className="mt-6 lg:order-1 lg:mt-0">
-          <SwapTokenChart token={sellToken} />
+          <SwapTokenChart token={chartToken} />
         </div>
       ) : null}
     </div>
