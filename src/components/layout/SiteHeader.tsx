@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { WalletConnectButton } from "@/components/wallet/WalletConnectButton";
 import { AnimatedPulseLogo } from "@/components/branding/AnimatedPulseLogo";
+import { ThemeToggle } from "./ThemeToggle";
 
 // Primary top nav — the most important destinations, always visible at xl+.
 // Below xl (where this row is hidden) these same items also appear at the
@@ -145,6 +146,7 @@ export function SiteHeader() {
               <XIcon className="h-3.5 w-3.5" />
             </a>
           ) : null}
+          <ThemeToggle />
           <WalletConnectButton />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

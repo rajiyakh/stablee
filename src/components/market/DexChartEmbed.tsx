@@ -1,3 +1,5 @@
+import { useTheme } from "@/hooks/useTheme";
+
 interface DexChartEmbedProps {
   chainId: string;
   pairAddress: string;
@@ -5,7 +7,8 @@ interface DexChartEmbedProps {
 }
 
 export function DexChartEmbed({ chainId, pairAddress, height = 480 }: DexChartEmbedProps) {
-  const src = `https://dexscreener.com/${encodeURIComponent(chainId)}/${encodeURIComponent(pairAddress)}?embed=1&theme=light&trades=0&info=0`;
+  const { theme } = useTheme();
+  const src = `https://dexscreener.com/${encodeURIComponent(chainId)}/${encodeURIComponent(pairAddress)}?embed=1&theme=${theme}&trades=0&info=0`;
 
   return (
     <div className="rounded-xl border border-border bg-card backdrop-blur-sm p-5">

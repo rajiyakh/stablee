@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { AnimatedPulseLogo } from "@/components/branding/AnimatedPulseLogo";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
 const anchorLinks = [
   { href: "#what-is", label: "Product" },
@@ -30,7 +31,8 @@ export function LandingHeader() {
           ))}
         </nav>
 
-        <div className="ml-auto">
+        <div className="ml-auto flex items-center gap-2">
+          <ThemeToggle />
           <Button asChild className="rounded-full">
             <Link to="/app">Open App</Link>
           </Button>

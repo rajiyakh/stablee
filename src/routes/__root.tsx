@@ -126,10 +126,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
+/**
+ * Runs before hydration/paint so a returning dark-theme visitor never sees a
+ * flash of the light theme first — SSR always renders light by default (see
+ * useTheme.ts), and this is what corrects the DOM before anything's visible.
+ */
+const THEME_INIT_SCRIPT = `(function(){try{if(localStorage.getItem("robinpulse_theme")==="dark"){document.documentElement.dataset.theme="dark"}}catch(e){}})();`;
+
 function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
       <body>
