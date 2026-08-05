@@ -3,9 +3,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ErrorState } from "@/components/common/ErrorState";
 import { DexChartEmbed } from "@/components/market/DexChartEmbed";
 import { dexTokenQuery } from "@/lib/market/client";
-import { formatUsd } from "@/lib/market/format";
+import { changeClass, formatPercent, formatUsd, shortenAddress } from "@/lib/market/format";
 import { projectConfig } from "@/config/project";
 import { NATIVE_SENTINEL, WETH_ADDRESS, type SwapTokenConfig } from "@/config/swapTokens";
+import type { DexMarket } from "@/lib/market/types";
 
 // Symbols with no meaningful price chart to show: ETH/WETH trade 1:1 (chart
 // would just mirror WETH's own near-flat pair), and BTC/WBTC aren't part of
@@ -20,6 +21,39 @@ export function isChartEligible(token: SwapTokenConfig | null): boolean {
   if (token.address.toLowerCase() === NATIVE_SENTINEL.toLowerCase()) return false;
   if (token.isStablecoin) return false;
   return !CHART_EXCLUDED_SYMBOLS.has(token.symbol.toUpperCase());
+}
+
+/** One side of the traded pair — symbol, address, and (for the base token
+ *  only, which is what DEX Screener actually prices) live USD price + 24h
+ *  change. No sparkline: we only have snapshot stats, not a price history,
+ *  and this project doesn't fabricate data to fill a visual gap. */
+function AssetInfoCard({
+  symbol,
+  address,
+  priceUsd,
+  priceChange24h,
+}: {
+  symbol: string | null;
+  address: string | null;
+  priceUsd: number | null;
+  priceChange24h?: number | null;
+}) {
+  return (
+    <div className="card-surface flex items-center justify-between gap-3 p-3">
+      <div className="min-w-0">
+        <p className="truncate text-sm font-semibold text-foreground">{symbol ?? "—"}</p>
+        <p className="truncate text-xs text-muted-foreground">{shortenAddress(address)}</p>
+      </div>
+      <div className="shrink-0 text-right">
+        <p className="text-sm font-semibold tabular-nums text-foreground">{formatUsd(priceUsd)}</p>
+        {priceChange24h !== undefined ? (
+          <p className={`text-xs font-medium tabular-nums ${changeClass(priceChange24h)}`}>
+            {formatPercent(priceChange24h)}
+          </p>
+        ) : null}
+      </div>
+    </div>
+  );
 }
 
 /** Price chart for the token being swapped, sourced from DEX Screener's highest-liquidity
@@ -37,17 +71,46 @@ export function SwapTokenChart({ token }: { token: SwapTokenConfig | null }) {
 
   const query = useQuery(dexTokenQuery(chainSlug, chartAddress ?? ""));
   const pairs = query.data?.data ?? [];
-  const top = [...pairs].sort((a, b) => (b.liquidityUsd ?? 0) - (a.liquidityUsd ?? 0))[0];
+  const top: DexMarket | undefined = [...pairs].sort(
+    (a, b) => (b.liquidityUsd ?? 0) - (a.liquidityUsd ?? 0),
+  )[0];
 
   if (!token || !chainSlug || !chartAddress || !isChartEligible(token)) return null;
+
+  // The pair label/price come from whatever pair DEX Screener actually
+  // returned (top.baseToken/quoteToken), not the Swap page's own Sell/Buy
+  // selection — the on-chain route is often through an intermediate asset
+  // (e.g. WETH) rather than the exact Buy token, so this stays accurate.
+  const quotePriceUsd =
+    top?.priceUsd !== null && top?.priceUsd !== undefined && top?.priceNative
+      ? top.priceUsd / top.priceNative
+      : null;
 
   return (
     <div className="space-y-2">
       <div className="flex flex-wrap items-center justify-between gap-2 px-1">
-        <h3 className="text-sm font-semibold text-foreground">{token.symbol} price</h3>
+        <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+          {top ? (
+            <>
+              <span>
+                {top.baseToken.symbol ?? token.symbol} / {top.quoteToken.symbol ?? "?"}
+              </span>
+              <span className={`text-xs font-medium ${changeClass(top.priceChange.h24)}`}>
+                {formatPercent(top.priceChange.h24)}
+              </span>
+            </>
+          ) : (
+            `${token.symbol} price`
+          )}
+        </h3>
         {top ? (
           <span className="text-lg font-semibold tabular-nums text-foreground">
             {formatUsd(top.priceUsd)}
+            {top.quoteToken.symbol ? (
+              <span className="ml-1 text-xs font-medium text-muted-foreground">
+                {top.quoteToken.symbol}
+              </span>
+            ) : null}
           </span>
         ) : null}
       </div>
@@ -71,7 +134,22 @@ export function SwapTokenChart({ token }: { token: SwapTokenConfig | null }) {
           </p>
         </div>
       ) : (
-        <DexChartEmbed chainId={top.chainId} pairAddress={top.pairAddress} />
+        <>
+          <DexChartEmbed chainId={top.chainId} pairAddress={top.pairAddress} />
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <AssetInfoCard
+              symbol={top.baseToken.symbol}
+              address={top.baseToken.address}
+              priceUsd={top.priceUsd}
+              priceChange24h={top.priceChange.h24}
+            />
+            <AssetInfoCard
+              symbol={top.quoteToken.symbol}
+              address={top.quoteToken.address}
+              priceUsd={quotePriceUsd}
+            />
+          </div>
+        </>
       )}
     </div>
   );
