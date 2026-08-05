@@ -13,6 +13,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CopyContractButton } from "@/components/feed/CopyContractButton";
+import { TokenLogo } from "@/features/markets/TokenLogo";
 import { resolveTokenQuery } from "@/lib/swap/client";
 import type { SwapTokenConfig } from "@/config/swapTokens";
 
@@ -93,14 +94,13 @@ export function TokenSelect({
         >
           {value ? (
             <span className="flex items-center gap-1.5 overflow-hidden">
-              {value.logoUrl ? (
-                <img
-                  src={value.logoUrl}
-                  alt=""
-                  className="size-4 shrink-0 rounded-full"
-                  loading="lazy"
-                />
-              ) : null}
+              <TokenLogo
+                logoUrl={value.logoUrl}
+                symbol={value.symbol}
+                size={16}
+                sizeClassName="size-4 shrink-0"
+                textClassName="text-[8px]"
+              />
               <span className="truncate font-medium">{value.symbol}</span>
               {value.verified ? (
                 <BadgeCheck className="size-3.5 shrink-0 text-positive" aria-label="Verified" />
@@ -133,14 +133,13 @@ export function TokenSelect({
                 ) : resolved ? (
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      {resolved.logoUrl ? (
-                        <img
-                          src={resolved.logoUrl}
-                          alt=""
-                          className="size-5 shrink-0 rounded-full"
-                          loading="lazy"
-                        />
-                      ) : null}
+                      <TokenLogo
+                        logoUrl={resolved.logoUrl}
+                        symbol={resolved.symbol}
+                        size={20}
+                        sizeClassName="size-5 shrink-0"
+                        textClassName="text-[9px]"
+                      />
                       <span className="shrink-0 font-medium">{resolved.symbol}</span>
                       <span className="min-w-0 truncate text-xs text-muted-foreground">
                         {resolved.name}
@@ -210,14 +209,13 @@ export function TokenSelect({
                   onSelect={() => selectToken(token)}
                 >
                   <div className="flex w-full items-center gap-2">
-                    {token.logoUrl ? (
-                      <img
-                        src={token.logoUrl}
-                        alt=""
-                        className="size-5 shrink-0 rounded-full"
-                        loading="lazy"
-                      />
-                    ) : null}
+                    <TokenLogo
+                      logoUrl={token.logoUrl}
+                      symbol={token.symbol}
+                      size={20}
+                      sizeClassName="size-5 shrink-0"
+                      textClassName="text-[9px]"
+                    />
                     <span className="shrink-0 font-medium">{token.symbol}</span>
                     <span className="min-w-0 truncate text-xs text-muted-foreground">
                       {token.name}
