@@ -15,20 +15,12 @@ import { WalletConnectButton } from "@/components/wallet/WalletConnectButton";
 import { AnimatedPulseLogo } from "@/components/branding/AnimatedPulseLogo";
 import { ThemeToggle } from "./ThemeToggle";
 
-// Primary top nav — the most important destinations, always visible at xl+.
-// Below xl (where this row is hidden) these same items also appear at the
-// top of the Menu dropdown, so nothing becomes unreachable on small screens.
+// Primary top nav — always visible at xl+. Below xl (where this row is
+// hidden) these same items also appear at the top of the Menu dropdown, so
+// nothing becomes unreachable on small screens.
 const navItems = [
-  { to: "/app", label: "Overview" },
   { to: "/app/ai-feed", label: "AI Feed", hot: true },
   { to: "/app/markets", label: "Markets" },
-  {
-    to: "/app/swap",
-    label: "Swap",
-    badge: isWalletConfigured() ? undefined : "Soon",
-    hot: isWalletConfigured(),
-  },
-  { to: "/app/bridge", label: "Bridge", badge: isWalletConfigured() ? undefined : "Soon" },
   {
     to: "/app/agents-hub",
     label: "Agent Hub",
@@ -37,11 +29,22 @@ const navItems = [
 ] as const;
 
 // Everything that used to live in the sidebar or the mobile hamburger sheet,
-// now consolidated into one "Menu" dropdown next to Connect. Portfolio moved
-// here from the primary nav (see navItems above). Leaderboard, Data Sources,
-// Methodology, and Disclaimer previously had no nav entry at all (direct-URL
-// only) — surfaced here for the first time.
+// now consolidated into one "Menu" dropdown next to Connect. Overview, Swap,
+// and Bridge live only here (not in navItems above), at every screen size.
 const menuItems = [
+  { to: "/app", label: "Overview", tag: "APP" },
+  {
+    to: "/app/swap",
+    label: "Swap",
+    tag: "APP",
+    badge: isWalletConfigured() ? undefined : "Soon",
+  },
+  {
+    to: "/app/bridge",
+    label: "Bridge",
+    tag: "APP",
+    badge: isWalletConfigured() ? undefined : "Soon",
+  },
   {
     to: "/app/portfolio",
     label: "Portfolio",
@@ -89,8 +92,8 @@ function NavRow({ to, label, badge }: { to: string; label: string; badge?: strin
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 bg-background/95 [background-image:linear-gradient(to_right,transparent,var(--color-border)_15%,var(--color-border)_85%,transparent)] [background-position:bottom] [background-repeat:no-repeat] [background-size:100%_1px]">
-      <div className="mx-auto grid h-14 w-full max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-4 px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/90 shadow-sm backdrop-blur-sm">
+      <div className="mx-auto grid h-16 w-full max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-4 px-4 sm:px-6 lg:px-8">
         <Link
           to="/app"
           className="group flex shrink-0 items-center gap-2 justify-self-start"
@@ -107,7 +110,6 @@ export function SiteHeader() {
             <Link
               key={item.to}
               to={item.to}
-              activeOptions={{ exact: item.to === "/app" }}
               activeProps={{ className: "text-foreground [&_.nav-underline]:scale-x-100" }}
               inactiveProps={{ className: "text-muted-foreground hover:text-foreground" }}
               className="group relative inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-semibold uppercase tracking-widest transition-colors"
