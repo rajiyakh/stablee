@@ -49,7 +49,7 @@ export function AgentRecruitCard({
           {agent.price} {agent.paymentTokenSymbol}
         </p>
         <p className="text-[11px] font-semibold tabular-nums" style={{ color: accent }}>
-          {agent.pulsePerDay}/day
+          {agent.pulsePerDay} $ORCA/day
         </p>
       </div>
 

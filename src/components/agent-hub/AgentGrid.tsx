@@ -16,7 +16,7 @@ export function AgentGrid({
         title="Six Genesis Agents"
         description="The RobinPulse Ocean Intelligence Fleet consists of six autonomous marine AI agents designed to monitor Robinhood Mainnet from the smallest emerging opportunities to the largest whale movements. Each Agent specializes in a different layer of market intelligence and farms $ORCA every day after recruitment."
       />
-      <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+      <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6">
         {agents.map((agent) => (
           <AgentRecruitCard key={agent.id} agent={agent} onRecruitClick={onRecruitClick} />
         ))}

@@ -47,16 +47,18 @@ function AgentsHubPage() {
   return (
     <PageContainer>
       <div className="space-y-16">
+        <div>
+          <AgentGrid agents={agents} onRecruitClick={setRecruitTarget} />
+
+          <p className="mx-auto mt-6 max-w-2xl text-center text-xs leading-relaxed text-muted-foreground">
+            Agent Hub is in a pre-TGE preview — minting isn't live yet, so no wallet connection,
+            payment, or on-chain transaction happens anywhere on this page today.
+          </p>
+        </div>
+
         <PageHeroBackground image="/backgrounds/agent-hub-hero.webp" height={560}>
           <AgentHubHero />
         </PageHeroBackground>
-
-        <AgentGrid agents={agents} onRecruitClick={setRecruitTarget} />
-
-        <p className="mx-auto -mt-10 max-w-2xl text-center text-xs leading-relaxed text-muted-foreground">
-          Agent Hub is in a pre-TGE preview — minting isn't live yet, so no wallet connection,
-          payment, or on-chain transaction happens anywhere on this page today.
-        </p>
 
         <AgentComparisonTable agents={agents} />
 
