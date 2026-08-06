@@ -24,6 +24,7 @@ const TERMINAL_TONE: Record<string, string> = {
 
 const IN_PROGRESS_STATES = new Set([
   "fetching_quote",
+  "approval_required",
   "waiting_for_signature",
   "submitted",
   "bridging",
@@ -33,14 +34,13 @@ const IN_PROGRESS_STATES = new Set([
 export function BridgeStatusPanel({ status }: { status: BridgeTransactionStatus }) {
   const tone = TERMINAL_TONE[status.state] ?? "text-foreground";
   const inProgress = IN_PROGRESS_STATES.has(status.state);
+  const label = STATE_LABEL[status.state] ?? "Processing";
 
   return (
     <div className="rounded-xl border border-border bg-card backdrop-blur-sm p-4 text-sm">
       <div className="flex items-center gap-2">
         {inProgress ? <Loader2 className="size-4 animate-spin text-muted-foreground" /> : null}
-        <span className={cn("font-display text-base font-semibold", tone)}>
-          {STATE_LABEL[status.state]}
-        </span>
+        <span className={cn("font-display text-base font-semibold", tone)}>{label}</span>
       </div>
       {status.substatusMessage ? (
         <p className="mt-1 text-xs text-muted-foreground">{status.substatusMessage}</p>

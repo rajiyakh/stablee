@@ -31,6 +31,11 @@ export function BridgeRouteCard({
 }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const { fromToken, toToken } = quote.meta;
+  // normalize.ts guards against mixing fee entries in different tokens into
+  // one BigInt sum, so providerFeeAmount/platformFeeAmount are internally
+  // consistent with each other — but neither is guaranteed to be in
+  // fromToken specifically, so this display is an approximation for
+  // providers/routes where the fee happens to be charged in the input token.
   const totalFees = BigInt(quote.providerFeeAmount || "0") + BigInt(quote.platformFeeAmount || "0");
 
   return (

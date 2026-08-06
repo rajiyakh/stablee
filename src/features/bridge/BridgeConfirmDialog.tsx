@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -44,6 +44,15 @@ export function BridgeConfirmDialog({
   isSubmitting: boolean;
 }) {
   const [acknowledged, setAcknowledged] = useState(false);
+
+  // This dialog stays mounted across route reselection (BridgePage.tsx keeps
+  // it in the tree whenever selectedQuote is set), so without this the fee
+  // acknowledgement for one quote would silently carry over to a different
+  // quote the user selects afterward.
+  useEffect(() => {
+    setAcknowledged(false);
+  }, [quote.provider, quote.routeId]);
+
   const ageMs = useQuoteAge(quote.meta.fetchedAt);
   const expired = Date.now() > quote.meta.expiresAt;
   const remainingSeconds = Math.max(

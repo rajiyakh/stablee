@@ -16,6 +16,7 @@ import {
   bridgeTokensQuery,
 } from "@/lib/bridge/client";
 import { trackBridgeEvent } from "@/lib/bridge/analytics";
+import { BRIDGE_FEE_BPS_DEFAULT } from "@/lib/bridge/fee";
 import { ApiError } from "@/lib/market/client";
 import type {
   BridgeSortMode,
@@ -102,6 +103,19 @@ export function BridgePage() {
   const [fromToken, setFromToken] = useState<SupportedToken | null>(null);
   const [toToken, setToToken] = useState<SupportedToken | null>(null);
 
+  // Explicit chain-select handlers (rather than a useEffect keyed on
+  // fromChain/toChain) so a chain switch always drops the now-possibly-wrong
+  // token for that chain, without also firing on the "reverse chains" button
+  // below, which already pairs the swapped chain with its correct token itself.
+  function handleFromChainChange(chain: SupportedChain | null) {
+    setFromChain(chain);
+    setFromToken(null);
+  }
+  function handleToChainChange(chain: SupportedChain | null) {
+    setToChain(chain);
+    setToToken(null);
+  }
+
   useEffect(() => {
     if (fromTokens.length > 0 && !fromToken) setFromToken(fromTokens[0]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -119,10 +133,34 @@ export function BridgePage() {
   const [flow, setFlow] = useState<Flow>("idle");
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectedQuote, setSelectedQuote] = useState<NormalizedBridgeQuote | null>(null);
+  const [recipientValid, setRecipientValid] = useState(true);
+
+  // Auto-fill the recipient once when a wallet address becomes available,
+  // without fighting the user if they deliberately clear the field —
+  // reading `recipient` in a dependency array here would refill it on every
+  // render where it's empty, making the field impossible to clear.
+  useEffect(() => {
+    if (!address) return;
+    setRecipient((prev) => (prev === "" ? address : prev));
+  }, [address]);
 
   useEffect(() => {
-    if (address && !recipient) setRecipient(address);
-  }, [address, recipient]);
+    setSelectedQuote(null);
+    setFlow("idle");
+    setConfirmOpen(false);
+    // Any change to what's actually being quoted invalidates a previously
+    // selected route/approval flow — only the 30s quote TTL guarded this
+    // before, which left a window where stale calldata for the OLD inputs
+    // could still be approved/executed after the user edited them.
+  }, [
+    amountInput,
+    fromChain?.chainId,
+    toChain?.chainId,
+    fromToken?.address,
+    toToken?.address,
+    recipient,
+    slippageBps,
+  ]);
 
   const balance = useBridgeTokenBalance(fromToken, fromChain?.chainId ?? null);
 
@@ -173,13 +211,16 @@ export function BridgePage() {
 
   const routes = quoteQuery.data?.data?.routes ?? [];
   const excluded = quoteQuery.data?.data?.excluded ?? [];
-  const feeBps = quoteQuery.data?.data?.feeBps ?? 100;
+  const feeBps = quoteQuery.data?.data?.feeBps ?? BRIDGE_FEE_BPS_DEFAULT;
 
   // The route the summary/CTA/details disclosure reflect: whichever route the
   // user explicitly picked, as long as it's still present in the latest quote
-  // results, else the top-ranked route for the active sort.
+  // results, else the top-ranked route for the active sort. Compared by the
+  // compound (provider, routeId) key — routeId alone isn't guaranteed unique
+  // across providers.
   const activeQuote =
-    selectedQuote && routes.some((r) => r.routeId === selectedQuote.routeId)
+    selectedQuote &&
+    routes.some((r) => r.provider === selectedQuote.provider && r.routeId === selectedQuote.routeId)
       ? selectedQuote
       : (routes[0] ?? null);
   const providerDisplayName =
@@ -187,6 +228,11 @@ export function BridgePage() {
     activeQuote?.provider ??
     null;
 
+  // Safe by construction, not by this cast: every quote in `routes` came
+  // back from /api/bridge/quote, which only ever returns quotes that already
+  // passed validateBridgeQuote() server-side (routeEngine.server.ts). A
+  // selectedQuote is always sourced from `routes`, so it was always validated
+  // — the cast just recovers that fact for the type system.
   const validatedQuote = selectedQuote as ValidatedBridgeQuote | null;
   const approval = useBridgeApproval(
     flow === "needs-approval" || flow === "approving" ? validatedQuote : null,
@@ -208,6 +254,18 @@ export function BridgePage() {
       setConfirmOpen(true);
     }
   }, [approval.isConfirmed]);
+
+  useEffect(() => {
+    if (!approval.error) return;
+    toast.error(approval.error.message || "Approval failed. Please try again.");
+    setFlow("needs-approval");
+  }, [approval.error]);
+
+  useEffect(() => {
+    if (!execution.error) return;
+    toast.error(execution.error.message || "Bridge transaction failed. Please try again.");
+    setFlow("ready");
+  }, [execution.error]);
 
   function selectRoute(route: NormalizedBridgeQuote) {
     setSelectedQuote(route);
@@ -262,7 +320,11 @@ export function BridgePage() {
       handleApproveClick();
       return;
     }
-    if (flow === "ready" && selectedQuote?.routeId === activeQuote.routeId) {
+    if (
+      flow === "ready" &&
+      selectedQuote?.provider === activeQuote.provider &&
+      selectedQuote?.routeId === activeQuote.routeId
+    ) {
       setConfirmOpen(true);
       return;
     }
@@ -276,10 +338,24 @@ export function BridgePage() {
   }, [execution.isConfirmed]);
 
   useEffect(() => {
-    if (statusTracking.status?.state === "completed") {
+    const state = statusTracking.status?.state;
+    if (state === "completed") {
       trackBridgeEvent("bridge_completed", { provider: selectedQuote?.provider });
-    } else if (statusTracking.status?.state === "failed") {
+    } else if (state === "failed") {
       trackBridgeEvent("bridge_failed", { provider: selectedQuote?.provider });
+    }
+    // Once the bridge reaches a terminal state, drop back to idle so the CTA
+    // (which was disabled for the whole "submitted" flow) becomes usable
+    // again for a fresh bridge, and status tracking stops being bound to
+    // this now-finished transaction hash.
+    if (
+      state === "completed" ||
+      state === "failed" ||
+      state === "refund_required" ||
+      state === "refunded"
+    ) {
+      setFlow("idle");
+      setSelectedQuote(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statusTracking.status?.state]);
@@ -289,6 +365,25 @@ export function BridgePage() {
       <div className="mx-auto w-full max-w-md">
         <div className="card-surface space-y-4 p-5">
           <p className="py-10 text-center text-sm text-muted-foreground">Loading…</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (providersQuery.isError) {
+    return (
+      <div className="mx-auto w-full max-w-md">
+        <div className="card-surface space-y-4 p-5">
+          <p className="rounded-lg border border-negative/30 bg-negative/10 p-3 text-sm text-negative">
+            Couldn't load bridge providers. Check your connection and try again.
+          </p>
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => void providersQuery.refetch()}
+          >
+            Retry
+          </Button>
         </div>
       </div>
     );
@@ -331,9 +426,15 @@ export function BridgePage() {
   } else {
     ctaLabel = "Review Bridge";
   }
+  // A recipient the user hasn't verified (or that isn't a valid address at
+  // all) must block submission, not just show a warning — this was
+  // previously decorative.
+  const recipientBlocking =
+    Boolean(recipient) && (!recipientValid || (isCustomRecipient && !recipientAcknowledged));
   const ctaDisabled =
-    (isConnected && !wrongNetwork && (insufficientBalance || !activeQuote)) ||
+    (isConnected && !wrongNetwork && (insufficientBalance || !activeQuote || recipientBlocking)) ||
     (flow === "needs-approval" && (approval.isApproving || approval.isConfirming)) ||
+    flow === "submitted" ||
     (wrongNetwork ? isSwitching : false);
 
   return (
@@ -370,6 +471,24 @@ export function BridgePage() {
             </div>
           ) : null}
 
+          {chainsQuery.isError || fromTokensQuery.isError || toTokensQuery.isError ? (
+            <div className="rounded-lg border border-negative/30 bg-negative/10 p-3 text-sm text-negative">
+              <p>Couldn't load chains or tokens. Check your connection and try again.</p>
+              <Button
+                size="sm"
+                variant="outline"
+                className="mt-2"
+                onClick={() => {
+                  void chainsQuery.refetch();
+                  void fromTokensQuery.refetch();
+                  void toTokensQuery.refetch();
+                }}
+              >
+                Retry
+              </Button>
+            </div>
+          ) : null}
+
           <BridgeRiskNotice fromChain={fromChain} toChain={toChain} />
 
           <div className="space-y-1">
@@ -382,7 +501,7 @@ export function BridgePage() {
                     variant="minimal"
                     chains={chains}
                     value={fromChain}
-                    onChange={setFromChain}
+                    onChange={handleFromChainChange}
                     label="From network"
                     loading={chainsQuery.isLoading}
                   />
@@ -415,9 +534,11 @@ export function BridgePage() {
                     disabled={balance.balance === null}
                     onClick={() => {
                       if (!fromToken || balance.balance === null) return;
-                      setAmountInput(
-                        (Number(balance.balance) / 10 ** fromToken.decimals).toString(),
-                      );
+                      // formatUnits (not Number()/division) — a Number() division on a
+                      // small balance can produce exponential notation (e.g. "1e-16"),
+                      // which fails the amount input's decimal-only guard and crashes
+                      // BigInt(amountBaseUnits) downstream.
+                      setAmountInput(formatUnits(balance.balance, fromToken.decimals));
                     }}
                   >
                     Max
@@ -455,7 +576,7 @@ export function BridgePage() {
                     variant="minimal"
                     chains={chains}
                     value={toChain}
-                    onChange={setToChain}
+                    onChange={handleToChainChange}
                     label="To network"
                     loading={chainsQuery.isLoading}
                   />
@@ -491,6 +612,7 @@ export function BridgePage() {
             onChange={setRecipient}
             acknowledged={recipientAcknowledged}
             onAcknowledgeChange={setRecipientAcknowledged}
+            onValidChange={setRecipientValid}
           />
 
           {insufficientBalance ? (
@@ -535,11 +657,17 @@ export function BridgePage() {
                 Compare all routes
               </summary>
               <div className="mt-2 space-y-2">
-                <div className="flex items-center gap-1 rounded-full bg-secondary/60 p-1 text-xs">
+                <div
+                  role="tablist"
+                  aria-label="Sort routes"
+                  className="flex items-center gap-1 rounded-full bg-secondary/60 p-1 text-xs"
+                >
                   {SORT_TABS.map((tab) => (
                     <button
                       key={tab.value}
                       type="button"
+                      role="tab"
+                      aria-selected={sort === tab.value}
                       onClick={() => setSort(tab.value)}
                       className={
                         sort === tab.value
@@ -559,7 +687,10 @@ export function BridgePage() {
                     highlight={
                       index === 0 ? SORT_TABS.find((t) => t.value === sort)?.label : undefined
                     }
-                    selected={activeQuote?.routeId === route.routeId}
+                    selected={
+                      activeQuote?.provider === route.provider &&
+                      activeQuote?.routeId === route.routeId
+                    }
                     onSelect={() => selectRoute(route)}
                   />
                 ))}

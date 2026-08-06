@@ -33,9 +33,14 @@ export function BridgeQuoteSummary({
   refreshing?: boolean;
 }) {
   const { fromToken, toToken } = quote.meta;
+  const inputAmountNumber = Number(
+    formatUnits(BigInt(quote.inputAmount || "0"), fromToken.decimals),
+  );
   const rate =
-    Number(formatUnits(BigInt(quote.estimatedOutputAmount || "0"), toToken.decimals)) /
-    Number(formatUnits(BigInt(quote.inputAmount || "0"), fromToken.decimals));
+    inputAmountNumber > 0
+      ? Number(formatUnits(BigInt(quote.estimatedOutputAmount || "0"), toToken.decimals)) /
+        inputAmountNumber
+      : null;
   const impactPercent = quote.priceImpactPercent;
   const impactSevere = impactPercent !== null && impactPercent >= BRIDGE_PRICE_IMPACT_MAX_PERCENT;
   const impactWarn =
@@ -46,7 +51,11 @@ export function BridgeQuoteSummary({
       <div className="flex items-center justify-between">
         <Row
           label="Rate"
-          value={`1 ${fromToken.symbol} = ${rate.toLocaleString("en-US", { maximumFractionDigits: 6 })} ${toToken.symbol}`}
+          value={
+            rate !== null
+              ? `1 ${fromToken.symbol} = ${rate.toLocaleString("en-US", { maximumFractionDigits: 6 })} ${toToken.symbol}`
+              : "—"
+          }
         />
         {onRefresh ? (
           <button

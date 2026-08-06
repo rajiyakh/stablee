@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { isAddress } from "viem";
 import { AlertTriangle } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -10,16 +11,25 @@ export function RecipientAddressInput({
   onChange,
   acknowledged,
   onAcknowledgeChange,
+  onValidChange,
 }: {
   value: string;
   connectedAddress: string | undefined;
   onChange: (value: string) => void;
   acknowledged: boolean;
   onAcknowledgeChange: (checked: boolean) => void;
+  /** Reports whether `value` is currently a valid address (or empty) so the
+   * parent can block submission on an invalid custom recipient. */
+  onValidChange?: (valid: boolean) => void;
 }) {
   const isCustom =
     Boolean(connectedAddress) && value.toLowerCase() !== connectedAddress?.toLowerCase();
   const isValid = value === "" || isAddress(value);
+
+  useEffect(() => {
+    onValidChange?.(isValid);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isValid]);
 
   return (
     <div className="space-y-2">
