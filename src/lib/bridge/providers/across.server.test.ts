@@ -117,17 +117,47 @@ describe("acrossAdapter.feeMode", () => {
   });
 });
 
+// The quote call bypasses fetchJson entirely (see across.server.ts's
+// fetchAcrossQuote) so a per-request quote never occupies a slot in the
+// shared cache — these tests stub global fetch directly rather than
+// fetchJsonMock, which only covers the chains/tokens calls now.
+function jsonResponse(body: unknown, status = 200): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "content-type": "application/json" },
+  });
+}
+
 describe("acrossAdapter.getQuote", () => {
+  let fetchMock: ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it("returns null without calling the API when not configured", async () => {
     const { acrossAdapter } = await import("./across.server");
     const result = await acrossAdapter.getQuote(params);
     expect(result).toBeNull();
-    expect(fetchJsonMock).not.toHaveBeenCalled();
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it("returns null (never throws) when the API call fails", async () => {
     setConfigured();
-    fetchJsonMock.mockRejectedValue(new Error("no route"));
+    fetchMock.mockRejectedValue(new Error("no route"));
+    const { acrossAdapter } = await import("./across.server");
+    const result = await acrossAdapter.getQuote(params);
+    expect(result).toBeNull();
+  });
+
+  it("returns null (never throws) when the response is missing required fields", async () => {
+    setConfigured();
+    fetchMock.mockResolvedValue(jsonResponse({ id: "across-1" }));
     const { acrossAdapter } = await import("./across.server");
     const result = await acrossAdapter.getQuote(params);
     expect(result).toBeNull();
@@ -135,44 +165,66 @@ describe("acrossAdapter.getQuote", () => {
 
   it("only sends app-fee params once ACROSS_APP_FEE_CONFIRMED is true", async () => {
     setConfigured();
-    fetchJsonMock.mockResolvedValue({
-      data: validApprovalResponse(),
-      fetchedAt: new Date().toISOString(),
-      cached: false,
-      stale: false,
-    });
+    fetchMock.mockResolvedValue(jsonResponse(validApprovalResponse()));
     const { acrossAdapter } = await import("./across.server");
     await acrossAdapter.getQuote(params);
-    const calledUrl = fetchJsonMock.mock.calls[0][0] as string;
+    const calledUrl = fetchMock.mock.calls[0][0] as string;
     expect(calledUrl).not.toContain("appFeeBps");
   });
 
   it("sends app-fee params once confirmed", async () => {
     setConfigured();
     process.env.ACROSS_APP_FEE_CONFIRMED = "true";
-    fetchJsonMock.mockResolvedValue({
-      data: validApprovalResponse(),
-      fetchedAt: new Date().toISOString(),
-      cached: false,
-      stale: false,
-    });
+    fetchMock.mockResolvedValue(jsonResponse(validApprovalResponse()));
     const { acrossAdapter } = await import("./across.server");
     await acrossAdapter.getQuote(params);
-    const calledUrl = fetchJsonMock.mock.calls[0][0] as string;
+    const calledUrl = fetchMock.mock.calls[0][0] as string;
     expect(calledUrl).toContain("appFeeBps=100");
   });
 
   it("normalizes a successful response into a NormalizedBridgeQuote", async () => {
     setConfigured();
-    fetchJsonMock.mockResolvedValue({
-      data: validApprovalResponse(),
-      fetchedAt: new Date().toISOString(),
-      cached: false,
-      stale: false,
-    });
+    fetchMock.mockResolvedValue(jsonResponse(validApprovalResponse()));
     const { acrossAdapter } = await import("./across.server");
     const result = await acrossAdapter.getQuote(params);
     expect(result?.provider).toBe("across");
     expect(result?.platformFeeAmount).toBe("10000");
+  });
+});
+
+describe("acrossAdapter health tracking", () => {
+  let fetchMock: ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("records a failure when getSupportedChains's response fails schema validation", async () => {
+    setConfigured();
+    fetchJsonMock.mockResolvedValue({
+      data: { notAChainsArray: true },
+      fetchedAt: new Date().toISOString(),
+      cached: false,
+      stale: false,
+    });
+    const { getProviderRuntimeStatus } = await import("@/lib/market/http.server");
+    const { acrossAdapter } = await import("./across.server");
+    const result = await acrossAdapter.getSupportedChains();
+    expect(result).toEqual([]);
+    expect(getProviderRuntimeStatus("across").lastError).toBeTruthy();
+  });
+
+  it("records a failure when a quote's response fails schema validation, not just a network error", async () => {
+    setConfigured();
+    fetchMock.mockResolvedValue(jsonResponse({ id: "across-1" }));
+    const { getProviderRuntimeStatus } = await import("@/lib/market/http.server");
+    const { acrossAdapter } = await import("./across.server");
+    await acrossAdapter.getQuote(params);
+    expect(getProviderRuntimeStatus("across").lastError).toBeTruthy();
   });
 });

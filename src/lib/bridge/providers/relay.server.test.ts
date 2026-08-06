@@ -109,9 +109,32 @@ describe("relayAdapter.getQuote", () => {
   it("results in fee_missing downstream when the response has no fees.app (never fabricates a fee)", async () => {
     setConfigured();
     process.env.RELAY_APP_FEE_CONFIRMED = "true";
-    fetchMock.mockResolvedValue(jsonResponse({ steps: [], fees: {} }));
+    fetchMock.mockResolvedValue(
+      jsonResponse({
+        steps: [],
+        fees: {},
+        details: {
+          currencyIn: {
+            currency: { address: params.fromToken, symbol: "USDC", decimals: 6, chainId: 1 },
+            amount: "1000000",
+          },
+          currencyOut: {
+            currency: { address: params.toToken, symbol: "USDG", decimals: 6, chainId: 4663 },
+            amount: "989000",
+          },
+        },
+      }),
+    );
     const { relayAdapter } = await import("./relay.server");
     const result = await relayAdapter.getQuote(params);
     expect(result?.platformFeeAmount).toBe("0");
+  });
+
+  it("returns null instead of a fabricated zero-decimal token when the response has no currency details", async () => {
+    setConfigured();
+    fetchMock.mockResolvedValue(jsonResponse({ steps: [], fees: {} }));
+    const { relayAdapter } = await import("./relay.server");
+    const result = await relayAdapter.getQuote(params);
+    expect(result).toBeNull();
   });
 });

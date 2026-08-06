@@ -11,6 +11,19 @@ vi.mock("@lifi/sdk", () => ({
   getTokens: (...args: unknown[]) => getTokensMock(...args),
   getQuote: (...args: unknown[]) => getQuoteMock(...args),
   getStatus: (...args: unknown[]) => getStatusMock(...args),
+  // Real (not just typed) classes so `instanceof` checks in lifi.server.ts's
+  // catch block behave correctly against both a plain rejection (below) and
+  // a genuine SDKError-wrapped-HTTPError (see the 401/404 tests).
+  SDKError: class SDKError extends Error {
+    cause?: unknown;
+  },
+  HTTPError: class HTTPError extends Error {
+    status: number;
+    constructor(status: number) {
+      super(`HTTP ${status}`);
+      this.status = status;
+    }
+  },
 }));
 
 const ORIGINAL_ENV = { ...process.env };
@@ -108,6 +121,29 @@ describe("lifiAdapter.getQuote", () => {
     const { lifiAdapter } = await import("./lifi.server");
     const result = await lifiAdapter.getQuote(params);
     expect(result).toBeNull();
+  });
+
+  it("returns null (not throws) when the wrapped HTTP failure is a 404 (LI.FI's own no-route classification)", async () => {
+    setConfigured();
+    const { SDKError, HTTPError } = await import("@lifi/sdk");
+    const httpError = new HTTPError(404);
+    const sdkError = new SDKError("HTTP 404");
+    sdkError.cause = httpError;
+    getQuoteMock.mockRejectedValue(sdkError);
+    const { lifiAdapter } = await import("./lifi.server");
+    const result = await lifiAdapter.getQuote(params);
+    expect(result).toBeNull();
+  });
+
+  it("rethrows (does not silently return null) when the wrapped HTTP failure is a 401 — a broken API key must not look like 'no route'", async () => {
+    setConfigured();
+    const { SDKError, HTTPError } = await import("@lifi/sdk");
+    const httpError = new HTTPError(401);
+    const sdkError = new SDKError("HTTP 401");
+    sdkError.cause = httpError;
+    getQuoteMock.mockRejectedValue(sdkError);
+    const { lifiAdapter } = await import("./lifi.server");
+    await expect(lifiAdapter.getQuote(params)).rejects.toThrow();
   });
 
   it("sends fee derived from computeBridgeFeeBps, never a hardcoded 0.01", async () => {

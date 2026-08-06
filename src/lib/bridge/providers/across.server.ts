@@ -1,4 +1,4 @@
-import { fetchJson, ProviderError } from "@/lib/market/http.server";
+import { fetchJson, ProviderError, recordFailure, recordSuccess } from "@/lib/market/http.server";
 import { assertAllowedHost } from "../allowlist";
 import { bridgeFeeBps, bridgeTreasuryAddress } from "../feeConfig.server";
 import { isNativeAddress, normalizeAcrossQuote, toCanonicalNativeSentinel } from "../normalize";
@@ -80,10 +80,35 @@ async function callAcross<T>(
   });
 }
 
+/**
+ * Quotes are per-wallet, per-amount and must never be cached — but
+ * fetchJson's shared cache (callAcross's path) always writes an entry even
+ * at ttlSeconds: 0, permanently occupying a slot in the 400-entry LRU with
+ * an amount+sender+recipient-unique key that will never be read again.
+ * Bypassing fetchJson for this one call avoids polluting the cache other
+ * providers' genuinely cacheable chains/tokens responses share.
+ */
+async function fetchAcrossQuote(query: Record<string, string>): Promise<unknown> {
+  const url = `${BASE_URL}/swap/approval?${new URLSearchParams({ ...query, integratorId: integratorId() }).toString()}`;
+  assertAllowedHost("across", url);
+  const response = await fetch(url, {
+    headers: { accept: "application/json", ...authHeaders() },
+    signal: AbortSignal.timeout(10_000),
+  });
+  if (response.status === 404) {
+    throw new ProviderError("not_found", "Resource not found", 404);
+  }
+  if (!response.ok) {
+    throw new ProviderError("provider_error", `Provider responded with ${response.status}`, 502);
+  }
+  return response.json();
+}
+
 async function getSupportedChains(): Promise<SupportedChain[]> {
   try {
     const result = await callAcross<unknown>("/swap/chains", {}, "across:chains", 600);
     const chains = acrossChainsResponseSchema.parse(result.data);
+    recordSuccess("across");
     return chains.map((chain) => ({
       chainId: chain.chainId,
       providerKey: String(chain.chainId),
@@ -92,7 +117,8 @@ async function getSupportedChains(): Promise<SupportedChain[]> {
       explorerUrl: chain.explorerUrl ?? null,
       riskNote: null,
     }));
-  } catch {
+  } catch (error) {
+    recordFailure("across", error instanceof Error ? error.message : "getSupportedChains failed");
     return [];
   }
 }
@@ -106,6 +132,7 @@ async function getSupportedTokens(chainId: number): Promise<SupportedToken[]> {
       600,
     );
     const tokens = acrossTokensResponseSchema.parse(result.data);
+    recordSuccess("across");
     return tokens.map((token) => ({
       chainId: token.chainId,
       address: toCanonicalNativeSentinel(token.address),
@@ -115,7 +142,8 @@ async function getSupportedTokens(chainId: number): Promise<SupportedToken[]> {
       logoUrl: token.logoUrl ?? null,
       priceUsd: token.priceUsd ? Number(token.priceUsd) : null,
     }));
-  } catch {
+  } catch (error) {
+    recordFailure("across", error instanceof Error ? error.message : "getSupportedTokens failed");
     return [];
   }
 }
@@ -144,13 +172,9 @@ async function getQuoteImpl(params: BridgeQuoteParams): Promise<NormalizedBridge
   }
 
   try {
-    const result = await callAcross<unknown>(
-      "/swap/approval",
-      query,
-      `across:quote:${JSON.stringify(query)}:${Date.now()}`,
-      0,
-    );
-    const parsed = acrossQuoteResponseSchema.parse(result.data);
+    const raw = await fetchAcrossQuote(query);
+    const parsed = acrossQuoteResponseSchema.parse(raw);
+    recordSuccess("across");
 
     return normalizeAcrossQuote(parsed, {
       params,
@@ -176,6 +200,7 @@ async function getQuoteImpl(params: BridgeQuoteParams): Promise<NormalizedBridge
     });
   } catch (error) {
     if (error instanceof ProviderError && error.status === 404) return null;
+    recordFailure("across", error instanceof Error ? error.message : "getQuote failed");
     return null;
   }
 }
@@ -213,6 +238,7 @@ async function getTransactionStatus(args: {
       5,
     );
     const parsed = acrossStatusResponseSchema.parse(result.data);
+    recordSuccess("across");
     const category =
       parsed.status === "filled"
         ? "destination_confirmed"
@@ -232,7 +258,8 @@ async function getTransactionStatus(args: {
       receivedAmount: null,
       substatusMessage: null,
     };
-  } catch {
+  } catch (error) {
+    recordFailure("across", error instanceof Error ? error.message : "getTransactionStatus failed");
     return {
       state: "submitted",
       sourceTxHash: args.txHash,

@@ -152,10 +152,25 @@ async function getQuoteImpl(params: BridgeQuoteParams): Promise<NormalizedBridge
     recordSuccess("relay");
     const parsed = relayQuoteResponseSchema.parse(raw);
 
+    const fromToken = resolveTokenFromDetails(parsed, "in");
+    const toToken = resolveTokenFromDetails(parsed, "out");
+    if (!fromToken || !toToken) {
+      // Relay's /quote/v2 details object (currencyIn/currencyOut) was never
+      // confirmed always-present during planning (see schemas/relay.ts). A
+      // synthetic decimals:0 fallback here used to flow silently into
+      // meta.fromToken/toToken and get formatted as if it were real — any
+      // amount display built on it would be wrong by orders of magnitude.
+      // Treating a missing details object as "no usable route" instead is
+      // the same honest-degrade choice this file already documents for
+      // outputAmount below.
+      recordFailure("relay", "quote response missing currency details");
+      return null;
+    }
+
     return normalizeRelayQuote(parsed, {
       params,
-      fromToken: resolveTokenFromDetails(parsed, "in", params),
-      toToken: resolveTokenFromDetails(parsed, "out", params),
+      fromToken,
+      toToken,
       feeBps: bridgeFeeBps(),
     });
   } catch (error) {
@@ -167,31 +182,15 @@ async function getQuoteImpl(params: BridgeQuoteParams): Promise<NormalizedBridge
 function resolveTokenFromDetails(
   parsed: ReturnType<typeof relayQuoteResponseSchema.parse>,
   side: "in" | "out",
-  params: BridgeQuoteParams,
-): SupportedToken {
+): SupportedToken | null {
   const detail = side === "in" ? parsed.details?.currencyIn : parsed.details?.currencyOut;
-  const fallbackAddress = side === "in" ? params.fromToken : params.toToken;
-  const fallbackChainId = side === "in" ? params.fromChainId : params.toChainId;
-  if (detail?.currency) {
-    return {
-      chainId: detail.currency.chainId,
-      address: toCanonicalNativeSentinel(detail.currency.address),
-      symbol: detail.currency.symbol,
-      name: detail.currency.symbol,
-      decimals: detail.currency.decimals,
-      logoUrl: null,
-      priceUsd: null,
-    };
-  }
-  // Details weren't present in the response — fall back to what we know we
-  // requested, with decimals unknown (0 rather than a guessed value; any
-  // downstream display of the amount must treat this as untrusted).
+  if (!detail?.currency) return null;
   return {
-    chainId: fallbackChainId,
-    address: toCanonicalNativeSentinel(fallbackAddress),
-    symbol: "",
-    name: "",
-    decimals: 0,
+    chainId: detail.currency.chainId,
+    address: toCanonicalNativeSentinel(detail.currency.address),
+    symbol: detail.currency.symbol,
+    name: detail.currency.symbol,
+    decimals: detail.currency.decimals,
     logoUrl: null,
     priceUsd: null,
   };

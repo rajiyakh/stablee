@@ -1,4 +1,12 @@
-import { createClient, getChains, getQuote, getStatus, getTokens } from "@lifi/sdk";
+import {
+  createClient,
+  getChains,
+  getQuote,
+  getStatus,
+  getTokens,
+  HTTPError,
+  SDKError,
+} from "@lifi/sdk";
 import { recordFailure, recordSuccess } from "@/lib/market/http.server";
 import { bridgeFeeBps, bridgeTreasuryAddress } from "../feeConfig.server";
 import { normalizeLifiQuote } from "../normalize";
@@ -159,11 +167,21 @@ async function getQuoteImpl(params: BridgeQuoteParams): Promise<NormalizedBridge
       feeBps: bridgeFeeBps(),
     });
   } catch (error) {
-    // A no-route response and a transient upstream failure both surface as
-    // "no quote from this provider right now" — routeEngine.server.ts
-    // records the exclusion reason from configured()/feeMode() state
-    // separately, so this never masks a real configuration problem.
     recordFailure("lifi", error instanceof Error ? error.message : "getQuote failed");
+    // LI.FI's SDKError wraps an HTTPError with the real HTTP status when the
+    // failure happened at the HTTP layer — a 404 there is LI.FI's own "no
+    // viable route" classification (see @lifi/sdk's httpError.ts status
+    // map), matching the same 404-as-no-route convention across.server.ts
+    // already uses. Any other status (401/403 auth, 429 rate limit, 5xx) is
+    // a real failure and must not be silently absorbed as "no route" — it's
+    // rethrown so routeEngine.server.ts's Promise.allSettled surfaces it as
+    // a genuine rejection instead of reporting a broken API key identically
+    // to "no routes available".
+    const httpStatus =
+      error instanceof SDKError && error.cause instanceof HTTPError ? error.cause.status : null;
+    if (httpStatus !== null && httpStatus !== 404) {
+      throw error;
+    }
     return null;
   }
 }
