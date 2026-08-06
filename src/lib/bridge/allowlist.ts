@@ -51,7 +51,12 @@ export function parseContractAllowlist(raw: string | undefined): Record<number, 
       result[id] = addresses.filter((a): a is string => typeof a === "string");
     }
     return result;
-  } catch {
+  } catch (error) {
+    // A malformed BRIDGE_CONTRACT_ALLOWLIST silently disables contract
+    // pinning site-wide (isAllowedContract treats an empty allowlist as
+    // "nothing to check against") — that's a meaningful security-relevant
+    // config regression, worth a loud signal rather than a quiet fallback.
+    console.error("[bridge] BRIDGE_CONTRACT_ALLOWLIST is not valid JSON:", error);
     return {};
   }
 }

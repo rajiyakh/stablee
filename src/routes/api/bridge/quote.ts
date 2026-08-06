@@ -58,6 +58,7 @@ export const Route = createFileRoute("/api/bridge/quote")({
               stale: false,
             }),
             0,
+            { private: true },
           );
         } catch (error) {
           return jsonError("bridge", error);

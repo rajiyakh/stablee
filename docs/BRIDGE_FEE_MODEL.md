@@ -20,13 +20,18 @@ as the charged fee. `computeBridgeFeeBps()` (`src/lib/bridge/fee.ts`) is used on
 the outbound request parameter sent to the provider and (b) run a consistency check
 (`checkPlatformFee`) against what the provider actually reports charging.
 
-`checkPlatformFee`, called by `validateBridgeQuote()` for every quote:
+`checkPlatformFee`, called by `validateBridgeQuote()` only when `quote.meta.feeMode ===
+"provider-native"` (i.e. the adapter that produced this quote actually has its fee-collection
+gate confirmed — see below; an unconfirmed adapter's quotes carry `feeMode: "unavailable"` and
+skip this check entirely, since there's no fee to consistency-check yet):
 
 - **`fee_missing`** — the provider was asked to carry the fee but reports none. The route is
   excluded, never rendered as if the fee were collected.
 - **`fee_mismatch`** — the reported fee deviates from the expected amount by more than a small
   rounding tolerance. Catches both overcharging and a fee applied twice (a doubled 1% fee is
   ~100bps off expected, far outside a 2bps tolerance).
+- **`invalid_fee_amount`** — the provider's `inputAmount` or `platformFeeAmount` isn't a
+  well-formed base-unit integer string. Never guessed at, the route is excluded instead.
 
 ## Per-provider mechanism
 

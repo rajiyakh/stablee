@@ -32,12 +32,23 @@ export function envelope<T>(
   };
 }
 
-export function jsonOk<T>(body: ApiEnvelope<T>, maxAge = 30): Response {
+export function jsonOk<T>(
+  body: ApiEnvelope<T>,
+  maxAge = 30,
+  options?: { private?: boolean },
+): Response {
+  // Private responses (per-wallet data like a bridge quote keyed to a
+  // specific sender/recipient) never get a shared stale-while-revalidate
+  // window — a shared cache serving a stale quote past its real TTL would
+  // be worse than no caching at all.
+  const cacheControl = options?.private
+    ? `private, max-age=${maxAge}`
+    : `public, max-age=${maxAge}, stale-while-revalidate=120`;
   return new Response(JSON.stringify(body), {
     status: 200,
     headers: {
       "content-type": "application/json; charset=utf-8",
-      "cache-control": `public, max-age=${maxAge}, stale-while-revalidate=120`,
+      "cache-control": cacheControl,
     },
   });
 }
