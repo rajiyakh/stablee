@@ -199,4 +199,44 @@ describe("fetchBridgeRoutes", () => {
     expect(result.routes).toHaveLength(0);
     expect(result.excluded[0].reason).toBe("no route for this pair");
   });
+
+  it("excludes an amount that doesn't match what was requested (a provider echoing back less than asked for)", async () => {
+    const { fetchBridgeRoutes } = await import("./routeEngine.server");
+    const lifi = fakeAdapter("lifi", async () =>
+      fakeQuote({ provider: "lifi", inputAmount: "500000" }),
+    );
+    adaptersSupportingRouteMock.mockResolvedValue([
+      { adapter: lifi, supported: true, reason: null },
+    ]);
+
+    const result = await fetchBridgeRoutes(params);
+    expect(result.routes).toHaveLength(0);
+    expect(result.excluded[0].reason).toContain("input_amount_mismatch");
+  });
+
+  it("a single quote that throws while being validated only excludes that route, never 502s the whole request", async () => {
+    const { fetchBridgeRoutes } = await import("./routeEngine.server");
+    // A quote missing `meta` entirely can't come from a real adapter (every
+    // adapter builds it via normalize.ts's buildMeta), but a malformed or
+    // unexpectedly-shaped provider response is exactly the kind of thing
+    // validateBridgeQuote() shouldn't be trusted to handle gracefully by
+    // construction alone — routeEngine.server.ts's per-route try/catch is
+    // the actual backstop.
+    const broken = fakeAdapter("lifi", async () => {
+      const quote = fakeQuote({ provider: "lifi" });
+      // @ts-expect-error deliberately malformed to exercise the try/catch
+      quote.meta = undefined;
+      return quote;
+    });
+    const across = fakeAdapter("across", async () => fakeQuote({ provider: "across" }));
+    adaptersSupportingRouteMock.mockResolvedValue([
+      { adapter: broken, supported: true, reason: null },
+      { adapter: across, supported: true, reason: null },
+    ]);
+
+    const result = await fetchBridgeRoutes(params);
+    expect(result.routes).toHaveLength(1);
+    expect(result.routes[0].provider).toBe("across");
+    expect(result.excluded.some((e) => e.provider === "lifi")).toBe(true);
+  });
 });

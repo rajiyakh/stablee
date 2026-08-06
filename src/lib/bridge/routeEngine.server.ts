@@ -55,6 +55,7 @@ export async function fetchBridgeRoutes(
     expectedToChainId: params.toChainId,
     expectedFromToken: params.fromToken,
     expectedToToken: params.toToken,
+    expectedFromAmount: params.fromAmount,
     expectedRecipient: params.recipient,
     expectedFeeBps: feeBps,
     contractAllowlist: parseContractAllowlist(process.env.BRIDGE_CONTRACT_ALLOWLIST),
@@ -66,6 +67,8 @@ export async function fetchBridgeRoutes(
     const provider = supportedAdapters[index].adapter.id;
 
     if (result.status === "rejected") {
+      const reason = result.reason instanceof Error ? result.reason.message : String(result.reason);
+      console.error(`[bridge] ${provider} quote request rejected:`, reason);
       excluded.push({ provider, reason: "quote request failed" });
       return;
     }
@@ -74,13 +77,20 @@ export async function fetchBridgeRoutes(
       return;
     }
 
-    const validation = validateBridgeQuote(result.value, validationContext);
-    if (!validation.ok) {
-      excluded.push({ provider, reason: validation.issues.map((i) => i.code).join(", ") });
-      return;
+    // A single malformed quote (e.g. a non-numeric amount string from the
+    // provider) must only exclude that one route, never take down the whole
+    // request and discard every other provider's valid routes with it.
+    try {
+      const validation = validateBridgeQuote(result.value, validationContext);
+      if (!validation.ok) {
+        excluded.push({ provider, reason: validation.issues.map((i) => i.code).join(", ") });
+        return;
+      }
+      validated.push(validation.quote);
+    } catch (error) {
+      console.error(`[bridge] ${provider} quote failed validation unexpectedly:`, error);
+      excluded.push({ provider, reason: "quote validation failed" });
     }
-
-    validated.push(validation.quote);
   });
 
   const ranked = rankRoutes(validated, sort).slice(0, MAX_ROUTES_RETURNED);

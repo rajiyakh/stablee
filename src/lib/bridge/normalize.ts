@@ -1,4 +1,5 @@
 import { BRIDGE_QUOTE_TTL_MS } from "@/config/bridgePolicy";
+import { safeBigInt } from "./fee";
 import { BRIDGE_NATIVE_SENTINEL } from "./types";
 import type {
   BridgeQuoteParams,
@@ -28,7 +29,10 @@ export function toCanonicalNativeSentinel(address: string): string {
 function applySlippageFloor(amount: string, slippageBps: number | null): string {
   if (!slippageBps) return amount;
   const value = BigInt(amount);
-  const kept = 10_000n - BigInt(slippageBps);
+  // Clamped defensively even though the slippage input UI already caps this
+  // (BRIDGE_SLIPPAGE_MAX_BPS) — never let a value above 10000bps flip `kept`
+  // negative and produce a negative minimumReceived.
+  const kept = 10_000n - BigInt(Math.min(10_000, Math.max(0, slippageBps)));
   return ((value * kept) / 10_000n).toString();
 }
 
@@ -44,6 +48,15 @@ function sumUsd(values: Array<string | null | undefined>): number | null {
     .filter((v): v is number => v !== null && Number.isFinite(v));
   if (parsed.length === 0) return null;
   return parsed.reduce((a, b) => a + b, 0);
+}
+
+/** Same guard as sumUsd, for a single USD string — never lets a malformed
+ * provider-supplied USD figure become NaN and silently corrupt downstream
+ * comparisons (e.g. rank.ts's gasCostUsd tie-break). */
+function toFiniteUsd(value: string | null | undefined): number | null {
+  if (!value) return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
 }
 
 export interface NormalizeContext {
@@ -97,19 +110,39 @@ export function normalizeLifiQuote(
 
   let platformFeeTotal = 0n;
   let providerFeeTotal = 0n;
+  // LI.FI's feeCosts entries aren't guaranteed to all share one token (e.g.
+  // a gas-token fee alongside an input-token fee) — mixing entries in
+  // different tokens into one BigInt sum would silently misreport the fee
+  // in whatever unit happens to dominate. Rather than assume a specific
+  // token is "correct", the first entry seen establishes the denomination
+  // for this quote and any later entry in a different token is excluded
+  // from the total instead of guessed at.
+  let feeDenomination: string | null = null;
   for (const fee of feeCosts) {
-    if (fee.feeSplit) {
-      platformFeeTotal += BigInt(fee.feeSplit.integratorFee ?? "0");
-      providerFeeTotal +=
-        BigInt(fee.feeSplit.lifiFee ?? "0") + BigInt(fee.feeSplit.intermediaryFee ?? "0");
+    const feeTokenAddress = toCanonicalNativeSentinel(fee.token.address).toLowerCase();
+    if (feeDenomination === null) {
+      feeDenomination = feeTokenAddress;
+    } else if (feeTokenAddress !== feeDenomination) {
       continue;
     }
+
+    if (fee.feeSplit) {
+      platformFeeTotal += safeBigInt(fee.feeSplit.integratorFee) ?? 0n;
+      providerFeeTotal +=
+        (safeBigInt(fee.feeSplit.lifiFee) ?? 0n) + (safeBigInt(fee.feeSplit.intermediaryFee) ?? 0n);
+      continue;
+    }
+    // `included` describes whether the fee is already netted into the
+    // output estimate, not whether it's RobinPulse's — requiring it here
+    // misclassified a legitimate on-top integrator fee as a provider fee,
+    // which then made checkPlatformFee wrongly report fee_missing.
     const looksLikeIntegratorFee =
-      (/integrator/i.test(fee.name) || /integrator/i.test(fee.description ?? "")) && fee.included;
+      /integrator/i.test(fee.name) || /integrator/i.test(fee.description ?? "");
+    const amount = safeBigInt(fee.amount) ?? 0n;
     if (looksLikeIntegratorFee) {
-      platformFeeTotal += BigInt(fee.amount || "0");
+      platformFeeTotal += amount;
     } else {
-      providerFeeTotal += BigInt(fee.amount || "0");
+      providerFeeTotal += amount;
     }
   }
 
@@ -210,7 +243,7 @@ export function normalizeRelayQuote(
     inputAmount: raw.details?.currencyIn?.amount ?? ctx.params.fromAmount,
     platformFeeAmount: appFee?.amount ?? "0",
     providerFeeAmount: providerFeeTotal,
-    gasCostUsd: raw.fees?.gas?.amountUsd ? Number(raw.fees.gas.amountUsd) : null,
+    gasCostUsd: toFiniteUsd(raw.fees?.gas?.amountUsd),
     estimatedOutputAmount: outputAmount,
     minimumReceived: applySlippageFloor(outputAmount, ctx.params.slippageBps),
     estimatedTimeSeconds: raw.details?.timeEstimate ?? null,
@@ -283,7 +316,7 @@ export function normalizeAcrossQuote(
     inputAmount: raw.inputAmount,
     platformFeeAmount: appFee?.amount ?? "0",
     providerFeeAmount: providerFeeTotal,
-    gasCostUsd: raw.originGas?.amountUsd ? Number(raw.originGas.amountUsd) : null,
+    gasCostUsd: toFiniteUsd(raw.originGas?.amountUsd),
     estimatedOutputAmount: raw.expectedOutputAmount,
     minimumReceived:
       raw.minOutputAmount || applySlippageFloor(raw.expectedOutputAmount, ctx.params.slippageBps),

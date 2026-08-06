@@ -65,6 +65,7 @@ const baseCtx = {
   expectedToChainId: 1,
   expectedFromToken: FROM_TOKEN,
   expectedToToken: TO_TOKEN,
+  expectedFromAmount: "1000000",
   expectedRecipient: SENDER,
   expectedFeeBps: 100,
   contractAllowlist: {},
@@ -92,11 +93,66 @@ describe("validateBridgeQuote", () => {
     if (!result.ok) expect(result.issues.some((i) => i.code === "quote_expired")).toBe(true);
   });
 
-  it("rejects a chain mismatch", () => {
-    const quote = baseQuote({ meta: { ...baseQuote().meta, fromChainId: 1 } });
+  it("rejects a chain mismatch on the source token's own chainId (provider-echoed, not just our request params)", () => {
+    const quote = baseQuote({
+      meta: {
+        ...baseQuote().meta,
+        fromToken: { ...baseQuote().meta.fromToken, chainId: 1 },
+      },
+    });
     const result = validateBridgeQuote(quote, baseCtx);
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.issues).toContainEqual({ code: "chain_mismatch" });
+  });
+
+  it("rejects a chain mismatch on the destination token's own chainId", () => {
+    const quote = baseQuote({
+      meta: {
+        ...baseQuote().meta,
+        toToken: { ...baseQuote().meta.toToken, chainId: 4663 },
+      },
+    });
+    const result = validateBridgeQuote(quote, baseCtx);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.issues).toContainEqual({ code: "chain_mismatch" });
+  });
+
+  it("rejects when the provider's transactionRequest targets a different chain than requested", () => {
+    const quote = baseQuote({
+      transactionRequest: { ...baseQuote().transactionRequest!, chainId: 1 },
+    });
+    const result = validateBridgeQuote(quote, baseCtx);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.issues).toContainEqual({ code: "chain_mismatch" });
+  });
+
+  it("rejects an input amount that doesn't match what was actually requested", () => {
+    const quote = baseQuote({ inputAmount: "500000" });
+    const result = validateBridgeQuote(quote, baseCtx);
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.issues).toContainEqual({
+        code: "input_amount_mismatch",
+        expected: "1000000",
+        actual: "500000",
+      });
+    }
+  });
+
+  it("rejects a malformed (non-integer) input amount instead of throwing", () => {
+    const quote = baseQuote({ inputAmount: "1.5" });
+    expect(() => validateBridgeQuote(quote, baseCtx)).not.toThrow();
+    const result = validateBridgeQuote(quote, baseCtx);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.issues).toContainEqual({ code: "invalid_amount" });
+  });
+
+  it("rejects a malformed estimatedOutputAmount instead of throwing", () => {
+    const quote = baseQuote({ estimatedOutputAmount: "not-a-number" });
+    expect(() => validateBridgeQuote(quote, baseCtx)).not.toThrow();
+    const result = validateBridgeQuote(quote, baseCtx);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.issues).toContainEqual({ code: "zero_output" });
   });
 
   it("rejects a token mismatch", () => {

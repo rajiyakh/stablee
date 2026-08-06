@@ -158,6 +158,26 @@ describe("normalizeLifiQuote", () => {
     const quote = normalizeLifiQuote(raw as never, ctx);
     expect(quote.meta.recipientEchoed).toBe(params.recipient);
   });
+
+  it("never mixes fee entries denominated in different tokens into one BigInt sum", () => {
+    // rawQuote() always denominates every feeCosts entry in toToken.address —
+    // this test deliberately overrides one entry to a third, different
+    // token to exercise the actual mixed-denomination guard.
+    const raw = rawQuote([
+      { name: "LI.FI Integrator Fee", amount: "10000", included: true },
+      { name: "Gas rebate", amount: "999999999", included: false },
+    ]);
+    raw.estimate.feeCosts[1] = {
+      ...raw.estimate.feeCosts[1],
+      token: { address: "0xsomeOtherToken000000000000000000000000", symbol: "ETH", decimals: 18 },
+    };
+    const quote = normalizeLifiQuote(raw as never, ctx);
+    // The first entry (toToken-denominated) establishes the denomination;
+    // the second entry, in a different token, is excluded rather than
+    // summed in — providerFeeAmount must not include "999999999".
+    expect(quote.platformFeeAmount).toBe("10000");
+    expect(quote.providerFeeAmount).toBe("0");
+  });
 });
 
 describe("normalizeRelayQuote", () => {

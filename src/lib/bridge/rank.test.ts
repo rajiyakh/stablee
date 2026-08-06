@@ -85,6 +85,25 @@ describe("rankRoutes bestReturn", () => {
     expect(ranked.map((r) => r.routeId)).toEqual(["cheapGas", "expensiveGas"]);
   });
 
+  it("treats a non-finite gasCostUsd the same as not-reported, never letting NaN break the sort", () => {
+    const nanGas = quote({
+      routeId: "nanGas",
+      estimatedOutputAmount: "990000",
+      gasCostUsd: Number.NaN,
+      estimatedTimeSeconds: 100,
+    });
+    const cleanGas = quote({
+      routeId: "cleanGas",
+      estimatedOutputAmount: "990000",
+      gasCostUsd: 1,
+      estimatedTimeSeconds: 50,
+    });
+    // Equal output; nanGas's unusable gas value must fall through to the
+    // time tie-break rather than participating in `aGas - bGas`.
+    const ranked = rankRoutes([cleanGas, nanGas], "bestReturn");
+    expect(ranked.map((r) => r.routeId)).toEqual(["cleanGas", "nanGas"]);
+  });
+
   it("does not let a missing gasCostUsd on one side silently win the tie-break", () => {
     const reportsGas = quote({
       routeId: "reportsGas",

@@ -4,6 +4,7 @@ import {
   checkPlatformFee,
   computeBridgeFeeBps,
   expectedPlatformFee,
+  safeBigInt,
 } from "./fee";
 
 describe("computeBridgeFeeBps", () => {
@@ -74,5 +75,48 @@ describe("checkPlatformFee", () => {
   it("flags fee_mismatch when the fee is significantly under-reported", () => {
     const result = checkPlatformFee({ inputAmount: "1000000", platformFeeAmount: "1000" }, 100);
     expect(result).toEqual({ code: "fee_mismatch", expected: "10000", actual: "1000" });
+  });
+
+  it("flags invalid_fee_amount instead of throwing on a malformed inputAmount", () => {
+    expect(() =>
+      checkPlatformFee({ inputAmount: "1.5", platformFeeAmount: "10000" }, 100),
+    ).not.toThrow();
+    const result = checkPlatformFee({ inputAmount: "1.5", platformFeeAmount: "10000" }, 100);
+    expect(result).toEqual({ code: "invalid_fee_amount" });
+  });
+
+  it("flags invalid_fee_amount instead of throwing on a malformed platformFeeAmount", () => {
+    const result = checkPlatformFee({ inputAmount: "1000000", platformFeeAmount: "1e18" }, 100);
+    expect(result).toEqual({ code: "invalid_fee_amount" });
+  });
+
+  it("flags invalid_fee_amount on an empty inputAmount rather than treating it as 0", () => {
+    const result = checkPlatformFee({ inputAmount: "", platformFeeAmount: "0" }, 100);
+    expect(result).toEqual({ code: "invalid_fee_amount" });
+  });
+});
+
+describe("safeBigInt", () => {
+  it("parses a well-formed base-unit integer string", () => {
+    expect(safeBigInt("1000000")).toBe(1_000_000n);
+  });
+
+  it("returns null for a decimal string", () => {
+    expect(safeBigInt("1.5")).toBeNull();
+  });
+
+  it("returns null for exponential notation", () => {
+    expect(safeBigInt("1e18")).toBeNull();
+  });
+
+  it("returns null for an empty or missing value", () => {
+    expect(safeBigInt("")).toBeNull();
+    expect(safeBigInt(null)).toBeNull();
+    expect(safeBigInt(undefined)).toBeNull();
+  });
+
+  it("never throws on non-numeric input", () => {
+    expect(() => safeBigInt("not-a-number")).not.toThrow();
+    expect(safeBigInt("not-a-number")).toBeNull();
   });
 });
