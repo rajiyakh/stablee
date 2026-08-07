@@ -13,23 +13,20 @@ import { EconomyLoopFlow } from "./sections/EconomyLoopFlow";
 import { ProtocolMetrics } from "./sections/ProtocolMetrics";
 import { RoadmapSection } from "./sections/RoadmapSection";
 
-/** $ORCA protocol documentation page. The premium dark section up top
- *  (`data-theme="dark"`, scoped to just this wrapper, not the whole app) is
- *  a fixed always-dark "showcase" band independent of the site's own
- *  light/dark toggle — same idea as Agent Hub's photo hero. Everything below
- *  it uses the site's normal light theme, unchanged.
+/** $ORCA protocol documentation page. The premium section up top (Hero
+ *  through Trust Banner) uses only theme-aware utilities/CSS variables, so
+ *  it follows the site's own light/dark toggle exactly like the rest of the
+ *  page — no local theme override.
  *  -mt-10 cancels PageContainer's top padding so the hero sits flush against
  *  the app header instead of showing a light gap. */
 export function TokenomicsPage() {
   return (
     <div className="-mx-4 -mt-10 sm:-mx-6 lg:-mx-8">
-      <div data-theme="dark" className="bg-background">
-        <PremiumHero />
-        <TokenAllocationSection />
-        <WhyOrcaSection />
-        <BuybackFlowPremium />
-        <TrustBanner />
-      </div>
+      <PremiumHero />
+      <TokenAllocationSection />
+      <WhyOrcaSection />
+      <BuybackFlowPremium />
+      <TrustBanner />
       <GenesisAgentFarming />
       <RewardEngineFlow />
       <RevenueEngineFlow />
