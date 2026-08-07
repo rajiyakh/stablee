@@ -140,6 +140,86 @@ export const PROTOCOL_METRICS: string[] = [
   "Treasury Balance",
 ];
 
+// --- Premium dark Tokenomics section (Hero/Allocation/Why ORCA/Buyback/Trust) ---
+// Distinct, additive exports for the new top-of-page section — the arrays
+// above remain in place, still consumed by the existing sections below it.
+
+export const SUPPLY_BADGES: string[] = [
+  "Fixed Supply",
+  "No Future Mint",
+  "AI Utility Token",
+  "Robinhood Mainnet",
+];
+
+export interface TokenAllocationItem {
+  percent: number;
+  name: string;
+  description: string;
+}
+
+/** Percents sum to 100 — see tokenomics.test.ts. */
+export const TOKEN_ALLOCATION: TokenAllocationItem[] = [
+  {
+    percent: 25,
+    name: "Genesis Agent Farming",
+    description: "Rewards distributed to Genesis Agent holders.",
+  },
+  {
+    percent: 15,
+    name: "Liquidity",
+    description: "DEX liquidity, future CEX liquidity, healthy markets.",
+  },
+  {
+    percent: 15,
+    name: "AI Development",
+    description: "AI Agents, infrastructure, research, future AI.",
+  },
+  {
+    percent: 15,
+    name: "Treasury",
+    description: "Protocol operations, security, future ecosystem growth.",
+  },
+  {
+    percent: 10,
+    name: "Community Rewards",
+    description: "Protocol incentives, campaigns, future ecosystem rewards.",
+  },
+  {
+    percent: 10,
+    name: "Team & Advisors",
+    description: "24-month linear vesting, 0% initial unlock.",
+  },
+  {
+    percent: 5,
+    name: "Marketing",
+    description: "Growth, strategic partnerships, community expansion.",
+  },
+  {
+    percent: 5,
+    name: "Strategic Reserve",
+    description: "Future integrations, emergency reserve.",
+  },
+];
+
+export const WHY_ORCA_ITEMS: string[] = [
+  "Lower Swap Fees",
+  "Lower Bridge Fees",
+  "Premium AI Features",
+  "Advanced Market Intelligence",
+  "Future Governance",
+  "Exclusive Community Campaigns",
+];
+
+export const BUYBACK_FLOW_INPUTS: string[] = ["Swap Fees", "Bridge Fees"];
+export const BUYBACK_FLOW_STAGES: string[] = ["Treasury", "Buyback", "Burn"];
+
+export const TRUST_BADGES: string[] = [
+  "Fixed Supply",
+  "No Future Mint",
+  "Team Vesting",
+  "Buyback & Burn",
+];
+
 export interface RoadmapPhase {
   phase: string;
   title: string;

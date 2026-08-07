@@ -4,8 +4,10 @@ import { cn } from "@/lib/utils";
 /** Fixed-height vertical connector: a static line, an animated draw-in
  *  overlay, and a small glowing "packet" dot traveling along it on a loop —
  *  deterministic (no DOM measurement), so it composes cleanly between any
- *  two stacked nodes. */
-function VerticalConnector({ height = 56 }: { height?: number }) {
+ *  two stacked nodes. Exported for reuse by other flow-style diagrams
+ *  (e.g. BuybackFlowPremium.tsx) that don't fit VerticalFlow's single-chain
+ *  shape but still want the same connector look. */
+export function VerticalConnector({ height = 56 }: { height?: number }) {
   return (
     <div className="relative flex justify-center" style={{ height }} aria-hidden="true">
       <svg width="2" height={height} className="overflow-visible text-border">
