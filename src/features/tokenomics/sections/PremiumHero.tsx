@@ -55,22 +55,20 @@ export function PremiumHero() {
         </Reveal>
 
         <Reveal delayMs={200}>
-          <div className="relative mx-auto mt-12 inline-flex">
+          <div className="relative mx-auto mt-12 flex flex-col items-center gap-1">
             <div
-              className="animate-orca-glow pointer-events-none absolute inset-0 -z-10 rounded-3xl opacity-60"
+              className="animate-orca-glow pointer-events-none absolute inset-x-0 top-1/2 -z-10 h-16 -translate-y-1/2 opacity-45"
               style={{
                 background:
-                  "radial-gradient(circle, color-mix(in oklch, var(--color-primary) 45%, transparent) 0%, transparent 72%)",
-                filter: "blur(28px)",
+                  "radial-gradient(circle, color-mix(in oklch, var(--color-primary) 45%, transparent) 0%, transparent 70%)",
+                filter: "blur(18px)",
               }}
               aria-hidden="true"
             />
-            <div className="glass-panel flex flex-col items-center gap-1 rounded-3xl border-primary/25 px-10 py-8 sm:px-16 sm:py-10">
-              <p className="font-mono text-3xl font-semibold tabular-nums text-foreground sm:text-5xl">
-                {TOTAL_SUPPLY.toLocaleString("en-US")}
-              </p>
-              <p className="text-sm font-semibold tracking-[0.2em] text-primary">{TOKEN_SYMBOL}</p>
-            </div>
+            <p className="font-mono text-3xl font-semibold tabular-nums text-foreground sm:text-5xl">
+              {TOTAL_SUPPLY.toLocaleString("en-US")}
+            </p>
+            <p className="text-sm font-semibold tracking-[0.2em] text-primary">{TOKEN_SYMBOL}</p>
           </div>
         </Reveal>
 
