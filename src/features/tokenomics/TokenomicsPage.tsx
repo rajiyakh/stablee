@@ -3,8 +3,6 @@ import { TokenAllocationSection } from "./sections/TokenAllocationSection";
 import { WhyOrcaSection } from "./sections/WhyOrcaSection";
 import { BuybackFlowPremium } from "./sections/BuybackFlowPremium";
 import { TrustBanner } from "./sections/TrustBanner";
-import { HeroSection } from "./sections/HeroSection";
-import { SupplyNode } from "./sections/SupplyNode";
 import { GenesisAgentFarming } from "./sections/GenesisAgentFarming";
 import { RewardEngineFlow } from "./sections/RewardEngineFlow";
 import { RevenueEngineFlow } from "./sections/RevenueEngineFlow";
@@ -32,8 +30,6 @@ export function TokenomicsPage() {
         <BuybackFlowPremium />
         <TrustBanner />
       </div>
-      <HeroSection />
-      <SupplyNode />
       <GenesisAgentFarming />
       <RewardEngineFlow />
       <RevenueEngineFlow />
